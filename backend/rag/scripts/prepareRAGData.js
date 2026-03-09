@@ -1,9 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
-const {
-  pool,
-} = require("c:/Users/Lenovo/Documents/PERSONAL-tham-khao/backend/config/mysql.js");
+const { pool } = require("../../config/mysql");
 const { buildCleanProductText, normalizeText } = require("./textNormalization");
 
 const CHUNK_SIZE = parseInt(process.env.RAG_CHUNK_SIZE || "900", 10);

@@ -1,10 +1,10 @@
-const { ChromaClient } = require('chromadb');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { normalizeText } = require('../rag/scripts/textNormalization.js');
-const { productModel, blogModel } = require('../models/index.js');
+const { ChromaClient } = require("chromadb");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { normalizeText } = require("../rag/scripts/textNormalization.js");
+const { productModel, blogModel } = require("../models/index.js");
 
-const CHROMA_HOST = process.env.CHROMA_HOST || 'localhost';
-const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || '8000');
+const CHROMA_HOST = process.env.CHROMA_HOST || "localhost";
+const CHROMA_PORT = parseInt(process.env.CHROMA_PORT || "8000");
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 let chromaClient = null;
@@ -19,12 +19,12 @@ async function initChroma() {
         port: CHROMA_PORT,
       });
       chromaCollection = await chromaClient.getCollection({
-        name: 'rag_products'
+        name: "rag_products",
       });
-      console.log('[RAG Service] Chroma connected');
+      console.log("[RAG Service] Chroma connected");
     }
   } catch (err) {
-    console.error('[RAG Service] Chroma init failed:', err.message);
+    console.error("[RAG Service] Chroma init failed:", err.message);
     chromaClient = null;
     chromaCollection = null;
   }
@@ -34,29 +34,27 @@ async function initChroma() {
 async function getEmbedding(text) {
   try {
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'text-embedding-004' });
+    const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
     const res = await model.embedContent(text);
     return res.embedding.values;
   } catch (err) {
-    console.error('[RAG Service] Embedding error:', err.message);
+    console.error("[RAG Service] Embedding error:", err.message);
     return null;
   }
 }
 
 // Build clean product text (same as prepareRAGData)
 function buildCleanProductText(product) {
-  if (!product) return '';
+  if (!product) return "";
 
   const name = normalizeText(product.name);
-  const category = normalizeText(product.category || '');
-  const supplier = normalizeText(product.supplier || '');
-  const origin = normalizeText(product.origin || '');
+  const category = normalizeText(product.category || "");
+  const supplier = normalizeText(product.supplier || "");
+  const origin = normalizeText(product.origin || "");
 
-  let description = '';
+  let description = "";
   if (product.description) {
-    description = normalizeText(product.description)
-      .substring(0, 300)
-      .trim();
+    description = normalizeText(product.description).substring(0, 300).trim();
   }
 
   const parts = [
@@ -64,7 +62,7 @@ function buildCleanProductText(product) {
     category && `danh muc ${category}`,
     supplier && `nha cung cap ${supplier}`,
     origin && `xuat xu ${origin}`,
-    description && `mo ta ${description}`
+    description && `mo ta ${description}`,
   ].filter(Boolean);
 
   // Add all variants with their prices and stock
@@ -72,21 +70,23 @@ function buildCleanProductText(product) {
   if (variants.length > 0) {
     const variantTexts = variants
       .map((v, idx) => {
-        const price = String(v.price_sale || 0).replace(/[.,]/g, '').replace(/,/g, '.');
-        const stock = v.stock || '0';
-        const unit = (v.unit || 'unit').toLowerCase();
+        const price = String(v.price_sale || 0)
+          .replace(/[.,]/g, "")
+          .replace(/,/g, ".");
+        const stock = v.stock || "0";
+        const unit = (v.unit || "unit").toLowerCase();
         return `variant ${idx + 1} gia ${price} ton kho ${stock} don vi ${unit}`;
       })
       .filter(Boolean);
     parts.push(...variantTexts);
   }
 
-  return parts.join(' ');
+  return parts.join(" ");
 }
 
 // Build clean blog text (same as prepareRAGData)
 function buildCleanBlogText(blog) {
-  if (!blog) return '';
+  if (!blog) return "";
 
   const normalizedTitle = normalizeText(blog.title);
   const normalizedContent = normalizeText(blog.content);
@@ -99,7 +99,9 @@ async function updateProductInRAG(productId) {
     await initChroma();
 
     if (!chromaCollection) {
-      console.log('[RAG Service] Chroma not available, skip product RAG update');
+      console.log(
+        "[RAG Service] Chroma not available, skip product RAG update",
+      );
       return false;
     }
 
@@ -115,8 +117,8 @@ async function updateProductInRAG(productId) {
     try {
       if (Array.isArray(product.variants)) {
         variants = product.variants;
-      } else if (typeof product.variants === 'string') {
-        variants = JSON.parse(product.variants || '[]');
+      } else if (typeof product.variants === "string") {
+        variants = JSON.parse(product.variants || "[]");
       }
     } catch {
       variants = [];
@@ -137,11 +139,11 @@ async function updateProductInRAG(productId) {
 
     // Prepare metadata (only primitive types allowed by Chroma)
     const metadata = {
-      type: 'product',
-      source: 'products',
+      type: "product",
+      source: "products",
       id: String(productId),
-      name: String(product.name || '').substring(0, 100),
-      category: String(product.category_id || 'N/A').substring(0, 100),
+      name: String(product.name || "").substring(0, 100),
+      category: String(product.category_id || "N/A").substring(0, 100),
     };
 
     const docId = `product:${productId}`;
@@ -151,13 +153,13 @@ async function updateProductInRAG(productId) {
       ids: [docId],
       embeddings: [embedding],
       metadatas: [metadata],
-      documents: [text]
+      documents: [text],
     });
 
     console.log(`[RAG Service] ✓ Updated product ${productId} in Chroma`);
     return true;
   } catch (err) {
-    console.error('[RAG Service] updateProductInRAG error:', err.message);
+    console.error("[RAG Service] updateProductInRAG error:", err.message);
     return false;
   }
 }
@@ -168,7 +170,7 @@ async function updateBlogInRAG(blogId) {
     await initChroma();
 
     if (!chromaCollection) {
-      console.log('[RAG Service] Chroma not available, skip blog RAG update');
+      console.log("[RAG Service] Chroma not available, skip blog RAG update");
       return false;
     }
 
@@ -191,11 +193,13 @@ async function updateBlogInRAG(blogId) {
 
     // Prepare metadata (only primitive types allowed by Chroma)
     const metadata = {
-      type: 'blog',
-      source: 'blogs',
+      type: "blog",
+      source: "blogs",
       id: String(blogId),
-      title: String(blog.title || '').substring(0, 100),
-      created_at: blog.created_at ? new Date(blog.created_at).toISOString() : '',
+      title: String(blog.title || "").substring(0, 100),
+      created_at: blog.created_at
+        ? new Date(blog.created_at).toISOString()
+        : "",
     };
 
     const docId = `blog:${blogId}`;
@@ -205,13 +209,13 @@ async function updateBlogInRAG(blogId) {
       ids: [docId],
       embeddings: [embedding],
       metadatas: [metadata],
-      documents: [text]
+      documents: [text],
     });
 
     console.log(`[RAG Service] ✓ Updated blog ${blogId} in Chroma`);
     return true;
   } catch (err) {
-    console.error('[RAG Service] updateBlogInRAG error:', err.message);
+    console.error("[RAG Service] updateBlogInRAG error:", err.message);
     return false;
   }
 }
@@ -222,19 +226,19 @@ async function deleteProductFromRAG(productId) {
     await initChroma();
 
     if (!chromaCollection) {
-      console.log('[RAG Service] Chroma not available, skip product deletion');
+      console.log("[RAG Service] Chroma not available, skip product deletion");
       return false;
     }
 
     const docId = `product:${productId}`;
     await chromaCollection.delete({
-      ids: [docId]
+      ids: [docId],
     });
 
     console.log(`[RAG Service] ✓ Deleted product ${productId} from Chroma`);
     return true;
   } catch (err) {
-    console.error('[RAG Service] deleteProductFromRAG error:', err.message);
+    console.error("[RAG Service] deleteProductFromRAG error:", err.message);
     return false;
   }
 }
@@ -245,19 +249,19 @@ async function deleteBlogFromRAG(blogId) {
     await initChroma();
 
     if (!chromaCollection) {
-      console.log('[RAG Service] Chroma not available, skip blog deletion');
+      console.log("[RAG Service] Chroma not available, skip blog deletion");
       return false;
     }
 
     const docId = `blog:${blogId}`;
     await chromaCollection.delete({
-      ids: [docId]
+      ids: [docId],
     });
 
     console.log(`[RAG Service] ✓ Deleted blog ${blogId} from Chroma`);
     return true;
   } catch (err) {
-    console.error('[RAG Service] deleteBlogFromRAG error:', err.message);
+    console.error("[RAG Service] deleteBlogFromRAG error:", err.message);
     return false;
   }
 }
@@ -266,5 +270,5 @@ module.exports = {
   updateProductInRAG,
   updateBlogInRAG,
   deleteProductFromRAG,
-  deleteBlogFromRAG
+  deleteBlogFromRAG,
 };

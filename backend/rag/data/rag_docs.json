@@ -1,121 +1,121 @@
 [
   {
     "id": "product:1:variant:0",
-    "text": "đặc sản vân đình chả vịt thuỷ mạnh danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 60 don vi kg mo ta vân đình nổi tiếng với món đặc sản vịt cỏ vân đình . vịt vân đình có đặc điểm là nhỏ con, lông cánh dài, màu cà kêm, thớ thịt dày, thơm, xương nhỏ, ăn không bị ngấy. nhưng rất ít người biết đến vân đình còn có một đặc sản nữa là chả vịt vân đình. thành phần của chả vịt vân đình bao gồm thịt vịt , nạ",
+    "text": "đặc sản vân đình chả vịt thuỷ mạnh danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 150000.00 ton kho -75 don vi kg mo ta - - text chả vịt thơm ngon đặc sản thương hiệu thuỷ mạnh",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 1,
       "name": "Đặc sản Vân Đình chả vịt Thuỷ Mạnh",
       "category": "Sản phẩm từ vịt",
-      "variant_name": "Gói 0.5kg",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "150000.00",
-      "stock": 60,
+      "stock": -75,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.320Z",
+      "created_at": "2026-03-09T16:20:35.114Z",
+      "language": "vi"
+    }
+  },
+  {
+    "id": "product:1:variant:1",
+    "text": "đặc sản vân đình chả vịt thuỷ mạnh danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 0.00 ton kho 0 don vi unit mo ta - - text chả vịt thơm ngon đặc sản thương hiệu thuỷ mạnh",
+    "metadata": {
+      "type": "product",
+      "source": "products",
+      "id": 1,
+      "name": "Đặc sản Vân Đình chả vịt Thuỷ Mạnh",
+      "category": "Sản phẩm từ vịt",
+      "variant_name": null,
+      "variant_index": 1,
+      "price": "0.00",
+      "stock": 0,
+      "unit": null,
+      "origin": "Việt Nam",
+      "created_at": "2026-03-09T16:20:35.119Z",
       "language": "vi"
     }
   },
   {
     "id": "product:2:variant:0",
-    "text": "chân vịt rút xương ủ xì dầu danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 145000.00 ton kho 70 don vi gói mo ta món nhậu chân vịt rút xương ủ xì dầu là một món ẩm thực đặc sản của nhiều vùng miền trong văn hóa ẩm thực đông á. chân vịt được chuẩn bị bằng cách rút xương trước khi được ngâm ủ trong hỗn hợp muối và các loại gia vị khác, tạo nên một hương vị đặc trưng và độ mềm, giòn ngon đặc biệt. quá trình rút x",
+    "text": "chân vịt rút xương ủ xì dầu danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 145000.00 ton kho -1000 don vi kg mo ta chân vịt rút xương ủ xì dầu ngon đậm vị",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 2,
       "name": "Chân vịt rút xương ủ xì dầu",
       "category": "Sản phẩm từ vịt",
-      "variant_name": "Gói 1kg",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "145000.00",
-      "stock": 70,
-      "unit": "gói",
+      "stock": -1000,
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.323Z",
+      "created_at": "2026-03-09T16:20:35.122Z",
       "language": "vi"
     }
   },
   {
     "id": "product:3:variant:0",
-    "text": "chân vịt rút xương ủ muối danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 145000.00 ton kho 70 don vi gói mo ta món nhậu chân vịt rút xương ủ muối là một món ẩm thực đặc sản của nhiều vùng miền trong văn hóa ẩm thực đông á. chân vịt được chuẩn bị bằng cách rút xương trước khi được ngâm ủ trong hỗn hợp muối và các loại gia vị khác, tạo nên một hương vị đặc trưng và độ mềm, giòn ngon đặc biệt. quá trình rút xươ",
+    "text": "chân vịt rút xương ủ muối danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 145000.00 ton kho 0 don vi kg mo ta chân vịt ủ muối đặc sản",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 3,
       "name": "Chân vịt rút xương ủ muối",
       "category": "Sản phẩm từ vịt",
-      "variant_name": "Gói 1kg",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "145000.00",
-      "stock": 70,
-      "unit": "gói",
+      "stock": 0,
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.324Z",
+      "created_at": "2026-03-09T16:20:35.125Z",
       "language": "vi"
     }
   },
   {
     "id": "product:4:variant:0",
-    "text": "đặc sản pate gan vịt danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 90000.00 ton kho 100 don vi hộp mo ta pate gan vịt, món ăn ngon và độc đáo, đã trở thành một phần không thể thiếu trong ẩm thực. pate gan vịt được làm từ gan vịt tươi, kết hợp với bơ và các gia vị thơm ngon. đây là món ăn phổ biến trong nhiều nền ẩm thực, bao gồm cả kiểu pháp và việt nam. trong kiểu pháp, pate gan vịt thường có màu be d",
+    "text": "đặc sản pate gan vịt danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 90000.00 ton kho 97 don vi hũ mo ta pate gan vịt béo ngậy, thơm ngon",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 4,
       "name": "Đặc sản pate gan vịt",
       "category": "Sản phẩm từ vịt",
-      "variant_name": "Hộp 500g",
+      "variant_name": "Hũ 200g",
       "variant_index": 0,
       "price": "90000.00",
-      "stock": 100,
-      "unit": "hộp",
+      "stock": 97,
+      "unit": "hũ",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.325Z",
+      "created_at": "2026-03-09T16:20:35.128Z",
       "language": "vi"
     }
   },
   {
     "id": "product:5:variant:0",
-    "text": "đặc sản vân đình: vịt ủ xì dầu danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 310000.00 ton kho 40 don vi con mo ta vịt ủ xì dầu được làm theo công thức đặc biệt, đã được nhiều khách hàng đánh giá cao về chất lượng. món đặc sản vịt vân đình ủ xì dầu có vị đậm đà của nước tương, mùi thơm của gia vị tự nhiên. nói đến món ăn độc đáo này thì nguyên liệu đầu tiên không thể không nhắc đến đó là vịt tươi nguyên con, tiế",
+    "text": "đặc sản vân đình: vịt ủ xì dầu danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 310000.00 ton kho 40 don vi con mo ta vịt ủ xì dầu nguyên con",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 5,
       "name": "Đặc sản Vân Đình: Vịt ủ xì dầu",
       "category": "Sản phẩm từ vịt",
-      "variant_name": "Nguyên con 3kg",
+      "variant_name": "Con 1.2kg",
       "variant_index": 0,
       "price": "310000.00",
       "stock": 40,
       "unit": "con",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.326Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:5:variant:1",
-    "text": "đặc sản vân đình: vịt ủ xì dầu danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 160000.00 ton kho 50 don vi con mo ta vịt ủ xì dầu được làm theo công thức đặc biệt, đã được nhiều khách hàng đánh giá cao về chất lượng. món đặc sản vịt vân đình ủ xì dầu có vị đậm đà của nước tương, mùi thơm của gia vị tự nhiên. nói đến món ăn độc đáo này thì nguyên liệu đầu tiên không thể không nhắc đến đó là vịt tươi nguyên con, tiế",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 5,
-      "name": "Đặc sản Vân Đình: Vịt ủ xì dầu",
-      "category": "Sản phẩm từ vịt",
-      "variant_name": "Nửa con 1.5kg",
-      "variant_index": 1,
-      "price": "160000.00",
-      "stock": 50,
-      "unit": "con",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.327Z",
+      "created_at": "2026-03-09T16:20:35.130Z",
       "language": "vi"
     }
   },
   {
     "id": "product:6:variant:0",
-    "text": "đặc sản mọc vịt vân đình danh muc sản phẩm từ vịt nha cung cap công ty abc xuat xu việt nam gia 135000.00 ton kho 78 don vi gói mo ta mọc vịt vân đình- một đặc sản khác của vân đình ít người biết đến. mọc vịt được làm từ thịt vịt, thịt nạc heo, mỡ heo, nấm hương, nước mắm cốt, tiêu, có thể dùng để nấu với canh chua, hoặc đơn giản là rán qua hoặc cho vào nồi chiên không dầu ăn cùng bún là được một bữa vừa ngon vừa nhanh, rất tiện c",
+    "text": "đặc sản mọc vịt vân đình danh muc sản phẩm từ vịt nha cung cap công ty xyz xuat xu việt nam gia 135000.00 ton kho 80 don vi kg mo ta mọc vịt dai mềm, đậm vị",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -125,282 +125,244 @@
       "variant_name": "Gói 500g",
       "variant_index": 0,
       "price": "135000.00",
-      "stock": 78,
-      "unit": "gói",
+      "stock": 80,
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.328Z",
+      "created_at": "2026-03-09T16:20:35.133Z",
       "language": "vi"
     }
   },
   {
     "id": "product:7:variant:0",
-    "text": "gà ủ muối danh muc sản phẩm từ gà nha cung cap công ty abc xuat xu việt nam gia 260000.00 ton kho 50 don vi con mo ta gà ủ muối được làm theo công thức đặc biệt, làm cho da gà giòn, vàng trông rất đẹp mắt. để làm món ăn này, người ta sẽ ướp gà với nhiều gia vị như bột nghệ, hành tím, gừng, sả, lá chanh, ớt trái, sau đó ủ trong muối hạt. khi ăn, thịt gà mềm, thơm, và có vị mặn đúng điệu. cách làm gà ủ muối đơn giản",
+    "text": "gà ủ muối danh muc sản phẩm từ gà nha cung cap công ty xyz xuat xu việt nam gia 300000.00 ton kho 50 don vi con mo ta gà ủ muối giữ nguyên vị ngọt tự nhiên",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 7,
       "name": "Gà ủ muối",
       "category": "Sản phẩm từ gà",
-      "variant_name": "Nguyên con 2.8kg",
+      "variant_name": "Con 1.2kg",
       "variant_index": 0,
-      "price": "260000.00",
+      "price": "300000.00",
       "stock": 50,
       "unit": "con",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.330Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:7:variant:1",
-    "text": "gà ủ muối danh muc sản phẩm từ gà nha cung cap công ty abc xuat xu việt nam gia 140000.00 ton kho 40 don vi con mo ta gà ủ muối được làm theo công thức đặc biệt, làm cho da gà giòn, vàng trông rất đẹp mắt. để làm món ăn này, người ta sẽ ướp gà với nhiều gia vị như bột nghệ, hành tím, gừng, sả, lá chanh, ớt trái, sau đó ủ trong muối hạt. khi ăn, thịt gà mềm, thơm, và có vị mặn đúng điệu. cách làm gà ủ muối đơn giản",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 7,
-      "name": "Gà ủ muối",
-      "category": "Sản phẩm từ gà",
-      "variant_name": "Nửa con 1.4kg",
-      "variant_index": 1,
-      "price": "140000.00",
-      "stock": 40,
-      "unit": "con",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.331Z",
+      "created_at": "2026-03-09T16:20:35.136Z",
       "language": "vi"
     }
   },
   {
     "id": "product:8:variant:0",
-    "text": "gà ủ xì dầu danh muc sản phẩm từ gà nha cung cap công ty abc xuat xu việt nam gia 290000.00 ton kho 44 don vi con mo ta gà ủ xì dầu được làm theo công thức đặc biệt, xuất phát từ món gà hấp xì dầu của trung quốc. gà ủ xì dầu có vị đậm đà của nước tương, mùi thơm của gia vị tự nhiên. nói đến món ăn độc đáo này thì nguyên liệu đầu tiên không thể không nhắc đến đó là gà ta tươi nguyên con, tiếp đến là các nguyên liệu qu",
+    "text": "gà ủ xì dầu danh muc sản phẩm từ gà nha cung cap công ty xyz xuat xu việt nam gia 315000.00 ton kho 45 don vi con mo ta gà ủ xì dầu đậm đà chuẩn vị",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 8,
       "name": "Gà ủ xì dầu",
       "category": "Sản phẩm từ gà",
-      "variant_name": "Nguyên con 2.8kg",
+      "variant_name": "Con 1.2kg",
       "variant_index": 0,
-      "price": "290000.00",
-      "stock": 44,
+      "price": "315000.00",
+      "stock": 45,
       "unit": "con",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.332Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:8:variant:1",
-    "text": "gà ủ xì dầu danh muc sản phẩm từ gà nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 50 don vi con mo ta gà ủ xì dầu được làm theo công thức đặc biệt, xuất phát từ món gà hấp xì dầu của trung quốc. gà ủ xì dầu có vị đậm đà của nước tương, mùi thơm của gia vị tự nhiên. nói đến món ăn độc đáo này thì nguyên liệu đầu tiên không thể không nhắc đến đó là gà ta tươi nguyên con, tiếp đến là các nguyên liệu qu",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 8,
-      "name": "Gà ủ xì dầu",
-      "category": "Sản phẩm từ gà",
-      "variant_name": "Nửa con 1.4kg",
-      "variant_index": 1,
-      "price": "150000.00",
-      "stock": 50,
-      "unit": "con",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.335Z",
+      "created_at": "2026-03-09T16:20:35.138Z",
       "language": "vi"
     }
   },
   {
     "id": "product:9:variant:0",
-    "text": "chân giò giả cầy danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 59 don vi phần mo ta giả cầy là món ăn đặc trưng của người việt, thường được làm từ chân giò heo với các nguyên liệu và gia vị tẩm ướp để mang lại hương vị tương tự như thịt cầy. thịt giả cầy mềm ngon mà không bở, thấm đẫm gia vị đậm đà, mùi thơm rất hấp dẫn. để nấu món giả cầy, bạn cần chuẩn bị những nguyên liệu sau: c",
+    "text": "chân giò giả cầy danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 150000.00 ton kho 60 don vi kg mo ta chân giò heo nấu giả cầy hương vị bắc",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 9,
       "name": "Chân giò giả cầy",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 1kg",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "150000.00",
-      "stock": 59,
-      "unit": "phần",
+      "stock": 60,
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.336Z",
+      "created_at": "2026-03-09T16:20:35.140Z",
       "language": "vi"
     }
   },
   {
     "id": "product:10:variant:0",
-    "text": "tai heo cuộn lưỡi danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 145000.00 ton kho 65 don vi phần mo ta tai heo cuộn lưỡi món ngon giòn dai đậm đà tai heo cuộn lưỡi là một món ăn độc đáo, hấp dẫn với sự kết hợp hoàn hảo giữa tai heo giòn sần sật và lưỡi heo mềm dai. món ăn này không chỉ có hương vị thơm ngon mà còn có hình thức đẹp mắt, thích hợp để làm món nhậu, món khai vị trong các bữa tiệc hoặc đơ",
+    "text": "tai heo cuộn lưỡi danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 145000.00 ton kho 65 don vi kg mo ta tai heo cuộn lưỡi giòn dai hấp dẫn",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 10,
       "name": "Tai heo cuộn lưỡi",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 1kg",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "145000.00",
       "stock": 65,
-      "unit": "phần",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.337Z",
+      "created_at": "2026-03-09T16:20:35.144Z",
       "language": "vi"
     }
   },
   {
     "id": "product:11:variant:0",
-    "text": "tai heo ủ muối danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 145000.00 ton kho 65 don vi gói mo ta tai heo ủ muối là món ăn của người á đông. tai heo ủ muối có màu nâu cánh gián, mùi thơm hấp dẫn bởi xì dầu cùng các gia vị thảo mộc. đặc biệt, thịt tai heo mềm mọng, sụn giòn tan, hương vị đậm đà thấm đều gia vị, ăn kèm với cơm nóng, làm nộm, salad hay nhậu cùng rau thơm đều rất ngon. tai heo được",
+    "text": "tai heo ủ muối danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 145000.00 ton kho 65 don vi kg mo ta tai heo ủ muối thơm ngon",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 11,
       "name": "Tai heo ủ muối",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Gói 500g",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "145000.00",
       "stock": 65,
-      "unit": "gói",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.338Z",
+      "created_at": "2026-03-09T16:20:35.146Z",
       "language": "vi"
     }
   },
   {
     "id": "product:12:variant:0",
-    "text": "tai heo ủ xì dầu danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 60 don vi gói mo ta tai heo ủ xì dầu là món ăn của người á đông. tai heo ủ xì dầu có màu nâu cánh gián, mùi thơm hấp dẫn bởi xì dầu cùng các gia vị thảo mộc. đặc biệt, thịt tai heo mềm mọng, sụn giòn tan, hương vị đậm đà thấm đều gia vị, ăn kèm với cơm nóng, làm nộm, salad hay nhậu cùng rau thơm đều rất ngon. tai heo đ",
+    "text": "tai heo ủ xì dầu danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 150000.00 ton kho 60 don vi kg mo ta tai heo ủ xì dầu chuẩn vị",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 12,
       "name": "Tai heo ủ xì dầu",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Gói 500g",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
       "price": "150000.00",
       "stock": 60,
-      "unit": "gói",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.339Z",
+      "created_at": "2026-03-09T16:20:35.149Z",
       "language": "vi"
     }
   },
   {
     "id": "product:13:variant:0",
-    "text": "thịt chưng mắm tép danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 80000.00 ton kho 100 don vi hộp mo ta thịt chưng mắm tép đậm đà hương vị quê nhà mắm tép chưng thịt món ăn dân dã mà quyến rũ đến lạ, gói trọn cả hồn quê trong từng hạt gạo trắng. được làm từ mắm tép lên men tự nhiên, kết hợp với thịt ba chỉ tuyển chọn xào chung với sả, tỏi, hành khô, ớt hiểm và chút đường mật mía tạo nên một hỗn hợp sề",
+    "text": "thịt chưng mắm tép danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 80000.00 ton kho 100 don vi hũ mo ta thịt chưng mắm tép đặc sản hà nội",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 13,
       "name": "Thịt chưng mắm tép",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Hộp 1kg",
+      "variant_name": "Hũ 200g",
       "variant_index": 0,
       "price": "80000.00",
       "stock": 100,
-      "unit": "hộp",
+      "unit": "hũ",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.340Z",
+      "created_at": "2026-03-09T16:20:35.151Z",
       "language": "vi"
     }
   },
   {
     "id": "product:14:variant:0",
-    "text": "nem lụi nha trang danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 100000.00 ton kho 50 don vi xiên mo ta nem lụi nha trang là một trong những món ăn trứ danh của thành phố biển. món ăn có nguồn gốc xuất phát từ ninh hòa một thị xã nằm ở phía bắc tỉnh khánh hòa và cách thành phố nha trang khoảng 30km. nem lụi nha trang từ lâu đã trở thành đặc sản ẩm thực làm du khách luôn cảm thấy ấn tượng và ghi nhớ. đ",
+    "text": "nem lụi nha trang danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 80000.00 ton kho 80 don vi que mo ta nem lụi nướng chuẩn vị nha trang",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 14,
       "name": "Nem lụi Nha Trang",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 10 xiên",
+      "variant_name": "Que 200g",
       "variant_index": 0,
-      "price": "100000.00",
-      "stock": 50,
-      "unit": "xiên",
+      "price": "80000.00",
+      "stock": 80,
+      "unit": "que",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.341Z",
+      "created_at": "2026-03-09T16:20:35.154Z",
       "language": "vi"
     }
   },
   {
     "id": "product:15:variant:0",
-    "text": "nem rán hà nội danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 80000.00 ton kho 40 don vi phần mo ta nem hà nội, hay còn gọi là nem rán, là một món ăn truyền thống nổi tiếng của thủ đô, được biết đến với hương vị thơm ngon và cách chế biến tinh tế. món ăn này thường xuất hiện trong các dịp lễ, tết và bữa cơm gia đình, là niềm tự hào của ẩm thực hà nội. nguyên liệu chính để làm nem hà nội gồm thịt l",
+    "text": "nem rán hà nội danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 110000.00 ton kho 89 don vi gói mo ta nem rán hà nội giòn rụm",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 15,
       "name": "Nem rán Hà Nội",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 10 chiếc",
+      "variant_name": "Gói 500g",
       "variant_index": 0,
-      "price": "80000.00",
-      "stock": 40,
-      "unit": "phần",
+      "price": "110000.00",
+      "stock": 89,
+      "unit": "gói",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.342Z",
+      "created_at": "2026-03-09T16:20:35.157Z",
       "language": "vi"
     }
   },
   {
     "id": "product:16:variant:0",
-    "text": "đặc sản chả cốm hà nội danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 120000.00 ton kho 80 don vi gói mo ta chả cốm hà nội là một trong những món ăn đặc trưng, mang đậm hương vị của đất kinh kỳ. món ăn này là sự kết hợp hoàn hảo giữa hương thơm dịu dàng của cốm non đặc sản nổi tiếng của hà nội và vị béo ngậy của thịt xay nhuyễn, hòa quyện với các loại gia vị truyền thống. nguyên liệu chính để làm chả cốm",
+    "text": "đặc sản chả cốm hà nội danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 90000.00 ton kho 100 don vi gói mo ta chả cốm truyền thống hà nội",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 16,
       "name": "Đặc sản chả cốm Hà Nội",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Gói 1kg",
+      "variant_name": "Gói 500g",
       "variant_index": 0,
-      "price": "120000.00",
-      "stock": 80,
+      "price": "90000.00",
+      "stock": 100,
       "unit": "gói",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.343Z",
+      "created_at": "2026-03-09T16:20:35.159Z",
       "language": "vi"
     }
   },
   {
     "id": "product:17:variant:0",
-    "text": "khâu nhục lạng sơn danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 125000.00 ton kho 60 don vi phần mo ta khâu nhục lạng sơn là một món ăn đặc sản nổi tiếng của lạng sơn, việt nam. món ăn này được chế biến từ thịt lợn và các gia vị như tàu soi, tàu xì, hồi, quế, thảo quả, địa liền được xay nhuyễn. quá trình chế biến khâu nhục lạng sơn vô cùng cầu kỳ với nhiều công đoạn, mỗi công đoạn lại đòi hỏi một yêu",
+    "text": "khâu nhục lạng sơn danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 125000.00 ton kho 60 don vi hộp mo ta đặc sản khâu nhục thơm mềm",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 17,
       "name": "Khâu nhục Lạng Sơn",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 500g",
+      "variant_name": "Hộp 500g",
       "variant_index": 0,
       "price": "125000.00",
       "stock": 60,
-      "unit": "phần",
+      "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.345Z",
+      "created_at": "2026-03-09T16:20:35.162Z",
       "language": "vi"
     }
   },
   {
     "id": "product:18:variant:0",
-    "text": "đặc sản chả chìa hải phòng danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 120000.00 ton kho 60 don vi xiên mo ta chả chìa hải phòng là một đặc sản ẩm thực nổi tiếng của thành phố cảng hải phòng. món ăn này được chế biến từ thịt lợn băm nhuyễn, trộn với gia vị như hành, tỏi, tiêu, mắm tôm và nấm hương. thịt sau đó được gói quanh những thanh mía nhỏ, tạo nên hình dáng như chiếc chìa. chả chìa được nướng trên bếp",
+    "text": "đặc sản chả chìa hải phòng danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 165000.00 ton kho 70 don vi kg mo ta đặc sản chả chìa hải phòng",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 18,
       "name": "Đặc sản chả chìa Hải Phòng",
       "category": "Sản phẩm từ heo",
-      "variant_name": "Phần 10 xiên",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
-      "price": "120000.00",
-      "stock": 60,
-      "unit": "xiên",
+      "price": "165000.00",
+      "stock": 70,
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.348Z",
+      "created_at": "2026-03-09T16:20:35.164Z",
       "language": "vi"
     }
   },
   {
     "id": "product:19:variant:0",
-    "text": "đặc sản chả sụn danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 60 don vi gói mo ta chả sụn là món ăn truyền thống của việt nam, được làm từ thịt heo và sụn ức gà. thịt heo và sụn ức gà được xay nhuyễn, trộn đều với gia vị như tiêu, nước mắm, mỡ heo sau đó, hỗn hợp được đóng thành từng miếng chả, hấp chín. chả sụn thơm ngon, giòn, ăn kèm với bún, rau sống, dưa leo, giá, và nước mắm",
+    "text": "đặc sản chả sụn danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 150000.00 ton kho 60 don vi gói mo ta chả sụn giòn tan hấp dẫn",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -413,13 +375,13 @@
       "stock": 60,
       "unit": "gói",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.350Z",
+      "created_at": "2026-03-09T16:20:35.167Z",
       "language": "vi"
     }
   },
   {
     "id": "product:20:variant:0",
-    "text": "xúc xích cốm danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 60000.00 ton kho 120 don vi gói mo ta xúc xích cốm là sự sáng tạo độc đáo, kết hợp giữa hương vị truyền thống của cốm hà nội và phong cách hiện đại của xúc xích. món ăn này có lớp vỏ giòn dai, nhân thịt mềm mịn quyện với cốm xanh thơm dẻo, tạo nên hương vị ngọt bùi, hấp dẫn. xúc xích cốm không chỉ là món ăn vặt thú vị mà còn phù hợp làm",
+    "text": "xúc xích cốm danh muc sản phẩm từ heo nha cung cap công ty xyz xuat xu việt nam gia 90000.00 ton kho 120 don vi gói mo ta xúc xích vị cốm hà nội độc đáo",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -428,36 +390,17 @@
       "category": "Sản phẩm từ heo",
       "variant_name": "Gói 500g",
       "variant_index": 0,
-      "price": "60000.00",
+      "price": "90000.00",
       "stock": 120,
       "unit": "gói",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.351Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:20:variant:1",
-    "text": "xúc xích cốm danh muc sản phẩm từ heo nha cung cap công ty abc xuat xu việt nam gia 110000.00 ton kho 100 don vi gói mo ta xúc xích cốm là sự sáng tạo độc đáo, kết hợp giữa hương vị truyền thống của cốm hà nội và phong cách hiện đại của xúc xích. món ăn này có lớp vỏ giòn dai, nhân thịt mềm mịn quyện với cốm xanh thơm dẻo, tạo nên hương vị ngọt bùi, hấp dẫn. xúc xích cốm không chỉ là món ăn vặt thú vị mà còn phù hợp làm",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 20,
-      "name": "Xúc xích cốm",
-      "category": "Sản phẩm từ heo",
-      "variant_name": "Gói 1kg",
-      "variant_index": 1,
-      "price": "110000.00",
-      "stock": 100,
-      "unit": "gói",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.352Z",
+      "created_at": "2026-03-09T16:20:35.170Z",
       "language": "vi"
     }
   },
   {
     "id": "product:21:variant:0",
-    "text": "chả cá thác lác hậu giang danh muc sản phẩm từ cá nha cung cap công ty abc xuat xu việt nam gia 120000.00 ton kho 80 don vi kg mo ta chả cá thác lác hậu giang là món ăn đặc sản nổi tiếng, mang đậm dấu ấn ẩm thực của miền tây sông nước. được làm từ cá thác lác tươi ngon loài cá đặc trưng của vùng hậu giang, chả cá nổi bật với vị ngọt tự nhiên, dai mềm đặc trưng và hương thơm hấp dẫn. quá trình chế biến chả cá thác lác đòi hỏi sự k",
+    "text": "chả cá thác lác hậu giang danh muc sản phẩm từ cá nha cung cap công ty xyz xuat xu việt nam gia 120000.00 ton kho 80 don vi kg mo ta đặc sản chả cá thác lác hậu giang",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -470,13 +413,13 @@
       "stock": 80,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.352Z",
+      "created_at": "2026-03-09T16:20:35.175Z",
       "language": "vi"
     }
   },
   {
     "id": "product:22:variant:0",
-    "text": "chả cá thác lác tươi danh muc sản phẩm từ cá nha cung cap công ty abc xuat xu việt nam gia 115000.00 ton kho 75 don vi kg mo ta chả cá thác lác tươi là đặc sản nổi tiếng của miền hậu giang, mang hương vị tự nhiên, tươi ngon và đặc trưng. cá thác lác được chọn lọc kỹ lưỡng, đảm bảo độ tươi, sau đó làm sạch, quết nhuyễn với gia vị truyền thống như tiêu, thì là, hành tím để tạo nên những miếng chả dai mềm, thơm ngọt. chả cá thá",
+    "text": "chả cá thác lác tươi danh muc sản phẩm từ cá nha cung cap công ty xyz xuat xu việt nam gia 115000.00 ton kho 75 don vi kg mo ta chả cá thác lác tươi dai mềm",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -489,13 +432,13 @@
       "stock": 75,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.354Z",
+      "created_at": "2026-03-09T16:20:35.178Z",
       "language": "vi"
     }
   },
   {
     "id": "product:23:variant:0",
-    "text": "chả cá thác lác tươi tẩm gia vị danh muc sản phẩm từ cá nha cung cap công ty abc xuat xu việt nam gia 125000.00 ton kho 70 don vi kg mo ta chả cá thác lác tươi là đặc sản nổi tiếng của miền hậu giang, mang hương vị tự nhiên, tươi ngon và đặc trưng. cá thác lác được chọn lọc kỹ lưỡng, đảm bảo độ tươi, sau đó làm sạch, quết nhuyễn với gia vị truyền thống như tiêu, thì là, hành tím để tạo nên những miếng chả dai mềm, thơm ngọt. chả cá thá",
+    "text": "chả cá thác lác tươi tẩm gia vị danh muc sản phẩm từ cá nha cung cap công ty xyz xuat xu việt nam gia 125000.00 ton kho 70 don vi kg mo ta chả cá thác lác ướp sẵn tiện dụng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -508,89 +451,89 @@
       "stock": 70,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.355Z",
+      "created_at": "2026-03-09T16:20:35.181Z",
       "language": "vi"
     }
   },
   {
     "id": "product:24:variant:0",
-    "text": "chả mực hạ long danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 175000.00 ton kho 50 don vi gói mo ta chả mực hạ long được làm từ mực tươi thường là mực mai, mực đánh bắt ở vùng biển hạ long , được giã nhuyễn thủ công hoặc xay , trộn với gia vị tỏi, tiêu, mắm, có thể có mỡ , sau đó viên hoặc ép thành miếng rồi mang đi chiên cho đến khi vàng đều. khi chiên lên, chả có vỏ ngoài giòn vàng, bên trong mự",
+    "text": "chả mực hạ long danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 230000.00 ton kho 50 don vi kg mo ta đặc sản chả mực giã tay hạ long",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 24,
       "name": "Chả mực Hạ Long",
       "category": "Hải sản",
-      "variant_name": "Gói 500g",
+      "variant_name": "Gói 0.5kg",
       "variant_index": 0,
-      "price": "175000.00",
+      "price": "230000.00",
       "stock": 50,
-      "unit": "gói",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.356Z",
+      "created_at": "2026-03-09T16:20:35.186Z",
       "language": "vi"
     }
   },
   {
     "id": "product:25:variant:0",
-    "text": "chả mo ghẹ danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 50000.00 ton kho 60 don vi khay mo ta chả ghẹ thường làm từ phần thịt ghẹ có khi gỡ từ mai càng ghẹ trộn với gia vị, có thể thêm một số nguyên liệu phụ như thịt, bún tàu, hành tây để tạo độ dẻo, thơm và dễ nặn ép. có loại nhồi mai ghẹ loại gọi là ghẹ farci : người ta bóc thịt ghẹ trộn hỗn hợp gia vị rồi nhồi lại vào mai ghẹ, đóng khay v",
+    "text": "chả mo ghẹ danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 200000.00 ton kho 60 don vi kg mo ta chả mo ghẹ thơm béo",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 25,
       "name": "Chả mo ghẹ",
       "category": "Hải sản",
-      "variant_name": "Khay 300g",
+      "variant_name": "Gói 0.5kg",
       "variant_index": 0,
-      "price": "50000.00",
+      "price": "200000.00",
       "stock": 60,
-      "unit": "khay",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.357Z",
+      "created_at": "2026-03-09T16:20:35.190Z",
       "language": "vi"
     }
   },
   {
     "id": "product:26:variant:0",
-    "text": "nem hải sản danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 160000.00 ton kho 80 don vi hộp mo ta nem hải sản thường làm từ hỗn hợp nhân hải sản tôm, mực, bề bề, thịt ghẹ tùy nơi , đôi khi thêm rau củ, trứng, gia vị, bún tàu... sau đó cuốn trong bánh đa nem hoặc lớp vỏ bánh giòn, rồi đem chiên vàng đến khi vỏ giòn rụm, nhân bên trong mềm, ngọt vị hải sản. khi ăn, nem hải sản thường giòn ngoài và",
+    "text": "nem hải sản danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 170000.00 ton kho 80 don vi kg mo ta nem hải sản tươi ngon, giòn rụm",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 26,
       "name": "Nem hải sản",
       "category": "Hải sản",
-      "variant_name": "Hộp 12 cái",
+      "variant_name": "Phần 0.5kg",
       "variant_index": 0,
-      "price": "160000.00",
+      "price": "170000.00",
       "stock": 80,
-      "unit": "hộp",
+      "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.358Z",
+      "created_at": "2026-03-09T16:20:35.193Z",
       "language": "vi"
     }
   },
   {
     "id": "product:27:variant:0",
-    "text": "chả cá mỏng danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 120000.00 ton kho 80 don vi kg mo ta chả cá mỏng là loại chả được làm từ phần thịt cá tươi thường là cá thu, cá thác lác hoặc cá biển tùy vùng , xay hoặc giã nhuyễn rồi trộn cùng gia vị vừa ăn. hỗn hợp này sau đó được ép thành những miếng chả mỏng, tròn hoặc dẹp và đem chiên vàng đều. nhờ được ép mỏng, chả cá khi chiên lên có lớp ngoài",
+    "text": "chả cá mỏng danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 120000.00 ton kho 100 don vi kg mo ta chả cá mỏng giòn ngon, chiên sẵn",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 27,
       "name": "Chả cá mỏng",
       "category": "Hải sản",
-      "variant_name": "Gói 500g",
+      "variant_name": "Gói 0.5kg",
       "variant_index": 0,
       "price": "120000.00",
-      "stock": 80,
+      "stock": 100,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.359Z",
+      "created_at": "2026-03-09T16:20:35.197Z",
       "language": "vi"
     }
   },
   {
     "id": "product:28:variant:0",
-    "text": "chả cá mực tôm danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 135000.00 ton kho 90 don vi kg mo ta chả cá mực tôm tươi ngon",
+    "text": "chả cá mực tôm danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 135000.00 ton kho 90 don vi kg mo ta chả cá mực tôm tươi ngon",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -603,13 +546,13 @@
       "stock": 90,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.361Z",
+      "created_at": "2026-03-09T16:20:35.200Z",
       "language": "vi"
     }
   },
   {
     "id": "product:29:variant:0",
-    "text": "chả cá danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 115000.00 ton kho 85 don vi kg mo ta chả cá làm từ cá tươi trong ngày",
+    "text": "chả cá danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 115000.00 ton kho 85 don vi kg mo ta chả cá làm từ cá tươi trong ngày",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -622,13 +565,13 @@
       "stock": 85,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.362Z",
+      "created_at": "2026-03-09T16:20:35.202Z",
       "language": "vi"
     }
   },
   {
     "id": "product:30:variant:0",
-    "text": "chả tôm danh muc hải sản nha cung cap công ty abc xuat xu việt nam gia 125000.00 ton kho 70 don vi kg mo ta chả tôm thơm ngon bổ dưỡng",
+    "text": "chả tôm danh muc hải sản nha cung cap công ty xyz xuat xu việt nam gia 125000.00 ton kho 70 don vi kg mo ta chả tôm thơm ngon bổ dưỡng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -641,13 +584,13 @@
       "stock": 70,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.364Z",
+      "created_at": "2026-03-09T16:20:35.205Z",
       "language": "vi"
     }
   },
   {
     "id": "product:31:variant:0",
-    "text": "hạnh nhân sấy danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 100000.00 ton kho 100 don vi túi mo ta hạnh nhân sấy giòn, dinh dưỡng cao",
+    "text": "hạnh nhân sấy danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 100000.00 ton kho 100 don vi túi mo ta hạnh nhân sấy giòn, dinh dưỡng cao",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -660,13 +603,13 @@
       "stock": 100,
       "unit": "túi",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.365Z",
+      "created_at": "2026-03-09T16:20:35.208Z",
       "language": "vi"
     }
   },
   {
     "id": "product:32:variant:0",
-    "text": "hạt điều bể sữa danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 110000.00 ton kho 100 don vi hộp mo ta hạt điều rang sữa béo nhẹ",
+    "text": "hạt điều bể sữa danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 110000.00 ton kho 100 don vi hộp mo ta hạt điều rang sữa béo nhẹ",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -679,13 +622,13 @@
       "stock": 100,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.366Z",
+      "created_at": "2026-03-09T16:20:35.210Z",
       "language": "vi"
     }
   },
   {
     "id": "product:33:variant:0",
-    "text": "hạt điều xếp hoa danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 120000.00 ton kho 90 don vi hộp mo ta hạt điều sấy xếp hình hoa sang trọng",
+    "text": "hạt điều xếp hoa danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 120000.00 ton kho 90 don vi hộp mo ta hạt điều sấy xếp hình hoa sang trọng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -698,13 +641,13 @@
       "stock": 90,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.366Z",
+      "created_at": "2026-03-09T16:20:35.212Z",
       "language": "vi"
     }
   },
   {
     "id": "product:34:variant:0",
-    "text": "hạt macca vip danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 150000.00 ton kho 80 don vi túi mo ta hạt macca loại thượng hạng",
+    "text": "hạt macca vip danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 150000.00 ton kho 80 don vi túi mo ta hạt macca loại thượng hạng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -717,13 +660,13 @@
       "stock": 80,
       "unit": "túi",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.367Z",
+      "created_at": "2026-03-09T16:20:35.215Z",
       "language": "vi"
     }
   },
   {
     "id": "product:35:variant:0",
-    "text": "hạt óc chó đỏ danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 130000.00 ton kho 90 don vi hộp mo ta hạt óc chó đỏ bổ dưỡng",
+    "text": "hạt óc chó đỏ danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 130000.00 ton kho 90 don vi hộp mo ta hạt óc chó đỏ bổ dưỡng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -736,13 +679,13 @@
       "stock": 90,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.368Z",
+      "created_at": "2026-03-09T16:20:35.218Z",
       "language": "vi"
     }
   },
   {
     "id": "product:36:variant:0",
-    "text": "hạt óc chó vàng danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 130000.00 ton kho 88 don vi hộp mo ta hạt óc chó vàng vị bùi béo",
+    "text": "hạt óc chó vàng danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 130000.00 ton kho 90 don vi hộp mo ta hạt óc chó vàng vị bùi béo",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -752,35 +695,35 @@
       "variant_name": "Hộp 300g",
       "variant_index": 0,
       "price": "130000.00",
-      "stock": 88,
+      "stock": 90,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.369Z",
+      "created_at": "2026-03-09T16:20:35.222Z",
       "language": "vi"
     }
   },
   {
     "id": "product:37:variant:0",
-    "text": "mix hạt danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 175000.00 ton kho 90 don vi túi mo ta hỗn hợp các loại hạt dinh dưỡng",
+    "text": "mix hạt danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 110000.00 ton kho 90 don vi túi mo ta hỗn hợp các loại hạt dinh dưỡng",
     "metadata": {
       "type": "product",
       "source": "products",
       "id": 37,
       "name": "Mix hạt",
       "category": "Các loại hạt",
-      "variant_name": "Túi 500g",
+      "variant_name": "Túi 250g",
       "variant_index": 0,
-      "price": "175000.00",
+      "price": "110000.00",
       "stock": 90,
       "unit": "túi",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.370Z",
+      "created_at": "2026-03-09T16:20:35.225Z",
       "language": "vi"
     }
   },
   {
     "id": "product:38:variant:0",
-    "text": "thanh rong biển kẹp hạt danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 85000.00 ton kho 100 don vi hộp mo ta thanh rong biển kết hợp hạt dinh dưỡng",
+    "text": "thanh rong biển kẹp hạt danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 85000.00 ton kho 100 don vi hộp mo ta thanh rong biển kết hợp hạt dinh dưỡng",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -793,13 +736,13 @@
       "stock": 100,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.370Z",
+      "created_at": "2026-03-09T16:20:35.228Z",
       "language": "vi"
     }
   },
   {
     "id": "product:39:variant:0",
-    "text": "xoài sấy dẻo danh muc thực phẩm khác nha cung cap công ty abc xuat xu việt nam gia 90000.00 ton kho 100 don vi túi mo ta xoài sấy dẻo chua ngọt tự nhiên",
+    "text": "xoài sấy dẻo danh muc thực phẩm khác nha cung cap công ty xyz xuat xu việt nam gia 90000.00 ton kho 100 don vi túi mo ta xoài sấy dẻo chua ngọt tự nhiên",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -812,13 +755,13 @@
       "stock": 100,
       "unit": "túi",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.371Z",
+      "created_at": "2026-03-09T16:20:35.230Z",
       "language": "vi"
     }
   },
   {
     "id": "product:40:variant:0",
-    "text": "bánh thanh hạnh nhân danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 90000.00 ton kho 80 don vi hộp mo ta bánh thanh hạnh nhân giòn tan",
+    "text": "bánh thanh hạnh nhân danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 90000.00 ton kho 80 don vi hộp mo ta bánh thanh hạnh nhân giòn tan",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -831,13 +774,13 @@
       "stock": 80,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.372Z",
+      "created_at": "2026-03-09T16:20:35.233Z",
       "language": "vi"
     }
   },
   {
     "id": "product:41:variant:0",
-    "text": "bánh thuyền hạnh nhân danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 95000.00 ton kho 80 don vi hộp mo ta bánh thuyền hạnh nhân thơm béo",
+    "text": "bánh thuyền hạnh nhân danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 95000.00 ton kho 80 don vi hộp mo ta bánh thuyền hạnh nhân thơm béo",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -850,13 +793,13 @@
       "stock": 80,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.373Z",
+      "created_at": "2026-03-09T16:20:35.238Z",
       "language": "vi"
     }
   },
   {
     "id": "product:42:variant:0",
-    "text": "bánh thuyền macca danh muc các loại hạt nha cung cap công ty abc xuat xu việt nam gia 99000.00 ton kho 70 don vi hộp mo ta bánh thuyền nhân macca cao cấp",
+    "text": "bánh thuyền macca danh muc các loại hạt nha cung cap công ty xyz xuat xu việt nam gia 99000.00 ton kho 70 don vi hộp mo ta bánh thuyền nhân macca cao cấp",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -869,13 +812,32 @@
       "stock": 70,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.375Z",
+      "created_at": "2026-03-09T16:20:35.240Z",
+      "language": "vi"
+    }
+  },
+  {
+    "id": "product:43:variant:0",
+    "text": "ruốc tôm danh muc các loại ruốc nha cung cap công ty xyz xuat xu việt nam gia 60000.00 ton kho 150 don vi hũ mo ta ruốc tôm vàng giòn",
+    "metadata": {
+      "type": "product",
+      "source": "products",
+      "id": 43,
+      "name": "Ruốc tôm",
+      "category": "Các loại ruốc",
+      "variant_name": "Hũ 100g",
+      "variant_index": 0,
+      "price": "60000.00",
+      "stock": 150,
+      "unit": "hũ",
+      "origin": "Việt Nam",
+      "created_at": "2026-03-09T16:20:35.243Z",
       "language": "vi"
     }
   },
   {
     "id": "product:44:variant:0",
-    "text": "ruốc bề bề danh muc các loại ruốc nha cung cap công ty abc xuat xu việt nam gia 65000.00 ton kho 130 don vi hũ mo ta ruốc bề bề đặc sản biển",
+    "text": "ruốc bề bề danh muc các loại ruốc nha cung cap công ty xyz xuat xu việt nam gia 65000.00 ton kho 130 don vi hũ mo ta ruốc bề bề đặc sản biển",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -888,13 +850,13 @@
       "stock": 130,
       "unit": "hũ",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.375Z",
+      "created_at": "2026-03-09T16:20:35.245Z",
       "language": "vi"
     }
   },
   {
     "id": "product:45:variant:0",
-    "text": "ruốc tôm rong biển danh muc các loại ruốc nha cung cap công ty abc xuat xu việt nam gia 75000.00 ton kho 100 don vi hũ mo ta ruốc tôm kết hợp rong biển",
+    "text": "ruốc tôm rong biển danh muc các loại ruốc nha cung cap công ty xyz xuat xu việt nam gia 75000.00 ton kho 100 don vi hũ mo ta ruốc tôm kết hợp rong biển",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -907,13 +869,13 @@
       "stock": 100,
       "unit": "hũ",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.376Z",
+      "created_at": "2026-03-09T16:20:35.248Z",
       "language": "vi"
     }
   },
   {
     "id": "product:46:variant:0",
-    "text": "ruốc cá thu danh muc các loại ruốc nha cung cap công ty abc xuat xu việt nam gia 70000.00 ton kho 120 don vi hũ mo ta ruốc cá thu thơm ngon",
+    "text": "ruốc cá thu danh muc các loại ruốc nha cung cap công ty xyz xuat xu việt nam gia 70000.00 ton kho 120 don vi hũ mo ta ruốc cá thu thơm ngon",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -926,13 +888,13 @@
       "stock": 120,
       "unit": "hũ",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.377Z",
+      "created_at": "2026-03-09T16:20:35.250Z",
       "language": "vi"
     }
   },
   {
     "id": "product:47:variant:0",
-    "text": "chả ốc ống nứa danh muc thực phẩm khác nha cung cap công ty abc xuat xu việt nam gia 160000.00 ton kho 60 don vi kg mo ta chả ốc hấp trong ống nứa độc đáo",
+    "text": "chả ốc ống nứa danh muc thực phẩm khác nha cung cap công ty xyz xuat xu việt nam gia 160000.00 ton kho 60 don vi kg mo ta chả ốc hấp trong ống nứa độc đáo",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -945,13 +907,13 @@
       "stock": 60,
       "unit": "kg",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.378Z",
+      "created_at": "2026-03-09T16:20:35.253Z",
       "language": "vi"
     }
   },
   {
     "id": "product:48:variant:0",
-    "text": "gân bò trộn rau tiến vua danh muc thực phẩm khác nha cung cap công ty abc xuat xu việt nam gia 130000.00 ton kho 70 don vi hộp mo ta gân bò trộn rau tiến vua giòn mát",
+    "text": "gân bò trộn rau tiến vua danh muc thực phẩm khác nha cung cap công ty xyz xuat xu việt nam gia 130000.00 ton kho 70 don vi hộp mo ta gân bò trộn rau tiến vua giòn mát",
     "metadata": {
       "type": "product",
       "source": "products",
@@ -964,311 +926,65 @@
       "stock": 70,
       "unit": "hộp",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.379Z",
+      "created_at": "2026-03-09T16:20:35.255Z",
       "language": "vi"
     }
   },
   {
-    "id": "product:50:variant:0",
-    "text": "mọc ốc danh muc thực phẩm khác nha cung cap công ty abc xuat xu việt nam gia 110000.00 ton kho 80 don vi gói mo ta viên mọc ốc là một đặc sản ẩm thực độc đáo và hấp dẫn của ẩm thực việt nam. món ăn này không chỉ mang đậm hương vị quê hương mà còn thể hiện sự sáng tạo và khéo léo của người dân việt. viên mọc ốc khi chín có màu sắc bắt mắt, hương vị đậm đà, hòa quyện giữa vị ngọt tự nhiên của ốc và mùi thơm của lá",
+    "id": "product:49:variant:0",
+    "text": "mọc ốc danh muc thực phẩm khác nha cung cap công ty xyz xuat xu việt nam gia 110000.00 ton kho 80 don vi gói mo ta mọc ốc hấp dẫn, ăn kèm bún",
     "metadata": {
       "type": "product",
       "source": "products",
-      "id": 50,
+      "id": 49,
       "name": "Mọc ốc",
       "category": "Thực phẩm khác",
-      "variant_name": "Gói 500g",
+      "variant_name": "Gói 250g",
       "variant_index": 0,
       "price": "110000.00",
       "stock": 80,
       "unit": "gói",
       "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.382Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:51:variant:0",
-    "text": "ruốc tôm danh muc các loại ruốc nha cung cap công ty abc xuat xu việt nam gia 65000.00 ton kho 64 don vi hộp mo ta ruốc tôm là món đặc sản được làm từ những con tôm tươi được bóc vỏ, xay hoặc giã nhỏ, sau đó đảo sên cùng gia vị cho đến khi tơi bông, khô ráo và vàng thơm. nhờ nguyên liệu là tôm biển tự nhiên, ruốc có vị ngọt thanh, thơm đặc trưng, màu cam hồng đẹp mắt và không bị bã như ruốc làm từ nguyên liệu ké",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 51,
-      "name": "Ruốc tôm",
-      "category": "Các loại ruốc",
-      "variant_name": "Hộp 200g",
-      "variant_index": 0,
-      "price": "65000.00",
-      "stock": 64,
-      "unit": "hộp",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.383Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "product:51:variant:1",
-    "text": "ruốc tôm danh muc các loại ruốc nha cung cap công ty abc xuat xu việt nam gia 160000.00 ton kho 80 don vi hộp mo ta ruốc tôm là món đặc sản được làm từ những con tôm tươi được bóc vỏ, xay hoặc giã nhỏ, sau đó đảo sên cùng gia vị cho đến khi tơi bông, khô ráo và vàng thơm. nhờ nguyên liệu là tôm biển tự nhiên, ruốc có vị ngọt thanh, thơm đặc trưng, màu cam hồng đẹp mắt và không bị bã như ruốc làm từ nguyên liệu ké",
-    "metadata": {
-      "type": "product",
-      "source": "products",
-      "id": 51,
-      "name": "Ruốc tôm",
-      "category": "Các loại ruốc",
-      "variant_name": "Hộp 500g",
-      "variant_index": 1,
-      "price": "160000.00",
-      "stock": 80,
-      "unit": "hộp",
-      "origin": "Việt Nam",
-      "created_at": "2026-01-08T16:38:19.384Z",
+      "created_at": "2026-03-09T16:20:35.258Z",
       "language": "vi"
     }
   },
   {
     "id": "blog:1::0",
-    "text": "mẹo bảo quản thực phẩm chế biến sẵn\n\np thực phẩm chế biến sẵn cần được bảo quản đúng cách để giữ hương vị và đảm bảo an toàn thực phẩm. p ul li bảo quản trong ngăn mát từ 0 5 c li li không để chung thực phẩm sống li li sử dụng trong vòng 3 5 ngày li ul",
+    "text": "mẹo bảo quản nước ngọt\n\np để nước ngọt luôn ngon, nên bảo quản ở nhiệt độ mát... p",
     "metadata": {
       "type": "blog_chunk",
       "source": "blogs",
       "id": 1,
-      "title": "mẹo bảo quản thực phẩm chế biến sẵn",
+      "title": "mẹo bảo quản nước ngọt",
       "chunk_index": 0,
-      "created_at": "2025-01-05T02:00:00.000Z",
+      "created_at": "2026-01-17T16:10:40.000Z",
       "language": "vi"
     }
   },
   {
     "id": "blog:2::0",
-    "text": "cách chọn chả cá ngon cho bữa cơm gia đình\n\np chả cá ngon thường có màu sáng, mùi thơm tự nhiên và độ dai vừa phải. p p khi mua nên chú ý nguồn gốc và hạn sử dụng. p",
+    "text": "cách pha cà phê ngon\n\np pha cà phê chuẩn cần có nước sôi và tỉ lệ hợp lý... p",
     "metadata": {
       "type": "blog_chunk",
       "source": "blogs",
       "id": 2,
-      "title": "cách chọn chả cá ngon cho bữa cơm gia đình",
+      "title": "cách pha cà phê ngon",
       "chunk_index": 0,
-      "created_at": "2025-01-10T07:30:00.000Z",
+      "created_at": "2026-01-17T16:10:40.000Z",
       "language": "vi"
     }
   },
   {
     "id": "blog:3::0",
-    "text": "top 5 món đặc sản làm quà biếu dịp tết\n\np dưới đây là những món đặc sản rất phù hợp làm quà biếu: p ol li chả mực hạ long li li chả cá thác lác li li ruốc tôm cao cấp li li hạt macca vip li li nem hải sản li ol",
+    "text": "lâm\n\nádasdasdasd div style \"text-align: center; margin: 1rem 0;\" img src \"https: bizweb.dktcdn.net 100 438 408 files hinh-anh-banh-sinh-nhat-dep-yody-vn1.jpg v 1683538791137\" alt \"sdfdf\" style \"max-width: 100 ; border-radius: 4px;\" p style \"margin: 0.5rem 0 0; color: 666; font-size: 14px;\" sdfdf p div",
     "metadata": {
       "type": "blog_chunk",
       "source": "blogs",
       "id": 3,
-      "title": "top 5 món đặc sản làm quà biếu dịp tết",
+      "title": "lâm",
       "chunk_index": 0,
-      "created_at": "2025-01-15T01:20:00.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:4::0",
-    "text": "cách bảo quản thực phẩm chế biến sẵn luôn tươi ngon\n\nthực phẩm chế biến sẵn ngày càng được nhiều gia đình lựa chọn vì sự tiện lợi. tuy nhiên, nếu không bảo quản đúng cách, chất lượng và hương vị sẽ bị ảnh hưởng. img src \"https: res.cloudinary.com dpq4bt42x image upload v1761729699 pate-gan-vit-1 luqpxa.jpg\" alt \"hình ảnh minh hoạ\" style \"max-width: 100 ; margin: 1rem 0; border-radius: 4px;\" bạn nên bảo quản thực phẩm ở nhiệt độ từ 0 5 độ c để giữ được độ tươi. không nên để thực phẩm chín chung với thực phẩm sống trong tủ lạnh. sau khi mở bao bì, nên sử dụng trong vòng 2 3 ngày. hãy dùng hộp đựng kín để tránh ám mùi và vi khuẩn xâm nhập. trước khi sử dụng, cần kiểm tra mùi và màu sắc của sản phẩm. không nên cấp đông lại thực phẩm đã rã đông. việc bảo quản đúng cách giúp đảm bảo an toàn cho sức khỏe gia đình. đây là thói quen nhỏ nhưng rất quan trọng trong sinh hoạt hằng ngày.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 4,
-      "title": "cách bảo quản thực phẩm chế biến sẵn luôn tươi ngon",
-      "chunk_index": 0,
-      "created_at": "2025-12-15T13:26:33.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:5::0",
-    "text": "về chúng tôi\n\nh2 về chúng tôi h2 p strong bếp sạch việt strong ra đời từ tình yêu và niềm đam mê đối với ẩm thực truyền thống của các vùng miền việt nam. được thành lập bởi những người con đất việt, thương hiệu mang theo sứ mệnh kết nối mọi người với tinh hoa ẩm thực quê hương. p p ý tưởng bắt nguồn từ mong muốn mang đến cho người tiêu dùng không chỉ những món đặc sản phong phú, mà còn là sự tiện lợi, an toàn trong từng bữa ăn hàng ngày. p p strong chúng tôi strong những thành viên sáng lập của strong bếp sạch việt strong từng đi khắp các vùng miền, từ tây bắc hùng vĩ đến miền tây sông nước, để khám phá và tuyển chọn những nguyên liệu đặc trưng. trong hành trình ấy, chúng tôi nhận ra rằng mỗi vùng đất đều có những món ăn độc đáo, mang hương vị đặc biệt mà không phải ai cũng có cơ hội được thưởng thức.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 5,
-      "title": "về chúng tôi",
-      "chunk_index": 0,
-      "created_at": "2025-12-18T09:18:02.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:5::1",
-    "text": "nh trình ấy, chúng tôi nhận ra rằng mỗi vùng đất đều có những món ăn độc đáo, mang hương vị đặc biệt mà không phải ai cũng có cơ hội được thưởng thức. p p chính vì vậy, strong bếp sạch việt strong ra đời với mong muốn đưa hương vị đặc sản của mọi miền đến gần hơn với bữa cơm của mỗi gia đình, đồng thời mang đến sự tiện lợi và an toàn thực phẩm. p h3 strong giá trị cốt lõi strong h3 h4 strong 1. chất lượng và an toàn thực phẩm strong h4 p strong bếp sạch việt strong cam kết mang đến những sản phẩm đạt tiêu chuẩn cao nhất về an toàn thực phẩm. mọi nguyên liệu đều được lựa chọn kỹ lưỡng từ các nguồn cung ứng đáng tin cậy, qua quá trình sơ chế và chế biến sạch sẽ, giữ trọn vẹn hương vị tự nhiên của sản phẩm. p h4 strong 2.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 5,
-      "title": "về chúng tôi",
-      "chunk_index": 1,
-      "created_at": "2025-12-18T09:18:02.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:5::2",
-    "text": "họn kỹ lưỡng từ các nguồn cung ứng đáng tin cậy, qua quá trình sơ chế và chế biến sạch sẽ, giữ trọn vẹn hương vị tự nhiên của sản phẩm. p h4 strong 2. tôn vinh giá trị truyền thống strong h4 p thương hiệu không chỉ là cầu nối giữa người tiêu dùng và các món ăn đặc sản, mà còn là đại sứ văn hóa ẩm thực của từng vùng miền. mỗi món ăn của strong bếp sạch việt strong đều mang trong mình câu chuyện về văn hóa, con người và tinh thần của vùng đất nơi món ăn ra đời. p h4 strong 3. tiện lợi và thân thiện với người tiêu dùng strong h4 p sản phẩm của strong bếp sạch việt strong được chế biến sẵn hoặc sơ chế, giúp người dùng tiết kiệm thời gian nấu nướng mà vẫn có thể thưởng thức những món ăn đặc sản như chính tay mình làm. thương hiệu đặt mục tiêu mang đến trải nghiệm ẩm thực tiện lợi nhưng không đánh mất đi giá trị nguyên bản của món ăn. p h4 strong 4.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 5,
-      "title": "về chúng tôi",
-      "chunk_index": 2,
-      "created_at": "2025-12-18T09:18:02.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:5::3",
-    "text": "ính tay mình làm. thương hiệu đặt mục tiêu mang đến trải nghiệm ẩm thực tiện lợi nhưng không đánh mất đi giá trị nguyên bản của món ăn. p h4 strong 4. bền vững và có trách nhiệm strong h4 p strong bếp sạch việt strong hiểu rằng thành công không chỉ đến từ việc kinh doanh hiệu quả, mà còn từ việc bảo vệ môi trường và đóng góp cho cộng đồng. vì thế, thương hiệu luôn chú trọng vào việc sử dụng các nguyên liệu bền vững và phát triển các mô hình kinh doanh có trách nhiệm với xã hội. p h3 strong sứ mệnh strong h3 ul li sứ mệnh của strong bếp sạch việt strong là trở thành nhịp cầu kết nối văn hóa ẩm thực giữa các vùng miền và người tiêu dùng. thương hiệu không chỉ muốn mang đến những món ăn ngon mà còn lan tỏa những giá trị tinh túy của ẩm thực việt nam, giúp mỗi người tiêu dùng, dù ở bất cứ đâu, đều có thể trải nghiệm trọn vẹn hương vị quê hương.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 5,
-      "title": "về chúng tôi",
-      "chunk_index": 3,
-      "created_at": "2025-12-18T09:18:02.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:5::4",
-    "text": "òn lan tỏa những giá trị tinh túy của ẩm thực việt nam, giúp mỗi người tiêu dùng, dù ở bất cứ đâu, đều có thể trải nghiệm trọn vẹn hương vị quê hương. li li với strong bếp sạch việt strong , mỗi bữa ăn không chỉ là thời gian thưởng thức món ngon mà còn là cơ hội để gắn kết gia đình, chia sẻ yêu thương và trân trọng những giá trị truyền thống. trong tương lai, strong bếp sạch việt strong sẽ không ngừng nỗ lực để tiếp tục sứ mệnh này, mở rộng thêm các dòng sản phẩm đặc sản vùng miền, mang đến sự lựa chọn phong phú và tiện lợi cho người tiêu dùng. li ul p strong bếp sạch việt mang hương vị vùng miền đến bếp nhà bạn. strong p",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 5,
-      "title": "về chúng tôi",
-      "chunk_index": 4,
-      "created_at": "2025-12-18T09:18:02.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::0",
-    "text": "tuyển đại lý\n\nh2 chính sách đại lý h2 p strong bếp sạch việt strong là thương hiệu chuyên kinh doanh và phân phối các dòng thực phẩm đặc sản vùng miền cao cấp. chúng tôi mong muốn được hợp tác với các đại lý trên toàn quốc để cùng phát triển hệ thống phân phối bền vững và lâu dài. p p hiện nay, strong bếp sạch việt strong vinh dự là strong nhà phân phối độc quyền strong các dòng sản phẩm đặc sản sau: p ul li phân phối strong thực phẩm đông lạnh strong li li đặc sản chả vịt vân đình li li đặc sản mọc vịt vân đình li li đặc sản chả chân vịt vân đình li li chả sụn li li đặc sản vân đình vịt ủ xì dầu li li đặc sản gà ủ muối li li đặc sản gà ủ xì dầu li li tai heo ủ muối ủ xì dầu li li chân vịt rút xương ủ muối ủ xì dầu li li các sản phẩm strong thực phẩm đông lạnh khác strong sắp ra mắt li ul h3 strong tôn chỉ phân phối strong h3 ul li sẵn sàng chia sẻ lợi nhuận, chia sẻ cơ hội kinh doanh và",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 0,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::1",
-    "text": "thực phẩm đông lạnh khác strong sắp ra mắt li ul h3 strong tôn chỉ phân phối strong h3 ul li sẵn sàng chia sẻ lợi nhuận, chia sẻ cơ hội kinh doanh và đồng hành lâu dài, bền vững cùng đại lý. li li quan tâm, hỗ trợ đại lý và tăng cường hợp tác nhằm nâng cao tính gắn kết. li li bảo vệ tối đa quyền lợi của đại lý trước biến động thị trường. li li bảo vệ khách hàng cho đại lý, đảm bảo tính công bằng trên toàn hệ thống phân phối. li li cùng đại lý mở rộng thị trường và phát triển kênh phân phối. li ul h3 strong điều kiện trở thành đại lý phân phối strong h3 ul li có mặt bằng đủ điều kiện kinh doanh. li li có kho lạnh hoặc tủ đông đảm bảo vệ sinh an toàn thực phẩm. li li cam kết nhập đơn hàng và cam kết doanh số theo tháng quý tùy khu vực . li li đại lý tự quản lý khu vực đã đăng ký với nhà phân phối. li li chủ động xây dựng mạng lưới bán hàng chuyên nghiệp, lành mạnh.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 1,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::2",
-    "text": "g quý tùy khu vực . li li đại lý tự quản lý khu vực đã đăng ký với nhà phân phối. li li chủ động xây dựng mạng lưới bán hàng chuyên nghiệp, lành mạnh. li li các đại lý mở rộng chi nhánh tại địa điểm mới sẽ được nhà phân phối hỗ trợ và bảo vệ theo nguyên tắc ưu tiên. li ul h3 strong chính sách hỗ trợ vận hành strong h3 ul li hỗ trợ kỹ thuật qua điện thoại và hỗ trợ trực tiếp tại chỗ khi có yêu cầu. li li đào tạo, huấn luyện theo chương trình và cấp đại lý tương ứng với từng dòng sản phẩm. li li hỗ trợ đổi hàng trong vòng 7 ngày nếu sản phẩm được xác định lỗi từ nhà sản xuất. li li trả hàng trong trường hợp hàng hóa, giá cả không đúng thỏa thuận mua bán. li li đại lý chịu trách nhiệm vận chuyển hàng hóa và chi phí vận chuyển. li ul h3 strong hợp đồng nguyên tắc công nợ strong h3 ul li sau khi ký hợp đồng, đại lý được đưa vào danh sách ưu đãi của nhà phân phối.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 2,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::3",
-    "text": "í vận chuyển. li ul h3 strong hợp đồng nguyên tắc công nợ strong h3 ul li sau khi ký hợp đồng, đại lý được đưa vào danh sách ưu đãi của nhà phân phối. li li thanh toán 100 trước khi giao hàng. li li trường hợp có bảo lãnh ngân hàng, đại lý được hưởng hạn mức tín dụng từ 40 đến 70 . li li thời hạn công nợ tối đa là 15 ngày. li ul h3 strong chính sách marketing truyền thông strong h3 ul li hỗ trợ catalogue, tờ rơi, banner theo các chương trình của nhà phân phối. li li thông tin đại lý được quảng bá trên website và các kênh truyền thông chính thức. li li được tham gia các chương trình khuyến mãi, thúc đẩy bán hàng. li li cập nhật đầy đủ thông tin về giá cả, sản phẩm và chính sách mới. li ul h3 strong chính sách bảo vệ giá strong h3 ul li chính sách giá được xây dựng nhằm đảm bảo tính cạnh tranh và lợi nhuận cho đại lý.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 3,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::4",
-    "text": "ính sách mới. li ul h3 strong chính sách bảo vệ giá strong h3 ul li chính sách giá được xây dựng nhằm đảm bảo tính cạnh tranh và lợi nhuận cho đại lý. li li bảo vệ giá đối với hàng tồn kho của đại lý khi nhà phân phối điều chỉnh giá. li li thông báo trước tối thiểu 30 45 ngày khi có thay đổi về giá bán. li ul h3 strong bảo vệ khách hàng cho đại lý strong h3 ul li khuyến khích đại lý mở rộng thị trường và phát triển lượng khách hàng. li li khách hàng thuộc đại lý sẽ được nhà phân phối bảo vệ quyền kinh doanh. li li không cạnh tranh không lành mạnh trong toàn hệ thống phân phối. li ul h3 strong chính sách chiết khấu thưởng strong h3 ul li chiết khấu dựa trên doanh số cam kết theo tháng hoặc quý. li li thưởng doanh số khi đại lý đạt hoặc vượt chỉ tiêu đề ra. li li chính sách chiết khấu được áp dụng song song với các chương trình hỗ trợ khác.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 4,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:6::5",
-    "text": "ý. li li thưởng doanh số khi đại lý đạt hoặc vượt chỉ tiêu đề ra. li li chính sách chiết khấu được áp dụng song song với các chương trình hỗ trợ khác. li ul p strong bếp sạch việt strong trân trọng mời quý đối tác cùng hợp tác và phát triển bền vững. p",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 6,
-      "title": "tuyển đại lý",
-      "chunk_index": 5,
-      "created_at": "2025-12-18T10:30:28.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:7::0",
-    "text": "cách nấu chân giò giả cầy\n\nh2 cách nấu chân giò mềm ngon, không hôi chuẩn vị tại nhà h2 p chân giò là món ăn quen thuộc, giàu dinh dưỡng và có thể biến tấu thành nhiều kiểu: hầm, nấu giả cầy, nấu canh măng, hoặc kho. trong bài này, mình hướng dẫn strong cách hầm chân giò strong theo kiểu đơn giản, thơm mềm, nước trong và không bị hôi. p div style \"text-align: center; margin: 1rem 0;\" img src \"https: res.cloudinary.com dpq4bt42x image upload v1767720444 srmzc1vnipwitfzqu9sj.jpg\" alt \"hình minh hoạ\" style \"max-width: 100 ; border-radius: 4px;\" p style \"margin: 0.5rem 0 0; color: 666; font-size: 14px;\" hình minh hoạ p div blockquote em mẹo nhỏ: em khử mùi hôi đúng cách và hầm đủ thời gian là chìa khóa để chân giò mềm mà không ngấy.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 7,
-      "title": "cách nấu chân giò giả cầy",
-      "chunk_index": 0,
-      "created_at": "2026-01-06T17:29:52.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:7::1",
-    "text": "font-size: 14px;\" hình minh hoạ p div blockquote em mẹo nhỏ: em khử mùi hôi đúng cách và hầm đủ thời gian là chìa khóa để chân giò mềm mà không ngấy. blockquote h3 1 chuẩn bị nguyên liệu h3 ul li chân giò: strong 1 1.2kg strong chọn chân trước để nhiều nạc hơn li li gừng: 1 củ, hành tím: 2 củ, hành lá: 2 nhánh li li củ cải trắng hoặc cà rốt: 1 củ tuỳ chọn li li gia vị: muối, nước mắm, hạt nêm, tiêu, đường phèn tuỳ chọn li ul h3 2 sơ chế chân giò để không hôi h3 ol li cạo sạch lông, rửa với muối hạt. li li chần chân giò 3 5 phút với strong gừng đập dập strong hành tím chút muối. li li vớt ra, rửa lại bằng nước ấm để loại bỏ bọt bẩn, giúp nước hầm trong. li ol h3 3 cách hầm chân giò mềm ngon h3 p strong bước 1: strong cho chân giò vào nồi, thêm nước ngập mặt thịt hoặc hơn 2 3cm . p p strong bước 2: strong thêm gừng, hành tím. đun sôi, hạ nhỏ lửa và vớt bọt kỹ.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 7,
-      "title": "cách nấu chân giò giả cầy",
-      "chunk_index": 1,
-      "created_at": "2026-01-06T17:29:52.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:7::2",
-    "text": "trong cho chân giò vào nồi, thêm nước ngập mặt thịt hoặc hơn 2 3cm . p p strong bước 2: strong thêm gừng, hành tím. đun sôi, hạ nhỏ lửa và vớt bọt kỹ. p p strong bước 3: strong hầm khoảng strong 45 60 phút strong tuỳ loại chân giò và bếp . p p strong bước 4: strong cho củ cải cà rốt vào hầm thêm 10 15 phút cho ngọt nước. p p strong bước 5: strong nêm strong nước mắm muối chút tiêu strong cho vừa ăn, tắt bếp. p div style \"padding:12px;border:1px solid e5e7eb;border-radius:10px;background: fafafa;margin:12px 0;\" h4 style \"margin:0 0 6px 0;\" tip để chân giò mềm mà không nát h4 ul style \"margin:0;padding-left:18px;\" li hầm lửa nhỏ, không đun sôi mạnh liên tục. li li vớt bọt thường xuyên để nước trong. li li nêm mắm ở cuối để mùi thơm rõ hơn. li ul div h3 4 gợi ý ăn kèm h3 ul li chấm muối tiêu chanh hoặc nước mắm gừng. li li ăn với bún, rau sống, hoặc cơm nóng.",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 7,
-      "title": "cách nấu chân giò giả cầy",
-      "chunk_index": 2,
-      "created_at": "2026-01-06T17:29:52.000Z",
-      "language": "vi"
-    }
-  },
-  {
-    "id": "blog:7::3",
-    "text": "ắm ở cuối để mùi thơm rõ hơn. li ul div h3 4 gợi ý ăn kèm h3 ul li chấm muối tiêu chanh hoặc nước mắm gừng. li li ăn với bún, rau sống, hoặc cơm nóng. li li nếu thích đậm vị: thêm nấm hương hoặc măng khô vào lúc hầm. li ul h3 5 cách bảo quản h3 p để nguội, chia hộp kín và bảo quản ngăn mát strong 1 2 ngày strong . khi dùng, hâm nóng ở lửa nhỏ để thịt không bị khô. p hr p strong kết luận: strong chỉ với vài bước sơ chế và hầm đúng cách, bạn sẽ có nồi chân giò thơm mềm, nước trong, ăn rất hao cơm . chúc bạn nấu ngon p",
-    "metadata": {
-      "type": "blog_chunk",
-      "source": "blogs",
-      "id": 7,
-      "title": "cách nấu chân giò giả cầy",
-      "chunk_index": 3,
-      "created_at": "2026-01-06T17:29:52.000Z",
+      "created_at": "2026-01-26T17:03:38.000Z",
       "language": "vi"
     }
   }

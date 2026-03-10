@@ -14,6 +14,12 @@
 cd ./frontend
 ```
 
+Tải thư viện nếu chưa có
+
+```bash
+npm install
+```
+
 ```javascript
 npm run dev
 ```
@@ -22,6 +28,12 @@ npm run dev
 
 ```bash
 cd ./backend
+```
+
+Tải thư viện nếu chưa có
+
+```bash
+npm install
 ```
 
 ```javascript

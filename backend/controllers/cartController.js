@@ -1,38 +1,42 @@
-const CartService = require('../services/cartService');
+const CartService = require("../services/cartService");
 
 class CartController {
   // Thêm sản phẩm vào giỏ hàng
   static async addItem(req, res, next) {
     try {
       const { userId, productVariantId, quantity } = req.body;
-
       if (!userId || !productVariantId || !quantity) {
         return res.status(400).json({
           success: false,
-          message: 'Missing required fields: userId, productVariantId, quantity'
+          message:
+            "Missing required fields: userId, productVariantId, quantity",
         });
       }
 
       if (quantity <= 0) {
         return res.status(400).json({
           success: false,
-          message: 'Quantity must be greater than 0'
+          message: "Quantity must be greater than 0",
         });
       }
 
       // Gọi service xử lý logic
-      const result = await CartService.addItem(userId, productVariantId, quantity);
+      const result = await CartService.addItem(
+        userId,
+        productVariantId,
+        quantity,
+      );
 
       res.status(200).json({
         success: true,
-        message: 'Product added to cart successfully',
-        data: result
+        message: "Product added to cart successfully",
+        data: result,
       });
     } catch (error) {
-      console.error('Add to cart error:', error);
+      console.error("Add to cart error:", error);
       res.status(500).json({
         success: false,
-        message: error.message || 'Failed to add product to cart'
+        message: error.message || "Failed to add product to cart",
       });
     }
   }
@@ -52,19 +56,19 @@ class CartController {
           cart_id: null,
           items: [],
           total_items: 0,
-          total_price: 0
+          total_price: 0,
         };
       }
 
       res.status(200).json({
         success: true,
-        data: cart
+        data: cart,
       });
     } catch (error) {
-      console.error('View cart error:', error);
+      console.error("View cart error:", error);
       res.status(500).json({
         success: false,
-        message: 'Failed to get cart'
+        message: "Failed to get cart",
       });
     }
   }
@@ -78,7 +82,7 @@ class CartController {
       if (!quantity || quantity <= 0) {
         return res.status(400).json({
           success: false,
-          message: 'Invalid quantity'
+          message: "Invalid quantity",
         });
       }
 
@@ -87,13 +91,13 @@ class CartController {
 
       res.status(200).json({
         success: true,
-        message: 'Cart item updated successfully'
+        message: "Cart item updated successfully",
       });
     } catch (error) {
-      console.error('Update cart item error:', error);
+      console.error("Update cart item error:", error);
       res.status(500).json({
         success: false,
-        message: error.message || 'Failed to update cart item'
+        message: error.message || "Failed to update cart item",
       });
     }
   }
@@ -108,13 +112,13 @@ class CartController {
 
       res.status(200).json({
         success: true,
-        message: 'Cart item removed successfully'
+        message: "Cart item removed successfully",
       });
     } catch (error) {
-      console.error('Remove cart item error:', error);
+      console.error("Remove cart item error:", error);
       res.status(500).json({
         success: false,
-        message: error.message || 'Failed to remove cart item'
+        message: error.message || "Failed to remove cart item",
       });
     }
   }
@@ -129,13 +133,13 @@ class CartController {
 
       res.status(200).json({
         success: true,
-        message: 'Cart cleared successfully'
+        message: "Cart cleared successfully",
       });
     } catch (error) {
-      console.error('Clear cart error:', error);
+      console.error("Clear cart error:", error);
       res.status(500).json({
         success: false,
-        message: 'Failed to clear cart'
+        message: "Failed to clear cart",
       });
     }
   }
@@ -148,7 +152,7 @@ class CartController {
       if (!userId || !orderId) {
         return res.status(400).json({
           success: false,
-          message: 'Missing required fields: userId, orderId'
+          message: "Missing required fields: userId, orderId",
         });
       }
 
@@ -156,14 +160,14 @@ class CartController {
 
       res.status(200).json({
         success: true,
-        message: 'Cart restored successfully',
-        data: result
+        message: "Cart restored successfully",
+        data: result,
       });
     } catch (error) {
-      console.error('Restore cart from order error:', error);
+      console.error("Restore cart from order error:", error);
       res.status(500).json({
         success: false,
-        message: error.message || 'Failed to restore cart'
+        message: error.message || "Failed to restore cart",
       });
     }
   }

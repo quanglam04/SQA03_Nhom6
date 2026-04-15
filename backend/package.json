@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,7 @@
     "vnpay": "^2.4.4"
   },
   "devDependencies": {
+    "jest": "^30.3.0",
     "nodemon": "^3.1.10"
   }
 }

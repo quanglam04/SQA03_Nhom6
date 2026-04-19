@@ -2,7 +2,7 @@
  * Unit Test — ShipmentService
  * File gốc  : backend/services/shipmentService.js
  * Test file : backend/__tests__/shipmentService.test.js
- * Người PT  : Người 3
+ * Người PT  : Trịnh Quang Lâm
  *
  * Rollback  : Toàn bộ test dùng jest.mock() để mock ShipmentModel,
  *             không kết nối DB thật => không có dữ liệu nào được

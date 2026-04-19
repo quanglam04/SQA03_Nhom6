@@ -2,7 +2,7 @@
  * Unit Test — ProductService
  * File gốc  : backend/services/productService.js
  * Test file : backend/__tests__/productService.test.js
- * Người PT  : Kiên
+ * Người PT  : Vũ Nhân Kiên
  *
  * Rollback  : Toàn bộ test dùng jest.mock() để mock productModel,
  *             không kết nối DB thật => không có dữ liệu nào được
@@ -66,12 +66,12 @@ describe("ProductService", () => {
         variants: [],
       };
       productModel.createWithVariants.mockRejectedValue(
-        new Error("Foreign key constraint fails: category_id not found")
+        new Error("Foreign key constraint fails: category_id not found"),
       );
 
       // Act & Assert
       await expect(ProductService.createProduct(inputData)).rejects.toThrow(
-        "Foreign key constraint fails: category_id not found"
+        "Foreign key constraint fails: category_id not found",
       );
 
       // CheckDB — createWithVariants vẫn được gọi đúng 1 lần với đúng data
@@ -201,7 +201,10 @@ describe("ProductService", () => {
 
       // CheckDB — updateWithVariants được gọi đúng 1 lần với đúng id và data
       expect(productModel.updateWithVariants).toHaveBeenCalledTimes(1);
-      expect(productModel.updateWithVariants).toHaveBeenCalledWith(1, updateData);
+      expect(productModel.updateWithVariants).toHaveBeenCalledWith(
+        1,
+        updateData,
+      );
 
       // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
     });
@@ -220,7 +223,10 @@ describe("ProductService", () => {
 
       // CheckDB — updateWithVariants vẫn được gọi đúng 1 lần với đúng id và data
       expect(productModel.updateWithVariants).toHaveBeenCalledTimes(1);
-      expect(productModel.updateWithVariants).toHaveBeenCalledWith(9999, updateData);
+      expect(productModel.updateWithVariants).toHaveBeenCalledWith(
+        9999,
+        updateData,
+      );
     });
 
     // TC_PROD_10
@@ -228,17 +234,20 @@ describe("ProductService", () => {
       // Arrange — mock updateWithVariants ném lỗi (DB error)
       const updateData = { name: "Lỗi DB", price: 10000 };
       productModel.updateWithVariants.mockRejectedValue(
-        new Error("Database connection lost")
+        new Error("Database connection lost"),
       );
 
       // Act & Assert
       await expect(ProductService.updateProduct(1, updateData)).rejects.toThrow(
-        "Database connection lost"
+        "Database connection lost",
       );
 
       // CheckDB — updateWithVariants vẫn được gọi đúng 1 lần
       expect(productModel.updateWithVariants).toHaveBeenCalledTimes(1);
-      expect(productModel.updateWithVariants).toHaveBeenCalledWith(1, updateData);
+      expect(productModel.updateWithVariants).toHaveBeenCalledWith(
+        1,
+        updateData,
+      );
     });
   });
   // ── end updateProduct() ───────────────────────────────────────────────────
@@ -287,12 +296,12 @@ describe("ProductService", () => {
     test("TC_PROD_12 — should_throw_error_when_removeWithVariants_fails", async () => {
       // Arrange — mock removeWithVariants ném lỗi (ví dụ: foreign key constraint)
       productModel.removeWithVariants.mockRejectedValue(
-        new Error("Cannot delete: product is referenced by existing orders")
+        new Error("Cannot delete: product is referenced by existing orders"),
       );
 
       // Act & Assert
       await expect(ProductService.deleteProduct(1)).rejects.toThrow(
-        "Cannot delete: product is referenced by existing orders"
+        "Cannot delete: product is referenced by existing orders",
       );
 
       // CheckDB — removeWithVariants vẫn được gọi đúng 1 lần với đúng id

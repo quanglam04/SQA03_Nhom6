@@ -72,7 +72,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
       expect(result.reason).toBe("NOT_ELIGIBLE");
     });
 
-    test('TC_REV_14 - Kiểm tra việc làm sạch (trim) nội dung nhận xét trước khi lưu', async () => {
+    test('TC_REV_13 - Kiểm tra việc làm sạch (trim) nội dung nhận xét trước khi lưu', async () => {
       pool.query.mockResolvedValueOnce([[{ id: 1 }]]);
       reviewModel.findByUserAndProduct.mockResolvedValue(null);
       
@@ -109,7 +109,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
       expect(reviewModel.create).toHaveBeenCalled();
     });
 
-    test('TC_REV_13 - Cập nhật đánh giá cũ khi thực hiện review từ đơn hàng', async () => {
+    test('TC_REV_12 - Cập nhật đánh giá cũ khi thực hiện review từ đơn hàng', async () => {
       pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: 5 }]]);
       reviewModel.findByUserAndProduct.mockResolvedValue({ id: 50 }); // Đã có review
 
@@ -117,7 +117,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
       expect(reviewModel.update).toHaveBeenCalled();
     });
 
-    test('TC_REV_15 - Chặn đánh giá nếu đơn hàng chưa chuyển sang "delivered"', async () => {
+    test('TC_REV_14 - Chặn đánh giá nếu đơn hàng chưa chuyển sang "delivered"', async () => {
       pool.query.mockResolvedValueOnce([[]]); // Giả lập query tìm status='delivered' không ra data
       const result = await reviewService.addOrUpdateReviewFromOrder(1, 6, 10, 5, "Not delivered");
       expect(result.ok).toBe(false);

@@ -31,6 +31,58 @@ describe("CartService", () => {
     jest.clearAllMocks();
   });
 
+  // ── getOrCreateCart() ──────────────────────────────────────────────────────
+  describe("getOrCreateCart()", () => {
+    // TC_CART_09
+    test("TC_CART_09 — should_return_existing_cart_when_cart_already_exists_for_user", async () => {
+      // Arrange — mock cartModel.findByUserId trả về giỏ đã tồn tại
+      const mockCart = { id: 42, user_id: 1 };
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+
+      // Act — gọi hàm cần test
+      const result = await CartService.getOrCreateCart(1);
+
+      // Assert — trả về đúng cart hiện có, KHÔNG tạo mới
+      expect(result).toEqual(mockCart);
+      expect(result).toHaveProperty("id", 42);
+
+      // CheckDB — findByUserId được gọi đúng 1 lần với đúng tham số
+      expect(cartModel.findByUserId).toHaveBeenCalledTimes(1);
+      expect(cartModel.findByUserId).toHaveBeenCalledWith(1);
+
+      // CheckDB — create KHÔNG được gọi vì giỏ đã tồn tại
+      expect(cartModel.create).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
+    });
+
+    // TC_CART_10
+    test("TC_CART_10 — should_create_and_return_new_cart_when_no_cart_exists_for_user", async () => {
+      // Arrange — mock findByUserId trả về null (chưa có giỏ); create trả về giỏ mới
+      const mockNewCart = { id: 99, user_id: 2 };
+      cartModel.findByUserId.mockResolvedValue(null);
+      cartModel.create.mockResolvedValue(mockNewCart);
+
+      // Act
+      const result = await CartService.getOrCreateCart(2);
+
+      // Assert — trả về giỏ vừa được tạo mới
+      expect(result).toEqual(mockNewCart);
+      expect(result).toHaveProperty("id", 99);
+
+      // CheckDB — create được gọi đúng 1 lần với đúng userId
+      expect(cartModel.create).toHaveBeenCalledTimes(1);
+      expect(cartModel.create).toHaveBeenCalledWith(2);
+
+      // CheckDB — findByUserId vẫn được gọi trước để kiểm tra
+      expect(cartModel.findByUserId).toHaveBeenCalledTimes(1);
+      expect(cartModel.findByUserId).toHaveBeenCalledWith(2);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
+    });
+  });
+  // ── end getOrCreateCart() ──────────────────────────────────────────────────
+
   // ── addItem() ──────────────────────────────────────────────────────────────
   describe("addItem()", () => {
     // TC_CART_01
@@ -199,5 +251,42 @@ describe("CartService", () => {
     });
   });
   // ── end removeItem() ───────────────────────────────────────────────────────
+
+  // ── clearCart() ────────────────────────────────────────────────────────────
+  describe("clearCart()", () => {
+    // TC_CART_11
+    test("TC_CART_11 — should_clear_all_items_from_cart_successfully", async () => {
+      // Arrange — mock clearCartItems thực thi thành công
+      cartModel.clearCartItems.mockResolvedValue(true);
+
+      // Act
+      const result = await CartService.clearCart(42);
+
+      // Assert — trả về true
+      expect(result).toBe(true);
+
+      // CheckDB — clearCartItems được gọi đúng 1 lần với đúng cartId
+      expect(cartModel.clearCartItems).toHaveBeenCalledTimes(1);
+      expect(cartModel.clearCartItems).toHaveBeenCalledWith(42);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị xóa => không cần rollback
+    });
+
+    // TC_CART_12
+    test("TC_CART_12 — should_throw_error_when_clearCartItems_fails", async () => {
+      // Arrange — mock clearCartItems ném lỗi (DB error hoặc cartId không hợp lệ)
+      cartModel.clearCartItems.mockRejectedValue(new Error("Cart not found"));
+
+      // Act & Assert
+      await expect(CartService.clearCart(9999)).rejects.toThrow(
+        "Cart not found"
+      );
+
+      // CheckDB — clearCartItems vẫn được gọi đúng 1 lần với đúng cartId
+      expect(cartModel.clearCartItems).toHaveBeenCalledTimes(1);
+      expect(cartModel.clearCartItems).toHaveBeenCalledWith(9999);
+    });
+  });
+  // ── end clearCart() ────────────────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════

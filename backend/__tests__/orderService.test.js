@@ -137,7 +137,7 @@ describe("OrderService", () => {
       expect(result).toEqual({ order_id: 88, total_price: 250000 });
     });
 
-    test("TC_ORD_02 - Ném lỗi khi giỏ hàng không có items", async () => {
+    test("TC_ORD_02 - Throw lỗi khi giỏ hàng không có items", async () => {
       // Input: userId=1, cartId=1
       // Expected Output: throw Error("Cart is empty")
       // CheckDB: getCartItemsWithDetails called, order creation not called
@@ -163,7 +163,7 @@ describe("OrderService", () => {
       expect(connection.release).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_ORD_03 - Ném lỗi khi tồn kho không đủ cho một item", async () => {
+    test("TC_ORD_03 - Throw lỗi khi tồn kho không đủ cho một item", async () => {
       // Input: userId=1, cartId=1, cart has item quantity=5 but stock=2
       // Expected Output: throw Error containing "Insufficient stock for"
       // CheckDB: order creation and stock updates must not happen
@@ -333,7 +333,7 @@ describe("OrderService", () => {
       );
     });
 
-    test("TC_ORD_06 - Ném lỗi khi cartId không tồn tại", async () => {
+    test("TC_ORD_06 - Throw lỗi khi cartId không tồn tại", async () => {
       // Input: cartId=9999
       // Expected Output: throw Error("Cart not found")
       // CheckDB: findById called; getCartItemsWithDetails not called
@@ -347,7 +347,7 @@ describe("OrderService", () => {
       expect(cartModel.getCartItemsWithDetails).not.toHaveBeenCalled();
     });
 
-    test("TC_ORD_07 - Ném lỗi khi giỏ hàng tồn tại nhưng trống", async () => {
+    test("TC_ORD_07 - Throw lỗi khi giỏ hàng tồn tại nhưng trống", async () => {
       // Input: cartId=1
       // Expected Output: throw Error("Cart is empty")
       // CheckDB: findById and getCartItemsWithDetails are called
@@ -390,7 +390,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_09
-    test("TC_ORD_09 - Ném lỗi khi orderId không tồn tại", async () => {
+    test("TC_ORD_09 - Throw lỗi khi orderId không tồn tại", async () => {
       // Input: orderId=9999
       // Expected Output: throw Error("Order not found")
       // CheckDB: findByIdWithDetails được gọi, trả về null
@@ -465,10 +465,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_12
-    test("TC_ORD_12 - Ném lỗi khi model ném lỗi DB trong getMyOrders", async () => {
+    test("TC_ORD_12 - Throw lỗi khi model throw lỗi DB trong getMyOrders", async () => {
       // Input: userId=1
       // Expected Output: throw Error("DB error")
-      // CheckDB: findByUserId ném lỗi
+      // CheckDB: findByUserId throw lỗi
       // Rollback: read-only flow with mocks, no DB mutation
       orderModel.findByUserId.mockRejectedValue(new Error("DB error"));
 
@@ -538,7 +538,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_15
-    test("TC_ORD_15 - Ném lỗi khi đơn hàng đã giao, không thể hủy", async () => {
+    test("TC_ORD_15 - Throw lỗi khi đơn hàng đã giao, không thể hủy", async () => {
       // Input: orderId=3, order đã giao (status="delivered")
       // Expected Output: throw Error("Cannot cancel this order")
       // CheckDB: orderModel.update KHÔNG được gọi
@@ -557,7 +557,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_16
-    test("TC_ORD_16 - Ném lỗi khi đơn hàng đã bị hủy trước đó", async () => {
+    test("TC_ORD_16 - Throw lỗi khi đơn hàng đã bị hủy trước đó", async () => {
       // Input: orderId=4, order đã bị hủy (status="canceled")
       // Expected Output: throw Error("Cannot cancel this order")
       // CheckDB: orderModel.update KHÔNG được gọi
@@ -575,7 +575,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_17
-    test("TC_ORD_17 - Ném lỗi khi orderId không tồn tại trong cancelOrder", async () => {
+    test("TC_ORD_17 - Throw lỗi khi orderId không tồn tại trong cancelOrder", async () => {
       // Input: orderId=9999
       // Expected Output: throw Error("Order not found")
       // CheckDB: findById trả về null
@@ -613,10 +613,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_19
-    test("TC_ORD_19 - Ném lỗi khi model ném lỗi DB trong updatePaymentStatus", async () => {
+    test("TC_ORD_19 - Throw lỗi khi model throw lỗi DB trong updatePaymentStatus", async () => {
       // Input: orderId=1, paymentStatus="paid"
       // Expected Output: throw Error("DB error")
-      // CheckDB: updatePaymentStatus ném lỗi
+      // CheckDB: updatePaymentStatus throw lỗi
       // Rollback: no transaction, mock only
       orderModel.updatePaymentStatus.mockRejectedValue(new Error("DB error"));
 
@@ -696,10 +696,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_22
-    test("TC_ORD_22 - Ném lỗi khi model ném lỗi DB trong getAllOrders", async () => {
+    test("TC_ORD_22 - Throw lỗi khi model throw lỗi DB trong getAllOrders", async () => {
       // Input: filters={}
       // Expected Output: throw Error("DB error")
-      // CheckDB: findAll ném lỗi
+      // CheckDB: findAll throw lỗi
       // Rollback: read-only flow with mocks, no DB mutation
       orderModel.findAll.mockRejectedValue(new Error("DB error"));
 
@@ -727,10 +727,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_24
-    test("TC_ORD_24 - Ném lỗi khi model ném lỗi DB trong updateOrder", async () => {
+    test("TC_ORD_24 - Throw lỗi khi model throw lỗi DB trong updateOrder", async () => {
       // Input: orderId=1, updateData={ status: "shipping" }
       // Expected Output: throw Error("DB error")
-      // CheckDB: orderModel.update ném lỗi
+      // CheckDB: orderModel.update throw lỗi
       // Rollback: no transaction, mock only
       orderModel.update.mockRejectedValue(new Error("DB error"));
 
@@ -745,7 +745,7 @@ describe("OrderService", () => {
 // ─── Branch bổ sung ──────────────────────────────────────────────────────────
 describe("createOrder() — updateVariantStock returns false", () => {
   // TC_ORD_25
-  test("TC_ORD_25 - Ném lỗi khi updateVariantStock trả về false", async () => {
+  test("TC_ORD_25 - Throw lỗi khi updateVariantStock trả về false", async () => {
     // Input: cart có 1 item, updateVariantStock trả về false
     // Expected Output: throw Error("Failed to update stock for variant ...")
     // CheckDB: rollback được gọi
@@ -793,7 +793,7 @@ describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_ORD_27
-  test("TC_ORD_27 - Ném lỗi khi cart null (getCartItemsWithDetails trả về null)", async () => {
+  test("TC_ORD_27 - Throw lỗi khi cart null (getCartItemsWithDetails trả về null)", async () => {
     // Một số mock trả về null thay vì [] → service kiểm tra !cartItems || cartItems.length === 0
     const connection = createMockConnection();
     pool.getConnection.mockResolvedValue(connection);
@@ -808,7 +808,7 @@ describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
   });
 
   // TC_ORD_28
-  test("TC_ORD_28 - Ném lỗi khi có nhiều items nhưng item thứ 2 hết tồn kho", async () => {
+  test("TC_ORD_28 - Throw lỗi khi có nhiều items nhưng item thứ 2 hết tồn kho", async () => {
     // Item đầu đủ hàng, item thứ 2 stock=0 < quantity=1 → throw ở item thứ 2
     const connection = createMockConnection();
     pool.getConnection.mockResolvedValue(connection);
@@ -831,7 +831,7 @@ describe("cancelOrder() — trạng thái không cho phép hủy", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_ORD_29
-  test("TC_ORD_29 - Ném lỗi khi đơn hàng đang vận chuyển (shipping) nhưng đã có payment", async () => {
+  test("TC_ORD_29 - Throw lỗi khi đơn hàng đang vận chuyển (shipping) nhưng đã có payment", async () => {
     const connection = createMockConnection();
     pool.getConnection.mockResolvedValue(connection);
 
@@ -854,7 +854,7 @@ describe("getCheckoutInfo() — cart items trả về null", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_ORD_30
-  test("TC_ORD_30 - Ném lỗi khi getCartItemsWithDetails trả về null (không phải mảng rỗng)", async () => {
+  test("TC_ORD_30 - Throw lỗi khi getCartItemsWithDetails trả về null (không phải mảng rỗng)", async () => {
     cartModel.findById.mockResolvedValue({ id: 1, user_id: 1 });
     cartModel.getCartItemsWithDetails.mockResolvedValue(null);
 

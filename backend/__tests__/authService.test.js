@@ -111,7 +111,7 @@ describe("createUser()", () => {
   });
 
   // TC_AUTH_02
-  it("TC_AUTH_02 - Ném lỗi EMAIL_EXISTS khi email đã được đăng ký", async () => {
+  it("TC_AUTH_02 - Throw lỗi EMAIL_EXISTS khi email đã được đăng ký", async () => {
     // Mock findUserByEmail → trả về user đã tồn tại
     pool.query.mockResolvedValueOnce([
       [
@@ -249,7 +249,7 @@ describe("createResetToken()", () => {
   });
 
   // TC_AUTH_08
-  it("TC_AUTH_08 - Ném lỗi USER_NOT_FOUND khi email không tồn tại", async () => {
+  it("TC_AUTH_08 - Throw lỗi USER_NOT_FOUND khi email không tồn tại", async () => {
     // Mock findUserByEmail → null (không có user)
     pool.query.mockResolvedValueOnce([[]]);
 
@@ -266,7 +266,7 @@ describe("createResetToken()", () => {
 // updatePassword()
 describe("updatePassword()", () => {
   // TC_AUTH_09
-  it("TC_AUTH_09 - Hash password mới và xóa token sau khi cập nhật thành công", async () => {
+  it("TC_AUTH_09 - Hash password mới và xóa token sau khi update thành công", async () => {
     const resetRecord = {
       user_id: 3,
       token: "validtoken123",
@@ -306,7 +306,7 @@ describe("updatePassword()", () => {
 // verifyResetToken()
 describe("verifyResetToken()", () => {
   // TC_AUTH_10
-  it("TC_AUTH_10 - Ném lỗi INVALID_TOKEN khi token hết hạn hoặc không tồn tại", async () => {
+  it("TC_AUTH_10 - Throw lỗi INVALID_TOKEN khi token hết hạn hoặc không tồn tại", async () => {
     // Mock pool.query trả về rows rỗng (token không tồn tại hoặc đã hết hạn)
     pool.query.mockResolvedValueOnce([[]]);
 
@@ -562,7 +562,7 @@ describe("getRolesByUserId() — rrows null branch", () => {
 // ── Negative test cases bổ sung ───────────────────────────────────────────────
 describe("createUser() — thiếu email hoặc password", () => {
   // TC_AUTH_22
-  it("TC_AUTH_22 - Ném lỗi khi không truyền email (email undefined)", async () => {
+  it("TC_AUTH_22 - Throw lỗi khi không truyền email (email undefined)", async () => {
     // email=undefined → findUserByEmail query với undefined, sau đó bcrypt.hash, INSERT sẽ lưu email=null
     // nhưng ở đây ta mock pool.query throw lỗi NOT NULL constraint như DB thật sẽ làm
     pool.query.mockResolvedValueOnce([[]]); // findUserByEmail → không tồn tại
@@ -575,7 +575,7 @@ describe("createUser() — thiếu email hoặc password", () => {
   });
 
   // TC_AUTH_23
-  it("TC_AUTH_23 - Ném lỗi EMAIL_EXISTS khi email đã tồn tại dù có thêm khoảng trắng (không trim)", async () => {
+  it("TC_AUTH_23 - Throw lỗi EMAIL_EXISTS khi email đã tồn tại dù có thêm khoảng trắng (không trim)", async () => {
     // Service không trim email → "  existing@example.com  " khác "existing@example.com"
     // → findUserByEmail trả về rỗng → tạo user mới thành công (KHÔNG throw EMAIL_EXISTS)
     // Đây là negative case: chứng minh service KHÔNG validate trim email
@@ -596,7 +596,7 @@ describe("createUser() — thiếu email hoặc password", () => {
 
 describe("updatePassword() — token không hợp lệ", () => {
   // TC_AUTH_24
-  it("TC_AUTH_24 - Ném lỗi INVALID_TOKEN khi gọi updatePassword với token đã hết hạn", async () => {
+  it("TC_AUTH_24 - Throw lỗi INVALID_TOKEN khi gọi updatePassword với token đã hết hạn", async () => {
     // verifyResetToken bên trong sẽ throw trước khi UPDATE
     pool.query.mockResolvedValueOnce([[]]); // verifyResetToken → rows rỗng → throw
 

@@ -127,7 +127,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
 
   // --- NHÓM 4: getOrderReviewStatus() ---
   describe('getOrderReviewStatus()', () => {
-    test('TC_REV_09 - Lấy trạng thái review và kiểm tra logic tính ngày còn lại', async () => {
+    test('TC_REV_09 - Lấy trạng thái review và check logic tính ngày còn lại', async () => {
       // Mock query 1: Order info
       pool.query.mockResolvedValueOnce([[{ 
         status: 'delivered', 
@@ -356,7 +356,7 @@ describe("addOrUpdateReview() — rating không hợp lệ (service không valid
   beforeEach(() => jest.clearAllMocks());
 
   // TC_REV_24
-  test("TC_REV_24 - Vẫn tạo review khi rating=0 (service không kiểm tra hợp lệ rating, chỉ controller)", async () => {
+  test("TC_REV_24 - Vẫn tạo review khi rating=0 (service không validate rating, chỉ controller)", async () => {
     pool.query.mockResolvedValueOnce([[{ id: 1 }]]);
     reviewModel.findByUserAndProduct.mockResolvedValue(null);
     reviewModel.create.mockResolvedValue({ id: 99, rating: 0 });
@@ -372,7 +372,7 @@ describe("addOrUpdateReview() — rating không hợp lệ (service không valid
   });
 
   // TC_REV_25
-  test("TC_REV_25 - Vẫn tạo review khi rating=6 (vượt max, service không kiểm tra hợp lệ)", async () => {
+  test("TC_REV_25 - Vẫn tạo review khi rating=6 (vượt max, service không validate)", async () => {
     pool.query.mockResolvedValueOnce([[{ id: 1 }]]);
     reviewModel.findByUserAndProduct.mockResolvedValue(null);
     reviewModel.create.mockResolvedValue({ id: 100, rating: 6 });

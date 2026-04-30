@@ -69,7 +69,7 @@ describe("ShipmentService", () => {
   // ── updateShipment() ───────────────────────────────────────────────────────
   describe("updateShipment()", () => {
     // TC_SHIP_03
-    test("TC_SHIP_03 — Gọi hàm create() để tạo shipment mới khi chưa có shipment cho order này", async () => {
+    test("TC_SHIP_03 — Gọi create() để tạo shipment mới khi chưa có shipment cho order này", async () => {
       // Arrange — mock findByOrderId trả về null => chưa có shipment
       const newShipment = {
         order_id: 1,
@@ -99,7 +99,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_04
-    test("TC_SHIP_04 — Gọi hàm update() để cập nhật shipment hiện có khi đã tồn tại cho order", async () => {
+    test("TC_SHIP_04 — Gọi update() để cập nhật shipment hiện có khi đã tồn tại cho order", async () => {
       // Arrange — mock findByOrderId trả về object => đã có shipment
       const existingShipment = {
         order_id: 1,
@@ -132,8 +132,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_05
-    test("TC_SHIP_05 — Ném lỗi khi model ném lỗi DB trong updateShipment", async () => {
-      // Arrange — mock findByOrderId ném lỗi DB
+    test("TC_SHIP_05 — Throw lỗi khi model throw lỗi DB trong updateShipment", async () => {
+      // Arrange — mock findByOrderId throw lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("DB connection failed"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -151,8 +151,8 @@ describe("ShipmentService", () => {
   // ── getShipment() error branch ─────────────────────────────────────────────
   describe("getShipment() — error branch", () => {
     // TC_SHIP_06
-    test("TC_SHIP_06 — Ném lỗi khi model ném lỗi DB trong getShipment", async () => {
-      // Arrange — mock findByOrderId ném lỗi DB
+    test("TC_SHIP_06 — Throw lỗi khi model throw lỗi DB trong getShipment", async () => {
+      // Arrange — mock findByOrderId throw lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("Timeout"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -221,8 +221,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_10
-    test("TC_SHIP_10 — Ném lỗi khi model ném lỗi DB trong getAllShipments", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_SHIP_10 — Throw lỗi khi model throw lỗi DB trong getAllShipments", async () => {
+      // Arrange — mock throw lỗi DB
       ShipmentModel.findAll.mockRejectedValue(new Error("Table not found"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -271,8 +271,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_13
-    test("TC_SHIP_13 — Ném lỗi khi model ném lỗi DB trong deleteShipment", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_SHIP_13 — Throw lỗi khi model throw lỗi DB trong deleteShipment", async () => {
+      // Arrange — mock throw lỗi DB
       ShipmentModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -292,7 +292,7 @@ describe("ShipmentService", () => {
 // ── Negative test cases bổ sung ───────────────────────────────────────────────
 describe("updateShipment() — shipmentData không hợp lệ", () => {
   // TC_SHIP_14
-  test("TC_SHIP_14 — Tạo shipment mới khi shipmentData là object rỗng (service không kiểm tra hợp lệ data)", async () => {
+  test("TC_SHIP_14 — Tạo shipment mới khi shipmentData là object rỗng (service không validate data)", async () => {
     // Service không kiểm tra shipmentData có hợp lệ không → gọi create với data rỗng
     ShipmentModel.findByOrderId.mockResolvedValue(null);
     ShipmentModel.create.mockResolvedValue({ order_id: 1 });
@@ -307,7 +307,7 @@ describe("updateShipment() — shipmentData không hợp lệ", () => {
 
 describe("getShipment() — orderId không hợp lệ", () => {
   // TC_SHIP_15
-  test("TC_SHIP_15 — Trả về null khi orderId là string không phải số (service không kiểm tra hợp lệ kiểu)", async () => {
+  test("TC_SHIP_15 — Trả về null khi orderId là string không phải số (service không validate kiểu)", async () => {
     // Service không validate kiểu orderId → gọi findByOrderId với string
     ShipmentModel.findByOrderId.mockResolvedValue(null);
 
@@ -325,7 +325,7 @@ describe("[FAIL] updateShipment() — service phải validate shipmentData khôn
   beforeEach(() => jest.clearAllMocks());
 
   // TC_SHIP_FAIL_01
-  test("TC_SHIP_FAIL_01 — Phải ném lỗi khi shipmentData là object rỗng {}", async () => {
+  test("TC_SHIP_FAIL_01 — Phải throw lỗi khi shipmentData là object rỗng {}", async () => {
     // Nghiệp vụ: cập nhật shipment với data rỗng là vô nghĩa
     // Hiện tại: service tạo/update với data rỗng → lỗ hổng
     // Cần sửa: thêm if (!shipmentData || Object.keys(shipmentData).length === 0) throw error
@@ -341,7 +341,7 @@ describe("[FAIL] getShipment() — service phải validate orderId là số hợ
   beforeEach(() => jest.clearAllMocks());
 
   // TC_SHIP_FAIL_02
-  test("TC_SHIP_FAIL_02 — Phải ném lỗi khi orderId là chuỗi không phải số ('abc')", async () => {
+  test("TC_SHIP_FAIL_02 — Phải throw lỗi khi orderId là chuỗi không phải số ('abc')", async () => {
     // Nghiệp vụ: orderId phải là số nguyên dương
     // Hiện tại: service không validate kiểu → query DB với 'abc'
     // Cần sửa: thêm if (isNaN(orderId) || orderId <= 0) throw error

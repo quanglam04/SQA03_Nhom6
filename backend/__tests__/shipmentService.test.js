@@ -25,7 +25,7 @@ describe("ShipmentService", () => {
   // ── getShipment() ──────────────────────────────────────────────────────────
   describe("getShipment()", () => {
     // TC_SHIP_01
-    test("TC_SHIP_01 — should return shipment object when orderId exists", async () => {
+    test("TC_SHIP_01 — Trả về shipment object khi orderId tồn tại", async () => {
       // Arrange — mock dữ liệu trả về khi tìm thấy shipment
       const mockShipment = {
         order_id: 1,
@@ -49,7 +49,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_02
-    test("TC_SHIP_02 — should return null when orderId does not exist", async () => {
+    test("TC_SHIP_02 — Trả về null khi orderId không có shipment", async () => {
       // Arrange — mock trả về null (không tìm thấy shipment)
       ShipmentModel.findByOrderId.mockResolvedValue(null);
 
@@ -69,7 +69,7 @@ describe("ShipmentService", () => {
   // ── updateShipment() ───────────────────────────────────────────────────────
   describe("updateShipment()", () => {
     // TC_SHIP_03
-    test("TC_SHIP_03 — should call create() when shipment does not exist yet", async () => {
+    test("TC_SHIP_03 — Gọi create() để tạo shipment mới khi chưa có shipment cho order này", async () => {
       // Arrange — mock findByOrderId trả về null => chưa có shipment
       const newShipment = {
         order_id: 1,
@@ -99,7 +99,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_04
-    test("TC_SHIP_04 — should call update() when shipment already exists", async () => {
+    test("TC_SHIP_04 — Gọi update() để cập nhật shipment hiện có khi đã tồn tại cho order", async () => {
       // Arrange — mock findByOrderId trả về object => đã có shipment
       const existingShipment = {
         order_id: 1,

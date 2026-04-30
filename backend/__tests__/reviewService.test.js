@@ -117,7 +117,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
       expect(reviewModel.update).toHaveBeenCalled();
     });
 
-    test('TC_REV_1 - Chặn đánh giá nếu đơn hàng chưa chuyển sang "delivered"', async () => {
+    test('TC_REV_1A - Chặn đánh giá nếu đơn hàng chưa chuyển sang "delivered"', async () => {
       pool.query.mockResolvedValueOnce([[]]); // Giả lập query tìm status='delivered' không ra data
       const result = await reviewService.addOrUpdateReviewFromOrder(1, 6, 10, 5, "Not delivered");
       expect(result.ok).toBe(false);

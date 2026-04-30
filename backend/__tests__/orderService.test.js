@@ -18,6 +18,16 @@ jest.mock("../models", () => ({
   orderModel: {
     create: jest.fn(),
     addOrderItem: jest.fn(),
+    findById: jest.fn(),
+    findByIdWithDetails: jest.fn(),
+    findByUserId: jest.fn(),
+    countByUserId: jest.fn(),
+    countOrderItems: jest.fn(),
+    getOrderItems: jest.fn(),
+    findAll: jest.fn(),
+    count: jest.fn(),
+    update: jest.fn(),
+    updatePaymentStatus: jest.fn(),
   },
   productModel: {
     updateVariantStock: jest.fn(),
@@ -352,4 +362,381 @@ describe("OrderService", () => {
       expect(cartModel.getCartItemsWithDetails).toHaveBeenCalledWith(1);
     });
   });
+
+  // ── getOrderDetail() ────────────────────────────────────────────────────────
+  describe("getOrderDetail()", () => {
+    // TC_ORD_08
+    test("TC_ORD_08 - should_return_order_detail_when_orderId_exists", async () => {
+      // Input: orderId=1
+      // Expected Output: return order object với đầy đủ thông tin
+      // CheckDB: findByIdWithDetails được gọi với orderId=1
+      // Rollback: read-only flow with mocks, no DB mutation
+      const mockOrder = {
+        id: 1,
+        user_id: 1,
+        total_price: 250000,
+        status: "pending",
+        payment_status: "unpaid",
+        shipping_address: "123 Hà Nội",
+        items: [{ variant_id: 7, quantity: 2, price: 50000 }],
+      };
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+
+      const result = await OrderService.getOrderDetail(1);
+
+      expect(result).toEqual(mockOrder);
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledTimes(1);
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledWith(1);
+    });
+
+    // TC_ORD_09
+    test("TC_ORD_09 - should_throw_error_when_orderId_does_not_exist", async () => {
+      // Input: orderId=9999
+      // Expected Output: throw Error("Order not found")
+      // CheckDB: findByIdWithDetails được gọi, trả về null
+      // Rollback: read-only flow with mocks, no DB mutation
+      orderModel.findByIdWithDetails.mockResolvedValue(null);
+
+      await expect(OrderService.getOrderDetail(9999)).rejects.toThrow(
+        "Order not found",
+      );
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledTimes(1);
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledWith(9999);
+    });
+  });
+  // ── end getOrderDetail() ───────────────────────────────────────────────────
+
+  // ── getMyOrders() ──────────────────────────────────────────────────────────
+  describe("getMyOrders()", () => {
+    // TC_ORD_10
+    test("TC_ORD_10 - should_return_orders_and_pagination_for_valid_user", async () => {
+      // Input: userId=1, filters={ page: 1, limit: 10 }
+      // Expected Output: { orders: [...], pagination: { page, limit, total, total_pages } }
+      // CheckDB: findByUserId, countByUserId, countOrderItems được gọi
+      // Rollback: read-only flow with mocks, no DB mutation
+      const mockOrders = [
+        { id: 1, total_price: "250000", status: "pending", payment_status: "unpaid", created_at: "2024-01-01" },
+        { id: 2, total_price: "150000", status: "delivered", payment_status: "paid", created_at: "2024-01-02" },
+      ];
+      orderModel.findByUserId.mockResolvedValue(mockOrders);
+      orderModel.countByUserId.mockResolvedValue(2);
+      orderModel.countOrderItems.mockResolvedValue(3);
+
+      const result = await OrderService.getMyOrders(1, { page: 1, limit: 10 });
+
+      expect(result.orders).toHaveLength(2);
+      expect(result.orders[0]).toEqual({
+        id: 1,
+        total_price: 250000,
+        status: "pending",
+        payment_status: "unpaid",
+        created_at: "2024-01-01",
+        total_items: 3,
+      });
+      expect(result.pagination).toEqual({
+        page: 1,
+        limit: 10,
+        total: 2,
+        total_pages: 1,
+      });
+      expect(orderModel.findByUserId).toHaveBeenCalledWith(1, { page: 1, limit: 10 });
+      expect(orderModel.countByUserId).toHaveBeenCalledWith(1, { page: 1, limit: 10 });
+      expect(orderModel.countOrderItems).toHaveBeenCalledTimes(2);
+    });
+
+    // TC_ORD_11
+    test("TC_ORD_11 - should_use_default_pagination_when_filters_are_empty", async () => {
+      // Input: userId=1, filters={} (không truyền page/limit)
+      // Expected Output: pagination dùng default page=1, limit=10
+      // CheckDB: findByUserId và countByUserId được gọi với filters={}
+      // Rollback: read-only flow with mocks, no DB mutation
+      orderModel.findByUserId.mockResolvedValue([]);
+      orderModel.countByUserId.mockResolvedValue(0);
+
+      const result = await OrderService.getMyOrders(1, {});
+
+      expect(result.pagination).toEqual({
+        page: 1,
+        limit: 10,
+        total: 0,
+        total_pages: 0,
+      });
+      expect(orderModel.findByUserId).toHaveBeenCalledWith(1, {});
+    });
+
+    // TC_ORD_12
+    test("TC_ORD_12 - should_throw_error_when_model_fails", async () => {
+      // Input: userId=1
+      // Expected Output: throw Error("DB error")
+      // CheckDB: findByUserId ném lỗi
+      // Rollback: read-only flow with mocks, no DB mutation
+      orderModel.findByUserId.mockRejectedValue(new Error("DB error"));
+
+      await expect(OrderService.getMyOrders(1)).rejects.toThrow("DB error");
+      expect(orderModel.findByUserId).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getMyOrders() ──────────────────────────────────────────────────────
+
+  // ── cancelOrder() ─────────────────────────────────────────────────────────
+  describe("cancelOrder()", () => {
+    // TC_ORD_13
+    test("TC_ORD_13 - should_cancel_order_and_restore_stock_when_order_is_pending", async () => {
+      // Input: orderId=1, reason="Tôi đổi ý"
+      // Expected Output: return true; stock được hoàn lại, status cập nhật = "canceled"
+      // CheckDB: getOrderItems, updateVariantStock(increment), update(canceled) được gọi
+      // Rollback: using mocked transaction only, no real DB write
+      const connection = createMockConnection();
+      pool.getConnection.mockResolvedValue(connection);
+
+      const mockOrder = { id: 1, status: "pending", payment_status: "unpaid" };
+      const mockItems = [
+        { variant_id: 7, quantity: 2 },
+        { variant_id: 8, quantity: 1 },
+      ];
+      orderModel.findById.mockResolvedValue(mockOrder);
+      orderModel.getOrderItems.mockResolvedValue(mockItems);
+      productModel.updateVariantStock.mockResolvedValue(true);
+      orderModel.update.mockResolvedValue(true);
+
+      const result = await OrderService.cancelOrder(1, "Tôi đổi ý");
+
+      expect(result).toBe(true);
+      expect(orderModel.findById).toHaveBeenCalledWith(1);
+      expect(orderModel.getOrderItems).toHaveBeenCalledWith(1);
+      expect(productModel.updateVariantStock).toHaveBeenCalledWith(7, 2, "increment");
+      expect(productModel.updateVariantStock).toHaveBeenCalledWith(8, 1, "increment");
+      expect(orderModel.update).toHaveBeenCalledWith(1, { status: "canceled" });
+      expect(connection.commit).toHaveBeenCalledTimes(1);
+      expect(connection.rollback).not.toHaveBeenCalled();
+      expect(connection.release).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_ORD_14
+    test("TC_ORD_14 - should_set_payment_status_refunded_when_order_was_paid", async () => {
+      // Input: orderId=2, order đã thanh toán (payment_status="paid")
+      // Expected Output: update được gọi với { status: "canceled", payment_status: "refunded" }
+      // CheckDB: xác minh updateData có payment_status="refunded"
+      // Rollback: using mocked transaction only, no real DB write
+      const connection = createMockConnection();
+      pool.getConnection.mockResolvedValue(connection);
+
+      const mockOrder = { id: 2, status: "pending", payment_status: "paid" };
+      orderModel.findById.mockResolvedValue(mockOrder);
+      orderModel.getOrderItems.mockResolvedValue([{ variant_id: 7, quantity: 1 }]);
+      productModel.updateVariantStock.mockResolvedValue(true);
+      orderModel.update.mockResolvedValue(true);
+
+      const result = await OrderService.cancelOrder(2, "Hàng lỗi");
+
+      expect(result).toBe(true);
+      expect(orderModel.update).toHaveBeenCalledWith(2, {
+        status: "canceled",
+        payment_status: "refunded",
+      });
+      expect(connection.commit).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_ORD_15
+    test("TC_ORD_15 - should_throw_error_when_order_status_is_delivered", async () => {
+      // Input: orderId=3, order đã giao (status="delivered")
+      // Expected Output: throw Error("Cannot cancel this order")
+      // CheckDB: orderModel.update KHÔNG được gọi
+      // Rollback: transaction is rolled back via mocked connection
+      const connection = createMockConnection();
+      pool.getConnection.mockResolvedValue(connection);
+
+      orderModel.findById.mockResolvedValue({ id: 3, status: "delivered", payment_status: "paid" });
+
+      await expect(OrderService.cancelOrder(3, "test")).rejects.toThrow(
+        "Cannot cancel this order",
+      );
+      expect(orderModel.update).not.toHaveBeenCalled();
+      expect(connection.rollback).toHaveBeenCalledTimes(1);
+      expect(connection.release).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_ORD_16
+    test("TC_ORD_16 - should_throw_error_when_order_status_is_already_canceled", async () => {
+      // Input: orderId=4, order đã bị hủy (status="canceled")
+      // Expected Output: throw Error("Cannot cancel this order")
+      // CheckDB: orderModel.update KHÔNG được gọi
+      // Rollback: transaction is rolled back via mocked connection
+      const connection = createMockConnection();
+      pool.getConnection.mockResolvedValue(connection);
+
+      orderModel.findById.mockResolvedValue({ id: 4, status: "canceled", payment_status: "unpaid" });
+
+      await expect(OrderService.cancelOrder(4, "test")).rejects.toThrow(
+        "Cannot cancel this order",
+      );
+      expect(orderModel.update).not.toHaveBeenCalled();
+      expect(connection.rollback).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_ORD_17
+    test("TC_ORD_17 - should_throw_error_when_orderId_does_not_exist", async () => {
+      // Input: orderId=9999
+      // Expected Output: throw Error("Order not found")
+      // CheckDB: findById trả về null
+      // Rollback: transaction is rolled back via mocked connection
+      const connection = createMockConnection();
+      pool.getConnection.mockResolvedValue(connection);
+
+      orderModel.findById.mockResolvedValue(null);
+
+      await expect(OrderService.cancelOrder(9999, "test")).rejects.toThrow(
+        "Order not found",
+      );
+      expect(orderModel.getOrderItems).not.toHaveBeenCalled();
+      expect(connection.rollback).toHaveBeenCalledTimes(1);
+      expect(connection.release).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end cancelOrder() ─────────────────────────────────────────────────────
+
+  // ── updatePaymentStatus() ─────────────────────────────────────────────────
+  describe("updatePaymentStatus()", () => {
+    // TC_ORD_18
+    test("TC_ORD_18 - should_return_true_when_payment_status_updated_successfully", async () => {
+      // Input: orderId=1, paymentStatus="paid"
+      // Expected Output: return true
+      // CheckDB: orderModel.updatePaymentStatus được gọi với đúng tham số
+      // Rollback: no transaction, mock only
+      orderModel.updatePaymentStatus.mockResolvedValue(true);
+
+      const result = await OrderService.updatePaymentStatus(1, "paid");
+
+      expect(result).toBe(true);
+      expect(orderModel.updatePaymentStatus).toHaveBeenCalledTimes(1);
+      expect(orderModel.updatePaymentStatus).toHaveBeenCalledWith(1, "paid");
+    });
+
+    // TC_ORD_19
+    test("TC_ORD_19 - should_throw_error_when_model_fails", async () => {
+      // Input: orderId=1, paymentStatus="paid"
+      // Expected Output: throw Error("DB error")
+      // CheckDB: updatePaymentStatus ném lỗi
+      // Rollback: no transaction, mock only
+      orderModel.updatePaymentStatus.mockRejectedValue(new Error("DB error"));
+
+      await expect(OrderService.updatePaymentStatus(1, "paid")).rejects.toThrow("DB error");
+      expect(orderModel.updatePaymentStatus).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end updatePaymentStatus() ─────────────────────────────────────────────
+
+  // ── getAllOrders() ─────────────────────────────────────────────────────────
+  describe("getAllOrders()", () => {
+    // TC_ORD_20
+    test("TC_ORD_20 - should_return_all_orders_with_pagination_for_admin", async () => {
+      // Input: filters={ page: 1, limit: 20 }
+      // Expected Output: { orders: [...], pagination: { page, limit, total, total_pages } }
+      // CheckDB: findAll, count, countOrderItems được gọi
+      // Rollback: read-only flow with mocks, no DB mutation
+      const mockOrders = [
+        {
+          id: 1,
+          user_name: "Nguyen Van A",
+          user_email: "a@test.com",
+          total_price: "250000",
+          shipping_address: "123 Hà Nội",
+          status: "pending",
+          payment_status: "unpaid",
+          created_at: "2024-01-01",
+          updated_at: "2024-01-01",
+        },
+      ];
+      orderModel.findAll.mockResolvedValue(mockOrders);
+      orderModel.count.mockResolvedValue(1);
+      orderModel.countOrderItems.mockResolvedValue(2);
+
+      const result = await OrderService.getAllOrders({ page: 1, limit: 20 });
+
+      expect(result.orders).toHaveLength(1);
+      expect(result.orders[0]).toEqual({
+        id: 1,
+        customer_name: "Nguyen Van A",
+        customer_email: "a@test.com",
+        total_price: 250000,
+        shipping_address: "123 Hà Nội",
+        status: "pending",
+        payment_status: "unpaid",
+        created_at: "2024-01-01",
+        updated_at: "2024-01-01",
+        total_items: 2,
+      });
+      expect(result.pagination).toEqual({
+        page: 1,
+        limit: 20,
+        total: 1,
+        total_pages: 1,
+      });
+      expect(orderModel.findAll).toHaveBeenCalledWith({ page: 1, limit: 20 });
+      expect(orderModel.count).toHaveBeenCalledWith({ page: 1, limit: 20 });
+    });
+
+    // TC_ORD_21
+    test("TC_ORD_21 - should_use_default_pagination_when_no_filters_passed", async () => {
+      // Input: filters={} (không truyền page/limit)
+      // Expected Output: pagination dùng default page=1, limit=20
+      // CheckDB: findAll và count được gọi với filters={}
+      // Rollback: read-only flow with mocks, no DB mutation
+      orderModel.findAll.mockResolvedValue([]);
+      orderModel.count.mockResolvedValue(0);
+
+      const result = await OrderService.getAllOrders({});
+
+      expect(result.pagination).toEqual({
+        page: 1,
+        limit: 20,
+        total: 0,
+        total_pages: 0,
+      });
+    });
+
+    // TC_ORD_22
+    test("TC_ORD_22 - should_throw_error_when_model_fails", async () => {
+      // Input: filters={}
+      // Expected Output: throw Error("DB error")
+      // CheckDB: findAll ném lỗi
+      // Rollback: read-only flow with mocks, no DB mutation
+      orderModel.findAll.mockRejectedValue(new Error("DB error"));
+
+      await expect(OrderService.getAllOrders({})).rejects.toThrow("DB error");
+      expect(orderModel.findAll).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllOrders() ─────────────────────────────────────────────────────
+
+  // ── updateOrder() ─────────────────────────────────────────────────────────
+  describe("updateOrder()", () => {
+    // TC_ORD_23
+    test("TC_ORD_23 - should_return_true_when_order_updated_successfully", async () => {
+      // Input: orderId=1, updateData={ status: "shipping" }
+      // Expected Output: return true
+      // CheckDB: orderModel.update được gọi với đúng tham số
+      // Rollback: no transaction, mock only
+      orderModel.update.mockResolvedValue(true);
+
+      const result = await OrderService.updateOrder(1, { status: "shipping" });
+
+      expect(result).toBe(true);
+      expect(orderModel.update).toHaveBeenCalledTimes(1);
+      expect(orderModel.update).toHaveBeenCalledWith(1, { status: "shipping" });
+    });
+
+    // TC_ORD_24
+    test("TC_ORD_24 - should_throw_error_when_model_fails", async () => {
+      // Input: orderId=1, updateData={ status: "shipping" }
+      // Expected Output: throw Error("DB error")
+      // CheckDB: orderModel.update ném lỗi
+      // Rollback: no transaction, mock only
+      orderModel.update.mockRejectedValue(new Error("DB error"));
+
+      await expect(OrderService.updateOrder(1, { status: "shipping" })).rejects.toThrow("DB error");
+      expect(orderModel.update).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end updateOrder() ─────────────────────────────────────────────────────
 });

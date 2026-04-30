@@ -20,6 +20,7 @@ describe("ShipmentService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   // ── getShipment() ──────────────────────────────────────────────────────────

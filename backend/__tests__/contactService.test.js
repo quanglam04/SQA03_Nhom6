@@ -15,7 +15,6 @@ jest.mock("../models/contactModel");
 const contactModel = require("../models/contactModel");
 const contactService = require("../services/contactService");
 
-// ════════════════════════════════════════════════════════════════════════════
 describe("contactService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe("contactService", () => {
   // ── updateStatus() ─────────────────────────────────────────────────────────
   describe("updateStatus()", () => {
     // TC_CONT_01
-    test("TC_CONT_01 — should return success:false when status is invalid", async () => {
+    test("TC_CONT_01 — Trả về success:false khi status không hợp lệ", async () => {
       // Arrange — không cần mock model vì validation chặn trước khi gọi DB
 
       // Act
@@ -42,7 +41,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_02
-    test("TC_CONT_02 — should return success:true when status is valid and record exists", async () => {
+    test("TC_CONT_02 — Cập nhật status thành công khi status hợp lệ và record tồn tại", async () => {
       // Arrange — mock trả về affectedRows=1 (cập nhật thành công)
       contactModel.updateStatus.mockResolvedValue({ affectedRows: 1 });
 
@@ -61,7 +60,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_03
-    test("TC_CONT_03 — should return success:false when id does not exist (affectedRows=0)", async () => {
+    test("TC_CONT_03 — Trả về success:false khi id không tồn tại (affectedRows=0) trong updateStatus", async () => {
       // Arrange — mock trả về affectedRows=0 (không tìm thấy record)
       contactModel.updateStatus.mockResolvedValue({ affectedRows: 0 });
 
@@ -84,7 +83,7 @@ describe("contactService", () => {
   // ── getRequestById() ───────────────────────────────────────────────────────
   describe("getRequestById()", () => {
     // TC_CONT_04
-    test("TC_CONT_04 — should return success:true with data when id exists", async () => {
+    test("TC_CONT_04 — Trả về success:true kèm data khi id tồn tại", async () => {
       // Arrange — mock trả về array có 1 phần tử (tìm thấy record)
       const mockContact = {
         id: 1,
@@ -110,7 +109,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_05
-    test("TC_CONT_05 — should return success:false when id does not exist", async () => {
+    test("TC_CONT_05 — Trả về success:false khi id không tồn tại trong getRequestById", async () => {
       // Arrange — mock trả về array rỗng (không tìm thấy record)
       contactModel.getById.mockResolvedValue([]);
 
@@ -129,7 +128,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_06
-    test("TC_CONT_06 — should return success:false when model throws error", async () => {
+    test("TC_CONT_06 — Trả về success:false khi model ném lỗi DB trong getRequestById", async () => {
       // Arrange — mock ném lỗi DB
       contactModel.getById.mockRejectedValue(new Error("DB connection failed"));
 
@@ -153,7 +152,7 @@ describe("contactService", () => {
   // ── updateStatus() error branch ────────────────────────────────────────────
   describe("updateStatus() — error branch", () => {
     // TC_CONT_07
-    test("TC_CONT_07 — should return success:false when model throws error", async () => {
+    test("TC_CONT_07 — Trả về success:false khi model ném lỗi DB trong updateStatus", async () => {
       // Arrange — mock ném lỗi DB
       contactModel.updateStatus.mockRejectedValue(new Error("Timeout"));
 
@@ -177,7 +176,7 @@ describe("contactService", () => {
   // ── createRequest() ────────────────────────────────────────────────────────
   describe("createRequest()", () => {
     // TC_CONT_08
-    test("TC_CONT_08 — should return success:true with insertId when contact is created", async () => {
+    test("TC_CONT_08 — Tạo contact request thành công, trả về insertId", async () => {
       // Arrange — mock trả về insertId=5 (tạo record thành công)
       contactModel.create.mockResolvedValue({ insertId: 5 });
 
@@ -203,7 +202,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_09
-    test("TC_CONT_09 — should return success:false when model throws error", async () => {
+    test("TC_CONT_09 — Trả về success:false khi model ném lỗi DB trong createRequest", async () => {
       // Arrange — mock ném lỗi DB
       contactModel.create.mockRejectedValue(new Error("Duplicate entry"));
 
@@ -229,7 +228,7 @@ describe("contactService", () => {
   // ── getAllRequests() ────────────────────────────────────────────────────────
   describe("getAllRequests()", () => {
     // TC_CONT_10
-    test("TC_CONT_10 — should return success:true with list of contacts", async () => {
+    test("TC_CONT_10 — Trả về success:true kèm danh sách contacts", async () => {
       // Arrange — mock trả về danh sách 2 contact
       const mockList = [
         { id: 1, name: "Nguyen Van A", email: "a@test.com", status: "pending" },
@@ -252,7 +251,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_11
-    test("TC_CONT_11 — should return success:true with empty array when no contacts exist", async () => {
+    test("TC_CONT_11 — Trả về success:true với data rỗng khi không có contact nào", async () => {
       // Arrange — mock trả về array rỗng
       contactModel.getAll.mockResolvedValue([]);
 
@@ -271,7 +270,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_12
-    test("TC_CONT_12 — should return success:false when model throws error", async () => {
+    test("TC_CONT_12 — Trả về success:false khi model ném lỗi DB trong getAllRequests", async () => {
       // Arrange — mock ném lỗi DB
       contactModel.getAll.mockRejectedValue(new Error("Table not found"));
 
@@ -294,7 +293,7 @@ describe("contactService", () => {
   // ── deleteRequest() ────────────────────────────────────────────────────────
   describe("deleteRequest()", () => {
     // TC_CONT_13
-    test("TC_CONT_13 — should return success:true when delete succeeds", async () => {
+    test("TC_CONT_13 — Xóa contact request thành công", async () => {
       // Arrange — mock trả về affectedRows=1 (xóa thành công)
       contactModel.delete.mockResolvedValue({ affectedRows: 1 });
 
@@ -313,7 +312,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_14
-    test("TC_CONT_14 — should return success:false when id does not exist (affectedRows=0)", async () => {
+    test("TC_CONT_14 — Trả về success:false khi id không tồn tại trong deleteRequest", async () => {
       // Arrange — mock trả về affectedRows=0 (không tìm thấy record)
       contactModel.delete.mockResolvedValue({ affectedRows: 0 });
 
@@ -332,7 +331,7 @@ describe("contactService", () => {
     });
 
     // TC_CONT_15
-    test("TC_CONT_15 — should return success:false when model throws error", async () => {
+    test("TC_CONT_15 — Trả về success:false khi model ném lỗi DB trong deleteRequest", async () => {
       // Arrange — mock ném lỗi DB
       contactModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
 
@@ -353,4 +352,3 @@ describe("contactService", () => {
   });
   // ── end deleteRequest() ────────────────────────────────────────────────────
 });
-// ════════════════════════════════════════════════════════════════════════════

@@ -15,7 +15,6 @@ jest.mock("../models/shipmentModel");
 const ShipmentModel = require("../models/shipmentModel");
 const ShipmentService = require("../services/shipmentService");
 
-// ════════════════════════════════════════════════════════════════════════════
 describe("ShipmentService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
@@ -133,7 +132,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_05
-    test("TC_SHIP_05 — should throw error when model throws in updateShipment", async () => {
+    test("TC_SHIP_05 — Throw lỗi khi model ném lỗi DB trong updateShipment", async () => {
       // Arrange — mock findByOrderId ném lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("DB connection failed"));
 
@@ -152,7 +151,7 @@ describe("ShipmentService", () => {
   // ── getShipment() error branch ─────────────────────────────────────────────
   describe("getShipment() — error branch", () => {
     // TC_SHIP_06
-    test("TC_SHIP_06 — should throw error when model throws in getShipment", async () => {
+    test("TC_SHIP_06 — Throw lỗi khi model ném lỗi DB trong getShipment", async () => {
       // Arrange — mock findByOrderId ném lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("Timeout"));
 
@@ -169,7 +168,7 @@ describe("ShipmentService", () => {
   // ── getAllShipments() ──────────────────────────────────────────────────────
   describe("getAllShipments()", () => {
     // TC_SHIP_07
-    test("TC_SHIP_07 — should return list of all shipments with filters", async () => {
+    test("TC_SHIP_07 — Trả về danh sách tất cả shipments theo filters", async () => {
       // Arrange — mock trả về danh sách 2 shipment
       const mockList = [
         { order_id: 1, status: "shipping", tracking_code: "VN001" },
@@ -192,7 +191,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_08
-    test("TC_SHIP_08 — should return empty array when no shipments exist", async () => {
+    test("TC_SHIP_08 — Trả về mảng rỗng khi không có shipment nào", async () => {
       // Arrange — mock trả về array rỗng
       ShipmentModel.findAll.mockResolvedValue([]);
 
@@ -209,7 +208,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_09
-    test("TC_SHIP_09 — should use empty object as default filters when none passed", async () => {
+    test("TC_SHIP_09 — Dùng {} làm default filters khi không truyền argument", async () => {
       // Arrange — gọi không truyền filters, mong model nhận {}
       ShipmentModel.findAll.mockResolvedValue([]);
 
@@ -222,7 +221,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_10
-    test("TC_SHIP_10 — should throw error when model throws in getAllShipments", async () => {
+    test("TC_SHIP_10 — Throw lỗi khi model ném lỗi DB trong getAllShipments", async () => {
       // Arrange — mock ném lỗi DB
       ShipmentModel.findAll.mockRejectedValue(new Error("Table not found"));
 
@@ -240,7 +239,7 @@ describe("ShipmentService", () => {
   // ── deleteShipment() ──────────────────────────────────────────────────────
   describe("deleteShipment()", () => {
     // TC_SHIP_11
-    test("TC_SHIP_11 — should return result when delete succeeds", async () => {
+    test("TC_SHIP_11 — Trả về kết quả xóa thành công khi orderId tồn tại", async () => {
       // Arrange — mock trả về { affectedRows: 1 } (xóa thành công)
       ShipmentModel.delete.mockResolvedValue({ affectedRows: 1 });
 
@@ -256,7 +255,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_12
-    test("TC_SHIP_12 — should return result when orderId does not exist (affectedRows=0)", async () => {
+    test("TC_SHIP_12 — Trả về affectedRows=0 khi orderId không tồn tại", async () => {
       // Arrange — mock trả về affectedRows=0 (không tìm thấy record)
       ShipmentModel.delete.mockResolvedValue({ affectedRows: 0 });
 
@@ -272,7 +271,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_13
-    test("TC_SHIP_13 — should throw error when model throws in deleteShipment", async () => {
+    test("TC_SHIP_13 — Throw lỗi khi model ném lỗi DB trong deleteShipment", async () => {
       // Arrange — mock ném lỗi DB
       ShipmentModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
 
@@ -288,4 +287,3 @@ describe("ShipmentService", () => {
   });
   // ── end deleteShipment() ──────────────────────────────────────────────────
 });
-// ════════════════════════════════════════════════════════════════════════════

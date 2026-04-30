@@ -58,7 +58,7 @@ describe("OrderService", () => {
   });
 
   describe("createOrder()", () => {
-    test("TC_ORD_01 - should_create_order_successfully_from_valid_cart", async () => {
+    test("TC_ORD_01 - Tạo đơn hàng thành công từ giỏ hàng hợp lệ", async () => {
       // Input: userId=1, cartId=1, shippingAddress="123 Hà Nội", paymentMethod="COD", note=""
       // Expected Output: return { order_id, total_price }; create/addItem/updateStock/clearCart are called
       // CheckDB: verify createOrder + addOrderItem + updateVariantStock + clearCartItems calls
@@ -137,7 +137,7 @@ describe("OrderService", () => {
       expect(result).toEqual({ order_id: 88, total_price: 250000 });
     });
 
-    test("TC_ORD_02 - should_throw_error_when_cart_has_no_items", async () => {
+    test("TC_ORD_02 - Throw lỗi khi giỏ hàng không có items", async () => {
       // Input: userId=1, cartId=1
       // Expected Output: throw Error("Cart is empty")
       // CheckDB: getCartItemsWithDetails called, order creation not called
@@ -163,7 +163,7 @@ describe("OrderService", () => {
       expect(connection.release).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_ORD_03 - should_throw_error_when_stock_is_insufficient_for_item", async () => {
+    test("TC_ORD_03 - Throw lỗi khi tồn kho không đủ cho một item", async () => {
       // Input: userId=1, cartId=1, cart has item quantity=5 but stock=2
       // Expected Output: throw Error containing "Insufficient stock for"
       // CheckDB: order creation and stock updates must not happen
@@ -199,7 +199,7 @@ describe("OrderService", () => {
       expect(connection.release).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_ORD_04 - should_calculate_total_price_with_subtotal_shipping_and_tax", async () => {
+    test("TC_ORD_04 - Tính đúng tổng tiền: subtotal + phí ship(30000) + thuế(10%)", async () => {
       // Input: userId=1, cartId=1, paymentMethod="COD", item quantity=2, price_sale=100000
       // Expected Output: total_price = 200000 + 30000 + 20000 = 250000
       // CheckDB: verify total_price passed to orderModel.create is correct
@@ -245,7 +245,7 @@ describe("OrderService", () => {
   });
 
   describe("getCheckoutInfo()", () => {
-    test("TC_ORD_05 - should_return_checkout_info_when_cart_is_valid", async () => {
+    test("TC_ORD_05 - Trả về thông tin checkout đầy đủ khi cart hợp lệ", async () => {
       // Input: cartId=1
       // Expected Output: return object { items[], subtotal, shipping_fee=30000, tax=subtotal*0.1, total_price }
       // CheckDB: findById and getCartItemsWithDetails are called with cartId
@@ -333,7 +333,7 @@ describe("OrderService", () => {
       );
     });
 
-    test("TC_ORD_06 - should_throw_error_when_cart_id_does_not_exist", async () => {
+    test("TC_ORD_06 - Throw lỗi khi cartId không tồn tại", async () => {
       // Input: cartId=9999
       // Expected Output: throw Error("Cart not found")
       // CheckDB: findById called; getCartItemsWithDetails not called
@@ -347,7 +347,7 @@ describe("OrderService", () => {
       expect(cartModel.getCartItemsWithDetails).not.toHaveBeenCalled();
     });
 
-    test("TC_ORD_07 - should_throw_error_when_cart_exists_but_has_no_items", async () => {
+    test("TC_ORD_07 - Throw lỗi khi giỏ hàng tồn tại nhưng trống", async () => {
       // Input: cartId=1
       // Expected Output: throw Error("Cart is empty")
       // CheckDB: findById and getCartItemsWithDetails are called
@@ -366,7 +366,7 @@ describe("OrderService", () => {
   // ── getOrderDetail() ────────────────────────────────────────────────────────
   describe("getOrderDetail()", () => {
     // TC_ORD_08
-    test("TC_ORD_08 - should_return_order_detail_when_orderId_exists", async () => {
+    test("TC_ORD_08 - Trả về chi tiết đơn hàng khi orderId tồn tại", async () => {
       // Input: orderId=1
       // Expected Output: return order object với đầy đủ thông tin
       // CheckDB: findByIdWithDetails được gọi với orderId=1
@@ -390,7 +390,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_09
-    test("TC_ORD_09 - should_throw_error_when_orderId_does_not_exist", async () => {
+    test("TC_ORD_09 - Throw lỗi khi orderId không tồn tại", async () => {
       // Input: orderId=9999
       // Expected Output: throw Error("Order not found")
       // CheckDB: findByIdWithDetails được gọi, trả về null
@@ -409,7 +409,7 @@ describe("OrderService", () => {
   // ── getMyOrders() ──────────────────────────────────────────────────────────
   describe("getMyOrders()", () => {
     // TC_ORD_10
-    test("TC_ORD_10 - should_return_orders_and_pagination_for_valid_user", async () => {
+    test("TC_ORD_10 - Trả về danh sách đơn hàng kèm pagination cho user hợp lệ", async () => {
       // Input: userId=1, filters={ page: 1, limit: 10 }
       // Expected Output: { orders: [...], pagination: { page, limit, total, total_pages } }
       // CheckDB: findByUserId, countByUserId, countOrderItems được gọi
@@ -445,7 +445,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_11
-    test("TC_ORD_11 - should_use_default_pagination_when_filters_are_empty", async () => {
+    test("TC_ORD_11 - Dùng default pagination khi filters rỗng", async () => {
       // Input: userId=1, filters={} (không truyền page/limit)
       // Expected Output: pagination dùng default page=1, limit=10
       // CheckDB: findByUserId và countByUserId được gọi với filters={}
@@ -465,7 +465,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_12
-    test("TC_ORD_12 - should_throw_error_when_model_fails", async () => {
+    test("TC_ORD_12 - Throw lỗi khi model ném lỗi DB trong getMyOrders", async () => {
       // Input: userId=1
       // Expected Output: throw Error("DB error")
       // CheckDB: findByUserId ném lỗi
@@ -481,7 +481,7 @@ describe("OrderService", () => {
   // ── cancelOrder() ─────────────────────────────────────────────────────────
   describe("cancelOrder()", () => {
     // TC_ORD_13
-    test("TC_ORD_13 - should_cancel_order_and_restore_stock_when_order_is_pending", async () => {
+    test("TC_ORD_13 - Hủy đơn hàng thành công và hoàn lại tồn kho", async () => {
       // Input: orderId=1, reason="Tôi đổi ý"
       // Expected Output: return true; stock được hoàn lại, status cập nhật = "canceled"
       // CheckDB: getOrderItems, updateVariantStock(increment), update(canceled) được gọi
@@ -513,7 +513,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_14
-    test("TC_ORD_14 - should_set_payment_status_refunded_when_order_was_paid", async () => {
+    test("TC_ORD_14 - Thêm payment_status=refunded khi hủy đơn đã thanh toán", async () => {
       // Input: orderId=2, order đã thanh toán (payment_status="paid")
       // Expected Output: update được gọi với { status: "canceled", payment_status: "refunded" }
       // CheckDB: xác minh updateData có payment_status="refunded"
@@ -538,7 +538,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_15
-    test("TC_ORD_15 - should_throw_error_when_order_status_is_delivered", async () => {
+    test("TC_ORD_15 - Throw lỗi khi đơn hàng đã giao, không thể hủy", async () => {
       // Input: orderId=3, order đã giao (status="delivered")
       // Expected Output: throw Error("Cannot cancel this order")
       // CheckDB: orderModel.update KHÔNG được gọi
@@ -557,7 +557,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_16
-    test("TC_ORD_16 - should_throw_error_when_order_status_is_already_canceled", async () => {
+    test("TC_ORD_16 - Throw lỗi khi đơn hàng đã bị hủy trước đó", async () => {
       // Input: orderId=4, order đã bị hủy (status="canceled")
       // Expected Output: throw Error("Cannot cancel this order")
       // CheckDB: orderModel.update KHÔNG được gọi
@@ -575,7 +575,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_17
-    test("TC_ORD_17 - should_throw_error_when_orderId_does_not_exist", async () => {
+    test("TC_ORD_17 - Throw lỗi khi orderId không tồn tại trong cancelOrder", async () => {
       // Input: orderId=9999
       // Expected Output: throw Error("Order not found")
       // CheckDB: findById trả về null
@@ -598,7 +598,7 @@ describe("OrderService", () => {
   // ── updatePaymentStatus() ─────────────────────────────────────────────────
   describe("updatePaymentStatus()", () => {
     // TC_ORD_18
-    test("TC_ORD_18 - should_return_true_when_payment_status_updated_successfully", async () => {
+    test("TC_ORD_18 - Cập nhật payment status thành công", async () => {
       // Input: orderId=1, paymentStatus="paid"
       // Expected Output: return true
       // CheckDB: orderModel.updatePaymentStatus được gọi với đúng tham số
@@ -613,7 +613,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_19
-    test("TC_ORD_19 - should_throw_error_when_model_fails", async () => {
+    test("TC_ORD_19 - Throw lỗi khi model ném lỗi DB trong updatePaymentStatus", async () => {
       // Input: orderId=1, paymentStatus="paid"
       // Expected Output: throw Error("DB error")
       // CheckDB: updatePaymentStatus ném lỗi
@@ -629,7 +629,7 @@ describe("OrderService", () => {
   // ── getAllOrders() ─────────────────────────────────────────────────────────
   describe("getAllOrders()", () => {
     // TC_ORD_20
-    test("TC_ORD_20 - should_return_all_orders_with_pagination_for_admin", async () => {
+    test("TC_ORD_20 - Trả về tất cả đơn hàng kèm pagination cho admin", async () => {
       // Input: filters={ page: 1, limit: 20 }
       // Expected Output: { orders: [...], pagination: { page, limit, total, total_pages } }
       // CheckDB: findAll, count, countOrderItems được gọi
@@ -677,7 +677,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_21
-    test("TC_ORD_21 - should_use_default_pagination_when_no_filters_passed", async () => {
+    test("TC_ORD_21 - Dùng default pagination khi không truyền filters", async () => {
       // Input: filters={} (không truyền page/limit)
       // Expected Output: pagination dùng default page=1, limit=20
       // CheckDB: findAll và count được gọi với filters={}
@@ -696,7 +696,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_22
-    test("TC_ORD_22 - should_throw_error_when_model_fails", async () => {
+    test("TC_ORD_22 - Throw lỗi khi model ném lỗi DB trong getAllOrders", async () => {
       // Input: filters={}
       // Expected Output: throw Error("DB error")
       // CheckDB: findAll ném lỗi
@@ -712,7 +712,7 @@ describe("OrderService", () => {
   // ── updateOrder() ─────────────────────────────────────────────────────────
   describe("updateOrder()", () => {
     // TC_ORD_23
-    test("TC_ORD_23 - should_return_true_when_order_updated_successfully", async () => {
+    test("TC_ORD_23 - Cập nhật đơn hàng thành công", async () => {
       // Input: orderId=1, updateData={ status: "shipping" }
       // Expected Output: return true
       // CheckDB: orderModel.update được gọi với đúng tham số
@@ -727,7 +727,7 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_24
-    test("TC_ORD_24 - should_throw_error_when_model_fails", async () => {
+    test("TC_ORD_24 - Throw lỗi khi model ném lỗi DB trong updateOrder", async () => {
       // Input: orderId=1, updateData={ status: "shipping" }
       // Expected Output: throw Error("DB error")
       // CheckDB: orderModel.update ném lỗi
@@ -745,7 +745,7 @@ describe("OrderService", () => {
 // ─── Branch bổ sung ──────────────────────────────────────────────────────────
 describe("createOrder() — updateVariantStock returns false", () => {
   // TC_ORD_25
-  test("TC_ORD_25 - should_throw_error_when_updateVariantStock_returns_false", async () => {
+  test("TC_ORD_25 - Throw lỗi khi updateVariantStock trả về false", async () => {
     // Input: cart có 1 item, updateVariantStock trả về false
     // Expected Output: throw Error("Failed to update stock for variant ...")
     // CheckDB: rollback được gọi
@@ -772,7 +772,7 @@ describe("createOrder() — updateVariantStock returns false", () => {
 
 // ─── Branch bổ sung: getAllOrders không truyền filters ───────────────────────
 describe("getAllOrders() — no filters (default limit=20)", () => {
-  test("TC_ORD_26 - should_use_default_limit_20_when_filters_is_undefined", async () => {
+  test("TC_ORD_26 - Dùng default limit=20 khi gọi getAllOrders không truyền filters", async () => {
     // Input: gọi getAllOrders() không truyền filters
     // Expected: pagination dùng default limit=20
     orderModel.findAll.mockResolvedValue([]);

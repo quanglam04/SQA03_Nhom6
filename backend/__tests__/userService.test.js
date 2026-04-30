@@ -25,7 +25,7 @@ describe("userService", () => {
   });
 
   describe("changePassword()", () => {
-    test("TC_USER_01 - should_hash_and_save_new_password_when_current_password_is_correct", async () => {
+    test("TC_USER_01 - Hash và lưu password mới khi current password đúng", async () => {
       // Input: id=1, currentPassword="OldPass@1", newPassword="NewPass@1"
       // Expected Output: new password is hashed and saved; updatePassword is called; return update result
       // Mock: user exists, bcrypt.compare=true, bcrypt.hash returns hashed_new_password
@@ -60,7 +60,7 @@ describe("userService", () => {
       expect(result).toEqual(mockUpdateResult);
     });
 
-    test("TC_USER_02 - should_throw_INCORRECT_PASSWORD_when_current_password_is_wrong", async () => {
+    test("TC_USER_02 - Throw lỗi INCORRECT_PASSWORD khi current password sai", async () => {
       // Input: id=1, currentPassword="WrongPass", newPassword="NewPass@1"
       // Expected Output: throw Error with code="INCORRECT_PASSWORD"
       // Mock: bcrypt.compare=false; no DB update
@@ -88,7 +88,7 @@ describe("userService", () => {
       expect(userModel.updatePassword).not.toHaveBeenCalled();
     });
 
-    test("TC_USER_03 - should_throw_USER_NOT_FOUND_when_user_does_not_exist", async () => {
+    test("TC_USER_03 - Throw lỗi USER_NOT_FOUND khi user không tồn tại", async () => {
       // Input: id=999, currentPassword="any", newPassword="any"
       // Expected Output: throw Error with code="USER_NOT_FOUND"
       // Mock: userModel.findByIdWithPassword returns null
@@ -112,7 +112,7 @@ describe("userService", () => {
 
   // ── getAllUsers() ──────────────────────────────────────────────────────────
   describe("getAllUsers()", () => {
-    test("TC_USER_07 - should_return_list_of_all_users", async () => {
+    test("TC_USER_07 - Trả về danh sách tất cả users", async () => {
       // Input: không có tham số
       // Expected Output: trả về danh sách users từ model
       // CheckDB: userModel.findAll được gọi đúng 1 lần
@@ -129,7 +129,7 @@ describe("userService", () => {
       expect(userModel.findAll).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_USER_08 - should_return_empty_array_when_no_users_exist", async () => {
+    test("TC_USER_08 - Trả về mảng rỗng khi không có user nào", async () => {
       // Input: không có tham số
       // Expected Output: trả về mảng rỗng
       // CheckDB: userModel.findAll được gọi đúng 1 lần
@@ -142,7 +142,7 @@ describe("userService", () => {
       expect(userModel.findAll).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_USER_09 - should_throw_error_when_model_findAll_fails", async () => {
+    test("TC_USER_09 - Throw lỗi khi model.findAll ném lỗi DB", async () => {
       // Input: không có tham số
       // Expected Output: throw DB error từ model
       // CheckDB: userModel.findAll được gọi trước khi throw
@@ -157,7 +157,7 @@ describe("userService", () => {
 
   // ── getUserById() ─────────────────────────────────────────────────────────
   describe("getUserById()", () => {
-    test("TC_USER_10 - should_return_user_when_id_exists", async () => {
+    test("TC_USER_10 - Trả về user object khi id tồn tại", async () => {
       // Input: id=1
       // Expected Output: trả về user object từ model
       // CheckDB: userModel.findById được gọi với đúng id
@@ -172,7 +172,7 @@ describe("userService", () => {
       expect(userModel.findById).toHaveBeenCalledWith(1);
     });
 
-    test("TC_USER_11 - should_return_null_when_id_does_not_exist", async () => {
+    test("TC_USER_11 - Trả về null khi id không tồn tại", async () => {
       // Input: id=9999
       // Expected Output: trả về null (không tìm thấy user)
       // CheckDB: userModel.findById được gọi với id=9999
@@ -186,7 +186,7 @@ describe("userService", () => {
       expect(userModel.findById).toHaveBeenCalledWith(9999);
     });
 
-    test("TC_USER_12 - should_throw_error_when_model_findById_fails", async () => {
+    test("TC_USER_12 - Throw lỗi khi model.findById ném lỗi DB", async () => {
       // Input: id=1
       // Expected Output: throw DB error từ model
       // CheckDB: userModel.findById được gọi trước khi throw
@@ -201,7 +201,7 @@ describe("userService", () => {
   // ── end getUserById() ─────────────────────────────────────────────────────
 
   describe("updateUser()", () => {
-    test("TC_USER_04 - should_return_updated_user_when_id_exists_and_payload_is_valid", async () => {
+    test("TC_USER_04 - Trả về user đã cập nhật khi id tồn tại và payload hợp lệ", async () => {
       // Input: id=3, data={ name: "Van", phone: "0912345678" }
       // Expected Output: return updated user data from model
       // Mock: userModel.updateById resolves updated object
@@ -219,7 +219,7 @@ describe("userService", () => {
       expect(result).toEqual(mockResult);
     });
 
-    test("TC_USER_05 - should_return_null_when_user_id_does_not_exist", async () => {
+    test("TC_USER_05 - Trả về null khi user id không tồn tại", async () => {
       // Input: id=999, data={ name: "Ghost" }
       // Expected Output: return null (no user updated)
       // Mock: userModel.updateById resolves null
@@ -235,7 +235,7 @@ describe("userService", () => {
       expect(result).toBeNull();
     });
 
-    test("TC_USER_06 - should_throw_error_when_model_updateById_fails", async () => {
+    test("TC_USER_06 - Throw lỗi khi model.updateById ném lỗi DB", async () => {
       // Input: id=3, data={ name: "Van" }
       // Expected Output: throw DB error from model
       // Mock: userModel.updateById rejects with error

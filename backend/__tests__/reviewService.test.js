@@ -152,9 +152,7 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
   });
 });
 
-// ════════════════════════════════════════════════════════════════════════════
 // Bổ sung — nâng Branch coverage lên 100%
-// ════════════════════════════════════════════════════════════════════════════
 describe('reviewService — branch coverage bổ sung', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -240,7 +238,7 @@ describe('reviewService — branch coverage bổ sung', () => {
   // ── addOrUpdateReviewFromOrder() — branch bổ sung ────────────────────────
   describe('addOrUpdateReviewFromOrder() — branch bổ sung', () => {
     // TC_REV_18
-    test('TC_REV_18 - days_since_delivery là null → fallback 9999 → bị block bởi WINDOW_EXPIRED', async () => {
+    test('TC_REV_18 - days_since_delivery là null thì fallback 9999, bị block bởi WINDOW_EXPIRED', async () => {
       // Arrange — days_since_delivery = null → Number(null ?? 9999) = 9999 → 9999 >= 30 → WINDOW_EXPIRED
       pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: null }]]);
 
@@ -254,7 +252,7 @@ describe('reviewService — branch coverage bổ sung', () => {
     });
 
     // TC_REV_19
-    test('TC_REV_19 - comment là null thì safeComment fallback về chuỗi rỗng', async () => {
+    test('TC_REV_19 - comment là null thì safeComment fallback về chuỗi rỗng trong addOrUpdateReviewFromOrder', async () => {
       // Arrange
       pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: 5 }]]);
       reviewModel.findByUserAndProduct.mockResolvedValue(null);
@@ -276,7 +274,7 @@ describe('reviewService — branch coverage bổ sung', () => {
   // ── getOrderReviewStatus() — branch bổ sung ──────────────────────────────
   describe('getOrderReviewStatus() — branch bổ sung', () => {
     // TC_REV_20
-    test('TC_REV_20 - Đơn hàng chưa delivered: days_since và daysRemaining là null, windowOpen = false', async () => {
+    test('TC_REV_20 - Đơn hàng chưa delivered: days_since và daysRemaining là null, windowOpen=false', async () => {
       // Arrange — status không phải delivered
       pool.query
         .mockResolvedValueOnce([[{ status: 'pending', days_since_delivery: null }]])
@@ -294,7 +292,7 @@ describe('reviewService — branch coverage bổ sung', () => {
     });
 
     // TC_REV_21
-    test('TC_REV_21 - Đơn hàng delivered đúng 30 ngày: daysRemaining = 0, windowOpen = false', async () => {
+    test('TC_REV_21 - Đơn hàng delivered đúng 30 ngày: daysRemaining=0, windowOpen=false', async () => {
       // Arrange — days_since_delivery = 30 → daysRemaining = 0, windowOpen = false (30 < 30 là false)
       pool.query
         .mockResolvedValueOnce([[{ status: 'delivered', days_since_delivery: 30 }]])
@@ -311,7 +309,7 @@ describe('reviewService — branch coverage bổ sung', () => {
     });
 
     // TC_REV_22
-    test('TC_REV_22 - days_since_delivery là null khi delivered: daysSince = 9999, daysRemaining = 0, windowOpen = false', async () => {
+    test('TC_REV_22 - days_since_delivery là null khi delivered: daysSince=9999, daysRemaining=0, windowOpen=false', async () => {
       // Arrange — delivered nhưng days_since_delivery = null → Number(null ?? 9999) = 9999
       // → isFinite(9999) = true → daysRemaining = Math.max(0, 30 - 9999) = 0, windowOpen = false
       pool.query
@@ -334,7 +332,7 @@ describe('reviewService — branch coverage bổ sung', () => {
 // ─── Branch bổ sung: o.status là null ────────────────────────────────────────
 describe("getOrderReviewStatus() — status null branch", () => {
   // TC_REV_23
-  test('TC_REV_23 - Đơn hàng tìm thấy nhưng status là null: delivered = false', async () => {
+  test('TC_REV_23 - Đơn hàng tìm thấy nhưng status là null: delivered=false', async () => {
     // Arrange — status = null → String(null || '').toLowerCase() = '' ≠ 'delivered'
     pool.query
       .mockResolvedValueOnce([[{ status: null, days_since_delivery: null }]])

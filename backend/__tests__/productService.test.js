@@ -15,7 +15,6 @@ jest.mock("../models/productModel");
 const productModel = require("../models/productModel");
 const ProductService = require("../services/productService");
 
-// ════════════════════════════════════════════════════════════════════════════
 describe("ProductService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe("ProductService", () => {
   // ── createProduct() ───────────────────────────────────────────────────────
   describe("createProduct()", () => {
     // TC_PROD_01
-    test("TC_PROD_01 — should_return_new_product_object_when_created_with_valid_data", async () => {
+    test("TC_PROD_01 — Tạo sản phẩm mới thành công và trả về product object", async () => {
       // Arrange — mock dữ liệu trả về khi tạo sản phẩm thành công
       const inputData = {
         name: "Táo đỏ",
@@ -57,7 +56,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_06
-    test("TC_PROD_06 — should_throw_error_when_createWithVariants_fails", async () => {
+    test("TC_PROD_06 — Throw lỗi khi createWithVariants thất bại", async () => {
       // Arrange — mock createWithVariants ném lỗi (ví dụ: category không tồn tại)
       const inputData = {
         name: "Sản phẩm lỗi",
@@ -84,7 +83,7 @@ describe("ProductService", () => {
   // ── getAllProducts() ──────────────────────────────────────────────────────
   describe("getAllProducts()", () => {
     // TC_PROD_13
-    test("TC_PROD_13 — should_return_all_products_with_variants_for_admin", async () => {
+    test("TC_PROD_13 — Trả về tất cả sản phẩm kèm variants cho admin", async () => {
       // Arrange — mock findAllWithVariants trả về danh sách sản phẩm kèm variants
       const mockProducts = [
         { id: 1, name: "Táo đỏ", price: 50000, variants: [{ name: "1kg", stock: 100 }] },
@@ -112,7 +111,7 @@ describe("ProductService", () => {
   // ── getAllActiveProducts() ────────────────────────────────────────────────
   describe("getAllActiveProducts()", () => {
     // TC_PROD_14
-    test("TC_PROD_14 — should_return_active_products_for_homepage", async () => {
+    test("TC_PROD_14 — Trả về danh sách sản phẩm active cho trang chủ", async () => {
       // Arrange — mock findAllActive trả về array sản phẩm có status active
       const mockActiveProducts = [
         { id: 1, name: "Táo đỏ", price: 50000, status: "active" },
@@ -135,7 +134,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_15
-    test("TC_PROD_15 — should_return_empty_array_when_no_active_products_exist", async () => {
+    test("TC_PROD_15 — Trả về mảng rỗng khi không có sản phẩm active nào", async () => {
       // Arrange — mock findAllActive trả về array rỗng
       productModel.findAllActive.mockResolvedValue([]);
 
@@ -158,7 +157,7 @@ describe("ProductService", () => {
   // ── getProductDetail() ────────────────────────────────────────────────────
   describe("getProductDetail()", () => {
     // TC_PROD_02
-    test("TC_PROD_02 — should_return_product_with_variants_when_product_exists", async () => {
+    test("TC_PROD_02 — Trả về sản phẩm kèm variants khi product tồn tại", async () => {
       // Arrange — mock dữ liệu trả về khi tìm thấy sản phẩm kèm variants
       const mockProduct = {
         id: 1,
@@ -186,7 +185,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_07
-    test("TC_PROD_07 — should_return_null_when_product_id_does_not_exist", async () => {
+    test("TC_PROD_07 — Trả về null khi id sản phẩm không tồn tại trong getProductDetail", async () => {
       // Arrange — mock findByIdWithVariants trả về null (không tìm thấy sản phẩm)
       productModel.findByIdWithVariants.mockResolvedValue(null);
 
@@ -206,7 +205,7 @@ describe("ProductService", () => {
   // ── getProductsByCategory() ───────────────────────────────────────────────
   describe("getProductsByCategory()", () => {
     // TC_PROD_16
-    test("TC_PROD_16 — should_return_products_when_categoryId_is_valid", async () => {
+    test("TC_PROD_16 — Trả về danh sách sản phẩm khi categoryId hợp lệ", async () => {
       // Arrange — mock findByCategory trả về array sản phẩm thuộc category
       const mockProducts = [
         { id: 1, name: "Táo đỏ", price: 50000, category_id: 1 },
@@ -230,7 +229,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_17
-    test("TC_PROD_17 — should_return_empty_array_when_category_has_no_products", async () => {
+    test("TC_PROD_17 — Trả về mảng rỗng khi danh mục không có sản phẩm nào", async () => {
       // Arrange — mock findByCategory trả về [] (không có sản phẩm nào thuộc category này)
       productModel.findByCategory.mockResolvedValue([]);
 
@@ -254,7 +253,7 @@ describe("ProductService", () => {
   // ── searchProductByName() ─────────────────────────────────────────────────
   describe("searchProductByName()", () => {
     // TC_PROD_03
-    test("TC_PROD_03 — should_return_array_with_products_when_keyword_matches", async () => {
+    test("TC_PROD_03 — Trả về array sản phẩm khi từ khóa khớp với tên", async () => {
       // Arrange — mock trả về danh sách có ít nhất 1 sản phẩm khớp từ khóa
       const mockProducts = [
         { id: 1, name: "Táo đỏ", price: 50000 },
@@ -276,7 +275,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_04
-    test("TC_PROD_04 — should_return_empty_array_when_no_product_matches_keyword", async () => {
+    test("TC_PROD_04 — Trả về mảng rỗng khi không có sản phẩm khớp từ khóa", async () => {
       // Arrange — mock trả về array rỗng vì không có sản phẩm khớp
       productModel.findByName.mockResolvedValue([]);
 
@@ -298,7 +297,7 @@ describe("ProductService", () => {
   // ── getProductById() ──────────────────────────────────────────────────────
   describe("getProductById()", () => {
     // TC_PROD_18
-    test("TC_PROD_18 — should_return_product_without_variants_when_id_exists", async () => {
+    test("TC_PROD_18 — Trả về sản phẩm (không kèm variants) khi id tồn tại", async () => {
       // Arrange — mock findById trả về product object không có variants
       const mockProduct = { id: 1, name: "Táo đỏ", price: 50000, category_id: 1 };
       productModel.findById.mockResolvedValue(mockProduct);
@@ -319,7 +318,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_19
-    test("TC_PROD_19 — should_return_null_when_product_id_does_not_exist", async () => {
+    test("TC_PROD_19 — Trả về null khi id sản phẩm không tồn tại trong getProductById", async () => {
       // Arrange — mock findById trả về null
       productModel.findById.mockResolvedValue(null);
 
@@ -341,7 +340,7 @@ describe("ProductService", () => {
   // ── updateProduct() ───────────────────────────────────────────────────────
   describe("updateProduct()", () => {
     // TC_PROD_08
-    test("TC_PROD_08 — should_return_updated_product_when_update_succeeds_with_valid_data", async () => {
+    test("TC_PROD_08 — Trả về sản phẩm đã cập nhật khi update thành công", async () => {
       // Arrange — mock updateWithVariants trả về product đã được cập nhật
       const updateData = {
         name: "Táo đỏ New Zealand",
@@ -372,7 +371,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_09
-    test("TC_PROD_09 — should_return_null_when_product_id_does_not_exist", async () => {
+    test("TC_PROD_09 — Trả về null khi id sản phẩm không tồn tại trong updateProduct", async () => {
       // Arrange — mock updateWithVariants trả về null (id không tồn tại trong DB)
       const updateData = { name: "Sản phẩm không tồn tại", price: 10000 };
       productModel.updateWithVariants.mockResolvedValue(null);
@@ -389,7 +388,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_10
-    test("TC_PROD_10 — should_throw_error_when_updateWithVariants_fails", async () => {
+    test("TC_PROD_10 — Throw lỗi khi updateWithVariants thất bại", async () => {
       // Arrange — mock updateWithVariants ném lỗi (DB error)
       const updateData = { name: "Lỗi DB", price: 10000 };
       productModel.updateWithVariants.mockRejectedValue(
@@ -411,7 +410,7 @@ describe("ProductService", () => {
   // ── deleteProduct() ───────────────────────────────────────────────────────
   describe("deleteProduct()", () => {
     // TC_PROD_05
-    test("TC_PROD_05 — should_call_removeWithVariants_and_return_result_when_product_exists", async () => {
+    test("TC_PROD_05 — Gọi removeWithVariants và trả về kết quả khi product tồn tại", async () => {
       // Arrange — mock trả về kết quả xóa thành công
       const mockDeleteResult = { affectedRows: 1 };
       productModel.removeWithVariants.mockResolvedValue(mockDeleteResult);
@@ -431,7 +430,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_11
-    test("TC_PROD_11 — should_return_affectedRows_zero_when_product_id_does_not_exist", async () => {
+    test("TC_PROD_11 — Trả về affectedRows=0 khi id sản phẩm không tồn tại trong deleteProduct", async () => {
       // Arrange — mock removeWithVariants trả về affectedRows=0 (id không tồn tại)
       const mockDeleteResult = { affectedRows: 0 };
       productModel.removeWithVariants.mockResolvedValue(mockDeleteResult);
@@ -449,7 +448,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_12
-    test("TC_PROD_12 — should_throw_error_when_removeWithVariants_fails", async () => {
+    test("TC_PROD_12 — Throw lỗi khi removeWithVariants thất bại", async () => {
       // Arrange — mock removeWithVariants ném lỗi (ví dụ: foreign key constraint)
       productModel.removeWithVariants.mockRejectedValue(
         new Error("Cannot delete: product is referenced by existing orders")
@@ -470,7 +469,7 @@ describe("ProductService", () => {
   // ── deleteVariant() ───────────────────────────────────────────────────────
   describe("deleteVariant()", () => {
     // TC_PROD_20
-    test("TC_PROD_20 — should_delete_variant_successfully_when_variantId_exists", async () => {
+    test("TC_PROD_20 — Xóa variant thành công khi variantId tồn tại", async () => {
       // Arrange — mock deleteVariantById trả về kết quả xóa thành công
       const mockDeleteResult = { affectedRows: 1 };
       productModel.deleteVariantById.mockResolvedValue(mockDeleteResult);
@@ -490,7 +489,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_21
-    test("TC_PROD_21 — should_return_affectedRows_zero_when_variantId_does_not_exist", async () => {
+    test("TC_PROD_21 — Trả về affectedRows=0 khi variantId không tồn tại", async () => {
       // Arrange — mock deleteVariantById trả về affectedRows=0 (variantId không tồn tại)
       const mockDeleteResult = { affectedRows: 0 };
       productModel.deleteVariantById.mockResolvedValue(mockDeleteResult);
@@ -510,7 +509,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_22
-    test("TC_PROD_22 — should_throw_error_when_deleteVariantById_fails", async () => {
+    test("TC_PROD_22 — Throw lỗi khi deleteVariantById thất bại", async () => {
       // Arrange — mock deleteVariantById ném lỗi (DB error)
       productModel.deleteVariantById.mockRejectedValue(
         new Error("Database error")
@@ -530,4 +529,3 @@ describe("ProductService", () => {
   });
   // ── end deleteVariant() ───────────────────────────────────────────────────
 });
-// ════════════════════════════════════════════════════════════════════════════

@@ -15,7 +15,6 @@ jest.mock("../models/blogModel");
 const blogModel = require("../models/blogModel");
 const blogService = require("../services/blogService");
 
-// ════════════════════════════════════════════════════════════════════════════
 describe("blogService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe("blogService", () => {
   // ── createBlog() ───────────────────────────────────────────────────────────
   describe("createBlog()", () => {
     // TC_BLOG_01
-    test("TC_BLOG_01 — should return success:true when blogData is valid", async () => {
+    test("TC_BLOG_01 — Tạo blog thành công khi blogData hợp lệ", async () => {
       // Arrange — mock blogModel.create trả về blog object
       const mockBlog = {
         id: 1,
@@ -54,7 +53,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_02
-    test("TC_BLOG_02 — should return success:false when title is empty", async () => {
+    test("TC_BLOG_02 — Trả về success:false khi title bị bỏ trống", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
       const blogData = { title: "", content: "Nội dung" };
 
@@ -73,7 +72,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_13
-    test("TC_BLOG_13 — should_return_success_false_when_content_is_empty", async () => {
+    test("TC_BLOG_13 — Trả về success:false khi content bị bỏ trống trong createBlog", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
       const blogData = { title: "Tiêu đề", content: "" };
 
@@ -98,7 +97,7 @@ describe("blogService", () => {
   // ── getBlogDetail() ────────────────────────────────────────────────────────
   describe("getBlogDetail()", () => {
     // TC_BLOG_03
-    test("TC_BLOG_03 — should return blog with comments when blogId exists", async () => {
+    test("TC_BLOG_03 — Trả về blog kèm comments khi blogId tồn tại", async () => {
       // Arrange — mock blog tồn tại và có 2 comments
       const mockBlog = { id: 1, title: "Tiêu đề", content: "Nội dung" };
       const mockComments = [
@@ -125,7 +124,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_04
-    test("TC_BLOG_04 — should return success:false when blogId does not exist", async () => {
+    test("TC_BLOG_04 — Trả về success:false khi blogId không tồn tại", async () => {
       // Arrange — mock blog không tìm thấy
       blogModel.findById.mockResolvedValue(null);
 
@@ -145,7 +144,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_08
-    test("TC_BLOG_08 — should_throw_error_when_findById_throws_DB_error", async () => {
+    test("TC_BLOG_08 — Throw lỗi khi blogModel.findById() ném lỗi DB", async () => {
       // Arrange — mock blogModel.findById ném lỗi DB
       blogModel.findById.mockRejectedValue(new Error("DB error"));
 
@@ -160,7 +159,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_09
-    test("TC_BLOG_09 — should_return_empty_comments_array_when_getComments_returns_null", async () => {
+    test("TC_BLOG_09 — Trả về comments=[] khi getComments() trả về null", async () => {
       // Arrange — blog tồn tại nhưng getComments trả về null
       const mockBlog = { id: 1, title: "Blog A", content: "Nội dung A" };
       blogModel.findById.mockResolvedValue(mockBlog);
@@ -185,7 +184,7 @@ describe("blogService", () => {
   // ── getAllBlogs() ──────────────────────────────────────────────────────────
   describe("getAllBlogs()", () => {
     // TC_BLOG_07
-    test("TC_BLOG_07 — should_throw_error_when_findAll_throws_DB_error", async () => {
+    test("TC_BLOG_07 — Throw lỗi khi blogModel.findAll() ném lỗi DB", async () => {
       // Arrange — mock blogModel.findAll ném lỗi DB
       blogModel.findAll.mockRejectedValue(new Error("DB error"));
 
@@ -203,7 +202,7 @@ describe("blogService", () => {
   // ── searchBlogs() ──────────────────────────────────────────────────────────
   describe("searchBlogs()", () => {
     // TC_BLOG_05
-    test("TC_BLOG_05 — should call findAll() when keyword is empty", async () => {
+    test("TC_BLOG_05 — Gọi getAllBlogs() khi keyword rỗng hoặc chỉ có khoảng trắng", async () => {
       // Arrange — mock blogModel.findAll trả về danh sách blog
       const mockBlogs = [
         { id: 1, title: "Blog 1" },
@@ -224,7 +223,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_10
-    test("TC_BLOG_10 — should_call_blogModel_searchBlogs_and_return_results_when_keyword_is_valid", async () => {
+    test("TC_BLOG_10 — Gọi searchBlogs() và trả về kết quả khi keyword hợp lệ", async () => {
       // Arrange — mock blogModel.searchBlogs trả về danh sách kết quả
       const mockBlogs = [{ id: 1, title: "Rau củ quả" }];
       blogModel.searchBlogs.mockResolvedValue(mockBlogs);
@@ -247,7 +246,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_11
-    test("TC_BLOG_11 — should_call_getAllBlogs_when_keyword_is_whitespace_only", async () => {
+    test("TC_BLOG_11 — Gọi getAllBlogs() khi keyword chỉ toàn khoảng trắng", async () => {
       // Arrange — mock blogModel.findAll trả về danh sách blog
       const mockBlogs = [{ id: 1, title: "Blog 1" }];
       blogModel.findAll.mockResolvedValue(mockBlogs);
@@ -267,7 +266,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_12
-    test("TC_BLOG_12 — should_call_getAllBlogs_when_keyword_is_null", async () => {
+    test("TC_BLOG_12 — Gọi getAllBlogs() khi keyword là null", async () => {
       // Arrange — mock blogModel.findAll trả về danh sách blog
       const mockBlogs = [{ id: 2, title: "Blog 2" }];
       blogModel.findAll.mockResolvedValue(mockBlogs);
@@ -291,7 +290,7 @@ describe("blogService", () => {
   // ── updateBlog() ───────────────────────────────────────────────────────────
   describe("updateBlog()", () => {
     // TC_BLOG_14
-    test("TC_BLOG_14 — should_return_success_false_when_title_is_empty", async () => {
+    test("TC_BLOG_14 — Trả về success:false khi title bị bỏ trống trong updateBlog", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
       const blogData = { title: "", content: "Nội dung" };
 
@@ -312,7 +311,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_15
-    test("TC_BLOG_15 — should_return_success_false_when_content_is_empty", async () => {
+    test("TC_BLOG_15 — Trả về success:false khi content bị bỏ trống trong updateBlog", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
       const blogData = { title: "Tiêu đề", content: "" };
 
@@ -333,7 +332,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_16
-    test("TC_BLOG_16 — should_return_success_true_when_blogData_is_valid", async () => {
+    test("TC_BLOG_16 — Cập nhật bài viết thành công khi blogData hợp lệ", async () => {
       // Arrange — mock blogModel.update trả về blog đã được cập nhật
       const blogData = { title: "Tiêu đề mới", content: "Nội dung mới" };
       const mockUpdatedBlog = { id: 1, title: "Tiêu đề mới", content: "Nội dung mới" };
@@ -361,7 +360,7 @@ describe("blogService", () => {
   // ── deleteBlog() ───────────────────────────────────────────────────────────
   describe("deleteBlog()", () => {
     // TC_BLOG_17
-    test("TC_BLOG_17 — should_return_success_true_when_blog_is_deleted_successfully", async () => {
+    test("TC_BLOG_17 — Trả về success:true khi xóa bài viết thành công", async () => {
       // Arrange — mock blogModel.remove trả về true
       blogModel.remove.mockResolvedValue(true);
 
@@ -383,7 +382,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_18
-    test("TC_BLOG_18 — should_return_success_false_when_blog_delete_fails", async () => {
+    test("TC_BLOG_18 — Trả về success:false khi xóa bài viết thất bại", async () => {
       // Arrange — mock blogModel.remove trả về false (không có bài viết nào bị xóa)
       blogModel.remove.mockResolvedValue(false);
 
@@ -409,7 +408,7 @@ describe("blogService", () => {
   // ── addComment() ───────────────────────────────────────────────────────────
   describe("addComment()", () => {
     // TC_BLOG_06
-    test("TC_BLOG_06 — should return success:false when comment content is empty", async () => {
+    test("TC_BLOG_06 — Trả về success:false khi nội dung comment trống", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
 
       // Act
@@ -427,7 +426,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_19
-    test("TC_BLOG_19 — should_return_success_true_when_comment_content_is_valid", async () => {
+    test("TC_BLOG_19 — Thêm comment thành công khi content hợp lệ", async () => {
       // Arrange — mock blogModel.addComment trả về comment object
       const mockComment = {
         id: 10,
@@ -455,7 +454,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_20
-    test("TC_BLOG_20 — should_return_success_false_when_content_is_whitespace_only", async () => {
+    test("TC_BLOG_20 — Trả về success:false khi content comment chỉ toàn khoảng trắng", async () => {
       // Arrange — không cần mock vì validation chặn trước khi gọi DB
       // content.trim() === "" khi chỉ có khoảng trắng
 
@@ -480,7 +479,7 @@ describe("blogService", () => {
   // ── getAllBlogs() — happy path ───────────────────────────────────────────
   describe("getAllBlogs() — happy path", () => {
     // TC_BLOG_21
-    test("TC_BLOG_21 — should return success:true with list of blogs", async () => {
+    test("TC_BLOG_21 — Trả về success:true kèm danh sách blogs", async () => {
       // Arrange
       const mockBlogs = [
         { id: 1, title: "Blog 1", content: "Nội dung 1" },
@@ -501,7 +500,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_22
-    test("TC_BLOG_22 — should return empty array when findAll returns null", async () => {
+    test("TC_BLOG_22 — Trả về data=[] khi findAll trả về null", async () => {
       // Arrange — mock trả về null (blogs || [] → [])
       blogModel.findAll.mockResolvedValue(null);
 
@@ -519,7 +518,7 @@ describe("blogService", () => {
   // ── getBlogsByCategory() ──────────────────────────────────────────────────
   describe("getBlogsByCategory()", () => {
     // TC_BLOG_23
-    test("TC_BLOG_23 — should return success:true with blogs of given category", async () => {
+    test("TC_BLOG_23 — Trả về blogs theo danh mục khi category hợp lệ", async () => {
       // Arrange
       const mockBlogs = [
         { id: 1, title: "Blog A", category: "sức khỏe" },
@@ -541,7 +540,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_24
-    test("TC_BLOG_24 — should return empty array when no blogs in category", async () => {
+    test("TC_BLOG_24 — Trả về data=[] khi không có blogs trong danh mục", async () => {
       // Arrange — mock trả về null (blogs || [] → [])
       blogModel.findByCategory.mockResolvedValue(null);
 
@@ -555,7 +554,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_25
-    test("TC_BLOG_25 — should throw error when model throws in getBlogsByCategory", async () => {
+    test("TC_BLOG_25 — Throw lỗi khi model ném lỗi DB trong getBlogsByCategory", async () => {
       // Arrange
       blogModel.findByCategory.mockRejectedValue(new Error("DB error"));
 
@@ -569,7 +568,7 @@ describe("blogService", () => {
   // ── getAllBlogsAdmin() ────────────────────────────────────────────────────
   describe("getAllBlogsAdmin()", () => {
     // TC_BLOG_26
-    test("TC_BLOG_26 — should return success:true with all blogs including drafts", async () => {
+    test("TC_BLOG_26 — Trả về tất cả blogs kể cả draft khi gọi getAllBlogsAdmin", async () => {
       // Arrange
       const mockBlogs = [
         { id: 1, title: "Blog published", status: "published" },
@@ -590,7 +589,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_27
-    test("TC_BLOG_27 — should return empty array when findAllAdmin returns null", async () => {
+    test("TC_BLOG_27 — Trả về data=[] khi findAllAdmin trả về null", async () => {
       // Arrange — mock trả về null (blogs || [] → [])
       blogModel.findAllAdmin.mockResolvedValue(null);
 
@@ -604,7 +603,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_28
-    test("TC_BLOG_28 — should throw error when model throws in getAllBlogsAdmin", async () => {
+    test("TC_BLOG_28 — Throw lỗi khi model ném lỗi DB trong getAllBlogsAdmin", async () => {
       // Arrange
       blogModel.findAllAdmin.mockRejectedValue(new Error("DB error"));
 
@@ -618,7 +617,7 @@ describe("blogService", () => {
   // ── error paths còn thiếu ─────────────────────────────────────────────────
   describe("searchBlogs() — error path", () => {
     // TC_BLOG_29
-    test("TC_BLOG_29 — should throw error when searchBlogs model throws", async () => {
+    test("TC_BLOG_29 — Throw lỗi khi model ném lỗi DB trong searchBlogs", async () => {
       // Arrange
       blogModel.searchBlogs.mockRejectedValue(new Error("DB error"));
 
@@ -631,7 +630,7 @@ describe("blogService", () => {
 
   describe("createBlog() — error path", () => {
     // TC_BLOG_30
-    test("TC_BLOG_30 — should throw error when model throws in createBlog", async () => {
+    test("TC_BLOG_30 — Throw lỗi khi model ném lỗi DB trong createBlog", async () => {
       // Arrange
       blogModel.create.mockRejectedValue(new Error("DB error"));
 
@@ -645,7 +644,7 @@ describe("blogService", () => {
 
   describe("updateBlog() — error path", () => {
     // TC_BLOG_31
-    test("TC_BLOG_31 — should throw error when model throws in updateBlog", async () => {
+    test("TC_BLOG_31 — Throw lỗi khi model ném lỗi DB trong updateBlog", async () => {
       // Arrange
       blogModel.update.mockRejectedValue(new Error("DB error"));
 
@@ -659,7 +658,7 @@ describe("blogService", () => {
 
   describe("deleteBlog() — error path", () => {
     // TC_BLOG_32
-    test("TC_BLOG_32 — should throw error when model throws in deleteBlog", async () => {
+    test("TC_BLOG_32 — Throw lỗi khi model ném lỗi DB trong deleteBlog", async () => {
       // Arrange
       blogModel.remove.mockRejectedValue(new Error("DB error"));
 
@@ -672,7 +671,7 @@ describe("blogService", () => {
 
   describe("addComment() — error path", () => {
     // TC_BLOG_33
-    test("TC_BLOG_33 — should throw error when model throws in addComment", async () => {
+    test("TC_BLOG_33 — Throw lỗi khi model ném lỗi DB trong addComment", async () => {
       // Arrange
       blogModel.addComment.mockRejectedValue(new Error("DB error"));
 
@@ -686,14 +685,12 @@ describe("blogService", () => {
   });
   // ── end error paths ───────────────────────────────────────────────────────
 });
-// ════════════════════════════════════════════════════════════════════════════
-// ════════════════════════════════════════════════════════════════════════════// ════════════════════════════════════════════════════════════════════════════
 
 
 // ─── Branch bổ sung: searchBlogs khi model trả về null ──────────────────────
 describe("searchBlogs() — blogs null branch", () => {
   // TC_BLOG_34
-  test("TC_BLOG_34 — should return empty array when searchBlogs model returns null", async () => {
+  test("TC_BLOG_34 — Trả về data=[] khi searchBlogs model trả về null", async () => {
     // Arrange — mock trả về null (blogs || [] → [])
     blogModel.searchBlogs.mockResolvedValue(null);
 

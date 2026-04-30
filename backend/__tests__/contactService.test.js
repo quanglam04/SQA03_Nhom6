@@ -127,7 +127,230 @@ describe("contactService", () => {
       expect(contactModel.getById).toHaveBeenCalledTimes(1);
       expect(contactModel.getById).toHaveBeenCalledWith(9999);
     });
+
+    // TC_CONT_06
+    test("TC_CONT_06 — should return success:false when model throws error", async () => {
+      // Arrange — mock ném lỗi DB
+      contactModel.getById.mockRejectedValue(new Error("DB connection failed"));
+
+      // Act
+      const result = await contactService.getRequestById(1);
+
+      // Assert — trả về lỗi từ catch block
+      expect(result).toEqual({
+        success: false,
+        message: "Lỗi lấy chi tiết",
+        error: "DB connection failed",
+      });
+
+      // CheckDB — xác minh getById vẫn được gọi
+      expect(contactModel.getById).toHaveBeenCalledTimes(1);
+      expect(contactModel.getById).toHaveBeenCalledWith(1);
+    });
   });
   // ── end getRequestById() ───────────────────────────────────────────────────
+
+  // ── updateStatus() error branch ────────────────────────────────────────────
+  describe("updateStatus() — error branch", () => {
+    // TC_CONT_07
+    test("TC_CONT_07 — should return success:false when model throws error", async () => {
+      // Arrange — mock ném lỗi DB
+      contactModel.updateStatus.mockRejectedValue(new Error("Timeout"));
+
+      // Act
+      const result = await contactService.updateStatus(1, "pending");
+
+      // Assert — trả về lỗi từ catch block
+      expect(result).toEqual({
+        success: false,
+        message: "Lỗi cập nhật",
+        error: "Timeout",
+      });
+
+      // CheckDB — xác minh updateStatus vẫn được gọi
+      expect(contactModel.updateStatus).toHaveBeenCalledTimes(1);
+      expect(contactModel.updateStatus).toHaveBeenCalledWith(1, "pending");
+    });
+  });
+  // ── end updateStatus() error branch ───────────────────────────────────────
+
+  // ── createRequest() ────────────────────────────────────────────────────────
+  describe("createRequest()", () => {
+    // TC_CONT_08
+    test("TC_CONT_08 — should return success:true with insertId when contact is created", async () => {
+      // Arrange — mock trả về insertId=5 (tạo record thành công)
+      contactModel.create.mockResolvedValue({ insertId: 5 });
+
+      const data = {
+        name: "Nguyen Van B",
+        email: "b@test.com",
+        message: "Tôi cần hỗ trợ",
+      };
+
+      // Act
+      const result = await contactService.createRequest(data);
+
+      // Assert — trả về thành công kèm id mới
+      expect(result).toEqual({
+        success: true,
+        message: "Gửi liên hệ thành công. Cảm ơn bạn!",
+        data: { id: 5 },
+      });
+
+      // CheckDB — xác minh create được gọi đúng 1 lần với đúng data
+      expect(contactModel.create).toHaveBeenCalledTimes(1);
+      expect(contactModel.create).toHaveBeenCalledWith(data);
+    });
+
+    // TC_CONT_09
+    test("TC_CONT_09 — should return success:false when model throws error", async () => {
+      // Arrange — mock ném lỗi DB
+      contactModel.create.mockRejectedValue(new Error("Duplicate entry"));
+
+      const data = { name: "X", email: "x@test.com", message: "test" };
+
+      // Act
+      const result = await contactService.createRequest(data);
+
+      // Assert — trả về lỗi từ catch block
+      expect(result).toEqual({
+        success: false,
+        message: "Lỗi gửi liên hệ",
+        error: "Duplicate entry",
+      });
+
+      // CheckDB — xác minh create vẫn được gọi
+      expect(contactModel.create).toHaveBeenCalledTimes(1);
+      expect(contactModel.create).toHaveBeenCalledWith(data);
+    });
+  });
+  // ── end createRequest() ────────────────────────────────────────────────────
+
+  // ── getAllRequests() ────────────────────────────────────────────────────────
+  describe("getAllRequests()", () => {
+    // TC_CONT_10
+    test("TC_CONT_10 — should return success:true with list of contacts", async () => {
+      // Arrange — mock trả về danh sách 2 contact
+      const mockList = [
+        { id: 1, name: "Nguyen Van A", email: "a@test.com", status: "pending" },
+        { id: 2, name: "Tran Thi B", email: "b@test.com", status: "resolved" },
+      ];
+      contactModel.getAll.mockResolvedValue(mockList);
+
+      // Act
+      const result = await contactService.getAllRequests();
+
+      // Assert — trả về thành công kèm data
+      expect(result).toEqual({
+        success: true,
+        data: mockList,
+      });
+      expect(result.data).toHaveLength(2);
+
+      // CheckDB — xác minh getAll được gọi đúng 1 lần, không tham số
+      expect(contactModel.getAll).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_CONT_11
+    test("TC_CONT_11 — should return success:true with empty array when no contacts exist", async () => {
+      // Arrange — mock trả về array rỗng
+      contactModel.getAll.mockResolvedValue([]);
+
+      // Act
+      const result = await contactService.getAllRequests();
+
+      // Assert — vẫn success nhưng data rỗng
+      expect(result).toEqual({
+        success: true,
+        data: [],
+      });
+      expect(result.data).toHaveLength(0);
+
+      // CheckDB
+      expect(contactModel.getAll).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_CONT_12
+    test("TC_CONT_12 — should return success:false when model throws error", async () => {
+      // Arrange — mock ném lỗi DB
+      contactModel.getAll.mockRejectedValue(new Error("Table not found"));
+
+      // Act
+      const result = await contactService.getAllRequests();
+
+      // Assert — trả về lỗi từ catch block
+      expect(result).toEqual({
+        success: false,
+        message: "Lỗi lấy danh sách",
+        error: "Table not found",
+      });
+
+      // CheckDB
+      expect(contactModel.getAll).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllRequests() ────────────────────────────────────────────────────
+
+  // ── deleteRequest() ────────────────────────────────────────────────────────
+  describe("deleteRequest()", () => {
+    // TC_CONT_13
+    test("TC_CONT_13 — should return success:true when delete succeeds", async () => {
+      // Arrange — mock trả về affectedRows=1 (xóa thành công)
+      contactModel.delete.mockResolvedValue({ affectedRows: 1 });
+
+      // Act
+      const result = await contactService.deleteRequest(1);
+
+      // Assert — trả về thành công
+      expect(result).toEqual({
+        success: true,
+        message: "Xóa thành công",
+      });
+
+      // CheckDB — xác minh delete được gọi đúng 1 lần với đúng tham số
+      expect(contactModel.delete).toHaveBeenCalledTimes(1);
+      expect(contactModel.delete).toHaveBeenCalledWith(1);
+    });
+
+    // TC_CONT_14
+    test("TC_CONT_14 — should return success:false when id does not exist (affectedRows=0)", async () => {
+      // Arrange — mock trả về affectedRows=0 (không tìm thấy record)
+      contactModel.delete.mockResolvedValue({ affectedRows: 0 });
+
+      // Act
+      const result = await contactService.deleteRequest(9999);
+
+      // Assert — trả về không tìm thấy
+      expect(result).toEqual({
+        success: false,
+        message: "Không tìm thấy",
+      });
+
+      // CheckDB
+      expect(contactModel.delete).toHaveBeenCalledTimes(1);
+      expect(contactModel.delete).toHaveBeenCalledWith(9999);
+    });
+
+    // TC_CONT_15
+    test("TC_CONT_15 — should return success:false when model throws error", async () => {
+      // Arrange — mock ném lỗi DB
+      contactModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
+
+      // Act
+      const result = await contactService.deleteRequest(1);
+
+      // Assert — trả về lỗi từ catch block
+      expect(result).toEqual({
+        success: false,
+        message: "Lỗi xóa",
+        error: "Foreign key constraint",
+      });
+
+      // CheckDB
+      expect(contactModel.delete).toHaveBeenCalledTimes(1);
+      expect(contactModel.delete).toHaveBeenCalledWith(1);
+    });
+  });
+  // ── end deleteRequest() ────────────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════

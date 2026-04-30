@@ -740,3 +740,49 @@ describe("OrderService", () => {
   });
   // ── end updateOrder() ─────────────────────────────────────────────────────
 });
+
+
+// ─── Branch bổ sung ──────────────────────────────────────────────────────────
+describe("createOrder() — updateVariantStock returns false", () => {
+  // TC_ORD_25
+  test("TC_ORD_25 - should_throw_error_when_updateVariantStock_returns_false", async () => {
+    // Input: cart có 1 item, updateVariantStock trả về false
+    // Expected Output: throw Error("Failed to update stock for variant ...")
+    // CheckDB: rollback được gọi
+    const connection = createMockConnection();
+    pool.getConnection.mockResolvedValue(connection);
+
+    cartModel.getCartItemsWithDetails.mockResolvedValue([
+      { variant_id: 7, variant_name: "Size M", quantity: 2, stock: 10, price_sale: "50000" },
+    ]);
+    orderModel.create.mockResolvedValue({ id: 88 });
+    orderModel.addOrderItem.mockResolvedValue(true);
+    productModel.updateVariantStock.mockResolvedValue(false); // stock update thất bại
+
+    await expect(
+      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+    ).rejects.toThrow("Failed to update stock for variant Size M");
+
+    expect(connection.rollback).toHaveBeenCalledTimes(1);
+    expect(cartModel.clearCartItems).not.toHaveBeenCalled();
+    expect(connection.release).toHaveBeenCalledTimes(1);
+  });
+});
+
+
+// ─── Branch bổ sung: getAllOrders không truyền filters ───────────────────────
+describe("getAllOrders() — no filters (default limit=20)", () => {
+  test("TC_ORD_26 - should_use_default_limit_20_when_filters_is_undefined", async () => {
+    // Input: gọi getAllOrders() không truyền filters
+    // Expected: pagination dùng default limit=20
+    orderModel.findAll.mockResolvedValue([]);
+    orderModel.count.mockResolvedValue(0);
+
+    // Act — không truyền argument để filters dùng default {}
+    const result = await OrderService.getAllOrders();
+
+    // Assert
+    expect(result.pagination.limit).toBe(20);
+    expect(result.pagination.total_pages).toBe(0);
+  });
+});

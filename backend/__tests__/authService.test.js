@@ -530,3 +530,44 @@ describe("verifyResetToken() — happy path", () => {
     );
   });
 });
+
+
+// ─── Branch bổ sung: name/phone là undefined → null ─────────────────────────
+describe("createUser() — branch name/phone undefined", () => {
+  // TC_AUTH_20
+  it("TC_AUTH_20 - should_pass_null_for_name_and_phone_when_not_provided", async () => {
+    // Arrange — không truyền name và phone → name || null = null, phone || null = null
+    bcrypt.hash.mockResolvedValue("hashed_pw");
+    pool.query
+      .mockResolvedValueOnce([[]])                   // findUserByEmail → không tồn tại
+      .mockResolvedValueOnce([{ insertId: 99 }])     // INSERT users
+      .mockResolvedValueOnce([[{ id: 3 }]])           // SELECT roles
+      .mockResolvedValueOnce([{}])                   // INSERT user_roles
+      .mockResolvedValueOnce([[{ id: 99, name: null, email: "x@test.com", phone: null, created_at: new Date(), updated_at: new Date() }]]);
+
+    // Act
+    await createUser({ email: "x@test.com", password: "Pass@1" });
+
+    // Assert — INSERT users được gọi với null cho name và phone
+    expect(pool.query).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining("INSERT INTO users"),
+      expect.arrayContaining([null, "x@test.com", "hashed_pw", null]),
+    );
+  });
+});
+
+// ─── Branch bổ sung: getRolesByUserId khi rrows là null ─────────────────────
+describe("getRolesByUserId() — rrows null branch", () => {
+  // TC_AUTH_21
+  it("TC_AUTH_21 - should_return_empty_array_when_query_returns_null", async () => {
+    // Arrange — mock pool.query trả về null thay vì array
+    pool.query.mockResolvedValueOnce([null]);
+
+    // Act
+    const result = await getRolesByUserId(1);
+
+    // Assert — (null || []).map(...) → []
+    expect(result).toEqual([]);
+  });
+});

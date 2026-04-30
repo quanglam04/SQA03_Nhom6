@@ -62,3 +62,26 @@ describe("authenticateToken", () => {
     });
   });
 });
+
+
+// ─── Branch bổ sung: decoded.id là null ──────────────────────────────────────
+describe("authenticateToken() — decoded.id null branch", () => {
+  // TC_AUTH_TOKEN_05
+  test("TC_AUTH_TOKEN_05 — should set userId to null when decoded has no id", () => {
+    // Arrange — token hợp lệ nhưng payload không có id
+    const realJwt = require("jsonwebtoken");
+    const secret = process.env.JWT_SECRET || "change_this_secret";
+    const tokenWithoutId = realJwt.sign({ role: "guest" }, secret);
+
+    const req = { headers: { authorization: `Bearer ${tokenWithoutId}` } };
+    const res = {};
+    const next = jest.fn();
+
+    // Act
+    authenticateToken(req, res, next);
+
+    // Assert — decoded.id undefined → req.userId = null
+    expect(req.userId).toBeNull();
+    expect(next).toHaveBeenCalled();
+  });
+});

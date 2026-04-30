@@ -643,3 +643,72 @@ describe("CartService", () => {
   // ── end restoreCartFromOrder() ─────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════
+
+// ─── Branch bổ sung: getCartByUserId ─────────────────────────────────────────
+describe("getCartByUserId()", () => {
+  // TC_CART_16
+  test("TC_CART_16 — should_return_cart_when_userId_exists", async () => {
+    // Arrange — mock trả về cart object
+    const mockCart = { id: 1, user_id: 1, items: [] };
+    cartModel.findByUserIdWithItems.mockResolvedValue(mockCart);
+
+    // Act
+    const result = await CartService.getCartByUserId(1);
+
+    // Assert
+    expect(result).toEqual(mockCart);
+    expect(cartModel.findByUserIdWithItems).toHaveBeenCalledTimes(1);
+    expect(cartModel.findByUserIdWithItems).toHaveBeenCalledWith(1);
+  });
+
+  // TC_CART_17
+  test("TC_CART_17 — should_return_null_when_userId_has_no_cart", async () => {
+    // Arrange — mock trả về null
+    cartModel.findByUserIdWithItems.mockResolvedValue(null);
+
+    // Act
+    const result = await CartService.getCartByUserId(9999);
+
+    // Assert
+    expect(result).toBeNull();
+    expect(cartModel.findByUserIdWithItems).toHaveBeenCalledWith(9999);
+  });
+
+  // TC_CART_18
+  test("TC_CART_18 — should_throw_error_when_model_throws", async () => {
+    // Arrange — mock ném lỗi
+    cartModel.findByUserIdWithItems.mockRejectedValue(new Error("DB error"));
+
+    // Act & Assert
+    await expect(CartService.getCartByUserId(1)).rejects.toThrow("DB error");
+    expect(cartModel.findByUserIdWithItems).toHaveBeenCalledWith(1);
+  });
+});
+// ─── end getCartByUserId() ───────────────────────────────────────────────────
+
+
+// ─── Branch bổ sung: order_items là null/undefined ───────────────────────────
+describe("restoreCartFromOrder() — order_items null branch", () => {
+  test("TC_CART_19 — should_return_zero_restored_items_when_order_has_no_order_items_field", async () => {
+    // Arrange — order không có field order_items (undefined) → ternary trả về 0
+    // Phải là VNPAY + unpaid mới qua được validation
+    const mockOrder = {
+      id: 5,
+      user_id: 1,
+      payment_method: 'VNPAY',
+      payment_status: 'unpaid',
+      // order_items: undefined — không có field này
+    };
+    const mockCart = { id: 1 };
+    cartModel.findByUserId.mockResolvedValue(mockCart);
+    orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+
+    // Act
+    const result = await CartService.restoreCartFromOrder(1, 5);
+
+    // Assert — order_items undefined → restored_items = 0
+    expect(result.restored_items).toBe(0);
+    expect(result.cart_id).toBe(1);
+  });
+});
+// ─── end branch bổ sung ───────────────────────────────────────────────────────

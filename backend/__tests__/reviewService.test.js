@@ -329,3 +329,25 @@ describe('reviewService — branch coverage bổ sung', () => {
   });
   // ── end getOrderReviewStatus() branches ───────────────────────────────────
 });
+
+
+// ─── Branch bổ sung: o.status là null ────────────────────────────────────────
+describe("getOrderReviewStatus() — status null branch", () => {
+  // TC_REV_23
+  test('TC_REV_23 - Đơn hàng tìm thấy nhưng status là null: delivered = false', async () => {
+    // Arrange — status = null → String(null || '').toLowerCase() = '' ≠ 'delivered'
+    pool.query
+      .mockResolvedValueOnce([[{ status: null, days_since_delivery: null }]])
+      .mockResolvedValueOnce([[{ variant_id: 1, product_id: 1, reviewed: 0 }]]);
+
+    // Act
+    const result = await reviewService.getOrderReviewStatus(1, 1);
+
+    // Assert — delivered = false vì status null không match 'delivered'
+    expect(result.found).toBe(true);
+    expect(result.delivered).toBe(false);
+    expect(result.days_since_delivery).toBeNull();
+    expect(result.days_remaining).toBeNull();
+    expect(result.window_open).toBe(false);
+  });
+});

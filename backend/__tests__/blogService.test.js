@@ -688,3 +688,21 @@ describe("blogService", () => {
 });
 // ════════════════════════════════════════════════════════════════════════════
 // ════════════════════════════════════════════════════════════════════════════// ════════════════════════════════════════════════════════════════════════════
+
+
+// ─── Branch bổ sung: searchBlogs khi model trả về null ──────────────────────
+describe("searchBlogs() — blogs null branch", () => {
+  // TC_BLOG_34
+  test("TC_BLOG_34 — should return empty array when searchBlogs model returns null", async () => {
+    // Arrange — mock trả về null (blogs || [] → [])
+    blogModel.searchBlogs.mockResolvedValue(null);
+
+    // Act
+    const result = await blogService.searchBlogs("từ khóa");
+
+    // Assert — data phải là [] thay vì null
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual([]);
+    expect(blogModel.searchBlogs).toHaveBeenCalledWith("từ khóa");
+  });
+});

@@ -56,7 +56,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_06
-    test("TC_PROD_06 — Throw lỗi khi createWithVariants thất bại", async () => {
+    test("TC_PROD_06 — Ném lỗi khi createWithVariants thất bại", async () => {
       // Arrange — mock createWithVariants ném lỗi (ví dụ: category không tồn tại)
       const inputData = {
         name: "Sản phẩm lỗi",
@@ -340,7 +340,7 @@ describe("ProductService", () => {
   // ── updateProduct() ───────────────────────────────────────────────────────
   describe("updateProduct()", () => {
     // TC_PROD_08
-    test("TC_PROD_08 — Trả về sản phẩm đã cập nhật khi update thành công", async () => {
+    test("TC_PROD_08 — Trả về sản phẩm đã cập nhật khi cập nhật thành công", async () => {
       // Arrange — mock updateWithVariants trả về product đã được cập nhật
       const updateData = {
         name: "Táo đỏ New Zealand",
@@ -388,7 +388,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_10
-    test("TC_PROD_10 — Throw lỗi khi updateWithVariants thất bại", async () => {
+    test("TC_PROD_10 — Ném lỗi khi updateWithVariants thất bại", async () => {
       // Arrange — mock updateWithVariants ném lỗi (DB error)
       const updateData = { name: "Lỗi DB", price: 10000 };
       productModel.updateWithVariants.mockRejectedValue(
@@ -448,7 +448,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_12
-    test("TC_PROD_12 — Throw lỗi khi removeWithVariants thất bại", async () => {
+    test("TC_PROD_12 — Ném lỗi khi removeWithVariants thất bại", async () => {
       // Arrange — mock removeWithVariants ném lỗi (ví dụ: foreign key constraint)
       productModel.removeWithVariants.mockRejectedValue(
         new Error("Cannot delete: product is referenced by existing orders")
@@ -509,7 +509,7 @@ describe("ProductService", () => {
     });
 
     // TC_PROD_22
-    test("TC_PROD_22 — Throw lỗi khi deleteVariantById thất bại", async () => {
+    test("TC_PROD_22 — Ném lỗi khi deleteVariantById thất bại", async () => {
       // Arrange — mock deleteVariantById ném lỗi (DB error)
       productModel.deleteVariantById.mockRejectedValue(
         new Error("Database error")

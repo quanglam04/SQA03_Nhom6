@@ -465,10 +465,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_12
-    test("TC_ORD_12 - Throw lỗi khi model ném lỗi DB trong getMyOrders", async () => {
+    test("TC_ORD_12 - Throw lỗi khi model throw lỗi DB trong getMyOrders", async () => {
       // Input: userId=1
       // Expected Output: throw Error("DB error")
-      // CheckDB: findByUserId ném lỗi
+      // CheckDB: findByUserId throw lỗi
       // Rollback: read-only flow with mocks, no DB mutation
       orderModel.findByUserId.mockRejectedValue(new Error("DB error"));
 
@@ -613,10 +613,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_19
-    test("TC_ORD_19 - Throw lỗi khi model ném lỗi DB trong updatePaymentStatus", async () => {
+    test("TC_ORD_19 - Throw lỗi khi model throw lỗi DB trong updatePaymentStatus", async () => {
       // Input: orderId=1, paymentStatus="paid"
       // Expected Output: throw Error("DB error")
-      // CheckDB: updatePaymentStatus ném lỗi
+      // CheckDB: updatePaymentStatus throw lỗi
       // Rollback: no transaction, mock only
       orderModel.updatePaymentStatus.mockRejectedValue(new Error("DB error"));
 
@@ -696,10 +696,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_22
-    test("TC_ORD_22 - Throw lỗi khi model ném lỗi DB trong getAllOrders", async () => {
+    test("TC_ORD_22 - Throw lỗi khi model throw lỗi DB trong getAllOrders", async () => {
       // Input: filters={}
       // Expected Output: throw Error("DB error")
-      // CheckDB: findAll ném lỗi
+      // CheckDB: findAll throw lỗi
       // Rollback: read-only flow with mocks, no DB mutation
       orderModel.findAll.mockRejectedValue(new Error("DB error"));
 
@@ -727,10 +727,10 @@ describe("OrderService", () => {
     });
 
     // TC_ORD_24
-    test("TC_ORD_24 - Throw lỗi khi model ném lỗi DB trong updateOrder", async () => {
+    test("TC_ORD_24 - Throw lỗi khi model throw lỗi DB trong updateOrder", async () => {
       // Input: orderId=1, updateData={ status: "shipping" }
       // Expected Output: throw Error("DB error")
-      // CheckDB: orderModel.update ném lỗi
+      // CheckDB: orderModel.update throw lỗi
       // Rollback: no transaction, mock only
       orderModel.update.mockRejectedValue(new Error("DB error"));
 

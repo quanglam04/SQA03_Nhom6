@@ -142,7 +142,7 @@ describe("userService", () => {
       expect(userModel.findAll).toHaveBeenCalledTimes(1);
     });
 
-    test("TC_USER_09 - Throw lỗi khi model.findAll ném lỗi DB", async () => {
+    test("TC_USER_09 - Throw lỗi khi model.findAll throw lỗi DB", async () => {
       // Input: không có tham số
       // Expected Output: throw DB error từ model
       // CheckDB: userModel.findAll được gọi trước khi throw
@@ -186,7 +186,7 @@ describe("userService", () => {
       expect(userModel.findById).toHaveBeenCalledWith(9999);
     });
 
-    test("TC_USER_12 - Throw lỗi khi model.findById ném lỗi DB", async () => {
+    test("TC_USER_12 - Throw lỗi khi model.findById throw lỗi DB", async () => {
       // Input: id=1
       // Expected Output: throw DB error từ model
       // CheckDB: userModel.findById được gọi trước khi throw
@@ -235,7 +235,7 @@ describe("userService", () => {
       expect(result).toBeNull();
     });
 
-    test("TC_USER_06 - Throw lỗi khi model.updateById ném lỗi DB", async () => {
+    test("TC_USER_06 - Throw lỗi khi model.updateById throw lỗi DB", async () => {
       // Input: id=3, data={ name: "Van" }
       // Expected Output: throw DB error from model
       // Mock: userModel.updateById rejects with error

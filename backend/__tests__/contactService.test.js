@@ -42,7 +42,7 @@ describe("contactService", () => {
 
     // TC_CONT_02
     test("TC_CONT_02 — Cập nhật status thành công khi status hợp lệ và record tồn tại", async () => {
-      // Arrange — mock trả về affectedRows=1 (cập nhật thành công)
+      // Arrange — mock trả về affectedRows=1 (update thành công)
       contactModel.updateStatus.mockResolvedValue({ affectedRows: 1 });
 
       // Act
@@ -128,8 +128,8 @@ describe("contactService", () => {
     });
 
     // TC_CONT_06
-    test("TC_CONT_06 — Trả về success:false khi model ném lỗi DB trong getRequestById", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_CONT_06 — Trả về success:false khi model throw lỗi DB trong getRequestById", async () => {
+      // Arrange — mock throw lỗi DB
       contactModel.getById.mockRejectedValue(new Error("DB connection failed"));
 
       // Act
@@ -152,8 +152,8 @@ describe("contactService", () => {
   // ── updateStatus() error branch ────────────────────────────────────────────
   describe("updateStatus() — error branch", () => {
     // TC_CONT_07
-    test("TC_CONT_07 — Trả về success:false khi model ném lỗi DB trong updateStatus", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_CONT_07 — Trả về success:false khi model throw lỗi DB trong updateStatus", async () => {
+      // Arrange — mock throw lỗi DB
       contactModel.updateStatus.mockRejectedValue(new Error("Timeout"));
 
       // Act
@@ -202,8 +202,8 @@ describe("contactService", () => {
     });
 
     // TC_CONT_09
-    test("TC_CONT_09 — Trả về success:false khi model ném lỗi DB trong createRequest", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_CONT_09 — Trả về success:false khi model throw lỗi DB trong createRequest", async () => {
+      // Arrange — mock throw lỗi DB
       contactModel.create.mockRejectedValue(new Error("Duplicate entry"));
 
       const data = { name: "X", email: "x@test.com", message: "test" };
@@ -270,8 +270,8 @@ describe("contactService", () => {
     });
 
     // TC_CONT_12
-    test("TC_CONT_12 — Trả về success:false khi model ném lỗi DB trong getAllRequests", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_CONT_12 — Trả về success:false khi model throw lỗi DB trong getAllRequests", async () => {
+      // Arrange — mock throw lỗi DB
       contactModel.getAll.mockRejectedValue(new Error("Table not found"));
 
       // Act
@@ -331,8 +331,8 @@ describe("contactService", () => {
     });
 
     // TC_CONT_15
-    test("TC_CONT_15 — Trả về success:false khi model ném lỗi DB trong deleteRequest", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_CONT_15 — Trả về success:false khi model throw lỗi DB trong deleteRequest", async () => {
+      // Arrange — mock throw lỗi DB
       contactModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
 
       // Act

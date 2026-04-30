@@ -144,8 +144,8 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_08
-    test("TC_BLOG_08 — Throw lỗi khi blogModel.findById() ném lỗi DB", async () => {
-      // Arrange — mock blogModel.findById ném lỗi DB
+    test("TC_BLOG_08 — Throw lỗi khi blogModel.findById() throw lỗi DB", async () => {
+      // Arrange — mock blogModel.findById throw lỗi DB
       blogModel.findById.mockRejectedValue(new Error("DB error"));
 
       // Act & Assert — lỗi phải được propagate ra ngoài
@@ -184,8 +184,8 @@ describe("blogService", () => {
   // ── getAllBlogs() ──────────────────────────────────────────────────────────
   describe("getAllBlogs()", () => {
     // TC_BLOG_07
-    test("TC_BLOG_07 — Throw lỗi khi blogModel.findAll() ném lỗi DB", async () => {
-      // Arrange — mock blogModel.findAll ném lỗi DB
+    test("TC_BLOG_07 — Throw lỗi khi blogModel.findAll() throw lỗi DB", async () => {
+      // Arrange — mock blogModel.findAll throw lỗi DB
       blogModel.findAll.mockRejectedValue(new Error("DB error"));
 
       // Act & Assert — lỗi phải được propagate ra ngoài
@@ -554,7 +554,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_25
-    test("TC_BLOG_25 — Throw lỗi khi model ném lỗi DB trong getBlogsByCategory", async () => {
+    test("TC_BLOG_25 — Throw lỗi khi model throw lỗi DB trong getBlogsByCategory", async () => {
       // Arrange
       blogModel.findByCategory.mockRejectedValue(new Error("DB error"));
 
@@ -603,7 +603,7 @@ describe("blogService", () => {
     });
 
     // TC_BLOG_28
-    test("TC_BLOG_28 — Throw lỗi khi model ném lỗi DB trong getAllBlogsAdmin", async () => {
+    test("TC_BLOG_28 — Throw lỗi khi model throw lỗi DB trong getAllBlogsAdmin", async () => {
       // Arrange
       blogModel.findAllAdmin.mockRejectedValue(new Error("DB error"));
 
@@ -617,7 +617,7 @@ describe("blogService", () => {
   // ── error paths còn thiếu ─────────────────────────────────────────────────
   describe("searchBlogs() — error path", () => {
     // TC_BLOG_29
-    test("TC_BLOG_29 — Throw lỗi khi model ném lỗi DB trong searchBlogs", async () => {
+    test("TC_BLOG_29 — Throw lỗi khi model throw lỗi DB trong searchBlogs", async () => {
       // Arrange
       blogModel.searchBlogs.mockRejectedValue(new Error("DB error"));
 
@@ -630,7 +630,7 @@ describe("blogService", () => {
 
   describe("createBlog() — error path", () => {
     // TC_BLOG_30
-    test("TC_BLOG_30 — Throw lỗi khi model ném lỗi DB trong createBlog", async () => {
+    test("TC_BLOG_30 — Throw lỗi khi model throw lỗi DB trong createBlog", async () => {
       // Arrange
       blogModel.create.mockRejectedValue(new Error("DB error"));
 
@@ -644,7 +644,7 @@ describe("blogService", () => {
 
   describe("updateBlog() — error path", () => {
     // TC_BLOG_31
-    test("TC_BLOG_31 — Throw lỗi khi model ném lỗi DB trong updateBlog", async () => {
+    test("TC_BLOG_31 — Throw lỗi khi model throw lỗi DB trong updateBlog", async () => {
       // Arrange
       blogModel.update.mockRejectedValue(new Error("DB error"));
 
@@ -658,7 +658,7 @@ describe("blogService", () => {
 
   describe("deleteBlog() — error path", () => {
     // TC_BLOG_32
-    test("TC_BLOG_32 — Throw lỗi khi model ném lỗi DB trong deleteBlog", async () => {
+    test("TC_BLOG_32 — Throw lỗi khi model throw lỗi DB trong deleteBlog", async () => {
       // Arrange
       blogModel.remove.mockRejectedValue(new Error("DB error"));
 
@@ -671,7 +671,7 @@ describe("blogService", () => {
 
   describe("addComment() — error path", () => {
     // TC_BLOG_33
-    test("TC_BLOG_33 — Throw lỗi khi model ném lỗi DB trong addComment", async () => {
+    test("TC_BLOG_33 — Throw lỗi khi model throw lỗi DB trong addComment", async () => {
       // Arrange
       blogModel.addComment.mockRejectedValue(new Error("DB error"));
 

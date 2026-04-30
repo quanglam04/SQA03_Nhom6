@@ -57,7 +57,7 @@ describe("ProductService", () => {
 
     // TC_PROD_06
     test("TC_PROD_06 — Throw lỗi khi createWithVariants thất bại", async () => {
-      // Arrange — mock createWithVariants ném lỗi (ví dụ: category không tồn tại)
+      // Arrange — mock createWithVariants throw lỗi (ví dụ: category không tồn tại)
       const inputData = {
         name: "Sản phẩm lỗi",
         price: 10000,
@@ -389,7 +389,7 @@ describe("ProductService", () => {
 
     // TC_PROD_10
     test("TC_PROD_10 — Throw lỗi khi updateWithVariants thất bại", async () => {
-      // Arrange — mock updateWithVariants ném lỗi (DB error)
+      // Arrange — mock updateWithVariants throw lỗi (DB error)
       const updateData = { name: "Lỗi DB", price: 10000 };
       productModel.updateWithVariants.mockRejectedValue(
         new Error("Database connection lost")
@@ -449,7 +449,7 @@ describe("ProductService", () => {
 
     // TC_PROD_12
     test("TC_PROD_12 — Throw lỗi khi removeWithVariants thất bại", async () => {
-      // Arrange — mock removeWithVariants ném lỗi (ví dụ: foreign key constraint)
+      // Arrange — mock removeWithVariants throw lỗi (ví dụ: foreign key constraint)
       productModel.removeWithVariants.mockRejectedValue(
         new Error("Cannot delete: product is referenced by existing orders")
       );
@@ -510,7 +510,7 @@ describe("ProductService", () => {
 
     // TC_PROD_22
     test("TC_PROD_22 — Throw lỗi khi deleteVariantById thất bại", async () => {
-      // Arrange — mock deleteVariantById ném lỗi (DB error)
+      // Arrange — mock deleteVariantById throw lỗi (DB error)
       productModel.deleteVariantById.mockRejectedValue(
         new Error("Database error")
       );

@@ -273,7 +273,7 @@ describe("CartService", () => {
 
     // TC_CART_12
     test("TC_CART_12 — Throw lỗi khi clearCartItems thất bại", async () => {
-      // Arrange — mock clearCartItems ném lỗi (DB error hoặc cartId không hợp lệ)
+      // Arrange — mock clearCartItems throw lỗi (DB error hoặc cartId không hợp lệ)
       cartModel.clearCartItems.mockRejectedValue(new Error("Cart not found"));
 
       // Act & Assert
@@ -291,8 +291,8 @@ describe("CartService", () => {
   // ── getOrCreateCart() — error path ────────────────────────────────────────
   describe("getOrCreateCart() — error path", () => {
     // TC_CART_13
-    test("TC_CART_13 — Throw lỗi khi findByUserId ném lỗi DB", async () => {
-      // Arrange — mock cartModel.findByUserId ném lỗi DB
+    test("TC_CART_13 — Throw lỗi khi findByUserId throw lỗi DB", async () => {
+      // Arrange — mock cartModel.findByUserId throw lỗi DB
       cartModel.findByUserId.mockRejectedValue(new Error("DB connection error"));
 
       // Act & Assert
@@ -673,8 +673,8 @@ describe("getCartByUserId()", () => {
   });
 
   // TC_CART_18
-  test("TC_CART_28 — Throw lỗi khi model ném lỗi DB trong getCartByUserId", async () => {
-    // Arrange — mock ném lỗi
+  test("TC_CART_28 — Throw lỗi khi model throw lỗi DB trong getCartByUserId", async () => {
+    // Arrange — mock throw lỗi
     cartModel.findByUserIdWithItems.mockRejectedValue(new Error("DB error"));
 
     // Act & Assert
@@ -716,7 +716,7 @@ describe("restoreCartFromOrder() — order_items null branch", () => {
 describe("addItem() — số lượng không hợp lệ", () => {
   // TC_CART_30
   test("TC_CART_30 — Vẫn thêm item khi quantity=0 (service không validate quantity > 0)", async () => {
-    // Service không kiểm tra quantity có dương không — đây là lỗ hổng
+    // Service không validate quantity có dương không — đây là lỗ hổng
     const mockVariant = { id: 5, stock: 10 };
     const mockCart = { id: 42 };
     cartModel.findByUserId.mockResolvedValue(mockCart);
@@ -752,7 +752,7 @@ describe("addItem() — số lượng không hợp lệ", () => {
 describe("updateItem() — số lượng không hợp lệ", () => {
   // TC_CART_32
   test("TC_CART_32 — Vẫn update khi quantity=0 (service không validate quantity > 0)", async () => {
-    // Service chỉ kiểm tra stock >= quantity, không kiểm tra quantity > 0
+    // Service chỉ kiểm tra stock >= quantity, không validate quantity > 0
     const mockCartItem = { id: 1, product_variant_id: 5 };
     const mockVariant = { id: 5, stock: 10 };
     cartModel.findItemById.mockResolvedValue(mockCartItem);

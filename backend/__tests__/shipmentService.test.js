@@ -25,7 +25,7 @@ describe("ShipmentService", () => {
   // ── getShipment() ──────────────────────────────────────────────────────────
   describe("getShipment()", () => {
     // TC_SHIP_01
-    test("TC_SHIP_01 — should return shipment object when orderId exists", async () => {
+    test("TC_SHIP_01 — Trả về shipment object khi orderId tồn tại", async () => {
       // Arrange — mock dữ liệu trả về khi tìm thấy shipment
       const mockShipment = {
         order_id: 1,
@@ -49,7 +49,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_02
-    test("TC_SHIP_02 — should return null when orderId does not exist", async () => {
+    test("TC_SHIP_02 — Trả về null khi orderId không có shipment", async () => {
       // Arrange — mock trả về null (không tìm thấy shipment)
       ShipmentModel.findByOrderId.mockResolvedValue(null);
 
@@ -69,7 +69,7 @@ describe("ShipmentService", () => {
   // ── updateShipment() ───────────────────────────────────────────────────────
   describe("updateShipment()", () => {
     // TC_SHIP_03
-    test("TC_SHIP_03 — should call create() when shipment does not exist yet", async () => {
+    test("TC_SHIP_03 — Gọi create() để tạo shipment mới khi chưa có shipment cho order này", async () => {
       // Arrange — mock findByOrderId trả về null => chưa có shipment
       const newShipment = {
         order_id: 1,
@@ -99,7 +99,7 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_04
-    test("TC_SHIP_04 — should call update() when shipment already exists", async () => {
+    test("TC_SHIP_04 — Gọi update() để cập nhật shipment hiện có khi đã tồn tại cho order", async () => {
       // Arrange — mock findByOrderId trả về object => đã có shipment
       const existingShipment = {
         order_id: 1,
@@ -132,8 +132,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_05
-    test("TC_SHIP_05 — Throw lỗi khi model ném lỗi DB trong updateShipment", async () => {
-      // Arrange — mock findByOrderId ném lỗi DB
+    test("TC_SHIP_05 — Throw lỗi khi model throw lỗi DB trong updateShipment", async () => {
+      // Arrange — mock findByOrderId throw lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("DB connection failed"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -151,8 +151,8 @@ describe("ShipmentService", () => {
   // ── getShipment() error branch ─────────────────────────────────────────────
   describe("getShipment() — error branch", () => {
     // TC_SHIP_06
-    test("TC_SHIP_06 — Throw lỗi khi model ném lỗi DB trong getShipment", async () => {
-      // Arrange — mock findByOrderId ném lỗi DB
+    test("TC_SHIP_06 — Throw lỗi khi model throw lỗi DB trong getShipment", async () => {
+      // Arrange — mock findByOrderId throw lỗi DB
       ShipmentModel.findByOrderId.mockRejectedValue(new Error("Timeout"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -221,8 +221,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_10
-    test("TC_SHIP_10 — Throw lỗi khi model ném lỗi DB trong getAllShipments", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_SHIP_10 — Throw lỗi khi model throw lỗi DB trong getAllShipments", async () => {
+      // Arrange — mock throw lỗi DB
       ShipmentModel.findAll.mockRejectedValue(new Error("Table not found"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
@@ -271,8 +271,8 @@ describe("ShipmentService", () => {
     });
 
     // TC_SHIP_13
-    test("TC_SHIP_13 — Throw lỗi khi model ném lỗi DB trong deleteShipment", async () => {
-      // Arrange — mock ném lỗi DB
+    test("TC_SHIP_13 — Throw lỗi khi model throw lỗi DB trong deleteShipment", async () => {
+      // Arrange — mock throw lỗi DB
       ShipmentModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
 
       // Act & Assert — lỗi phải được re-throw ra ngoài

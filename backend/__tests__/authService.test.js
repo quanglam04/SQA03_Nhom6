@@ -266,7 +266,7 @@ describe("createResetToken()", () => {
 // updatePassword()
 describe("updatePassword()", () => {
   // TC_AUTH_09
-  it("TC_AUTH_09 - Hash password mới và xóa token sau khi cập nhật thành công", async () => {
+  it("TC_AUTH_09 - Hash password mới và xóa token sau khi update thành công", async () => {
     const resetRecord = {
       user_id: 3,
       token: "validtoken123",

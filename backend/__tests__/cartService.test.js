@@ -21,7 +21,7 @@ jest.mock("../config/mysql", () => ({
   },
 }));
 
-const { cartModel, productModel } = require("../models/index");
+const { cartModel, productModel, orderModel } = require("../models/index");
 const CartService = require("../services/cartService");
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -288,5 +288,358 @@ describe("CartService", () => {
     });
   });
   // ── end clearCart() ────────────────────────────────────────────────────────
+
+  // ── getOrCreateCart() — error path ────────────────────────────────────────
+  describe("getOrCreateCart() — error path", () => {
+    // TC_CART_13
+    test("TC_CART_13 — should_throw_error_when_findByUserId_throws_db_error", async () => {
+      // Arrange — mock cartModel.findByUserId ném lỗi DB
+      cartModel.findByUserId.mockRejectedValue(new Error("DB connection error"));
+
+      // Act & Assert
+      await expect(CartService.getOrCreateCart(1)).rejects.toThrow(
+        "DB connection error"
+      );
+
+      // CheckDB — findByUserId được gọi đúng 1 lần với đúng userId
+      expect(cartModel.findByUserId).toHaveBeenCalledTimes(1);
+      expect(cartModel.findByUserId).toHaveBeenCalledWith(1);
+
+      // CheckDB — create KHÔNG được gọi vì lỗi xảy ra trước đó
+      expect(cartModel.create).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+  });
+  // ── end getOrCreateCart() — error path ────────────────────────────────────
+
+  // ── addItem() — stock overflow on existing item ────────────────────────────
+  describe("addItem() — stock overflow on existing item", () => {
+    // TC_CART_14
+    test("TC_CART_14 — should_throw_error_when_total_quantity_exceeds_stock_for_existing_item", async () => {
+      // Arrange — giỏ đã có item variant=5, quantity=8; stock=10; thêm quantity=5 → 8+5=13 > 10
+      const mockVariant = { id: 5, stock: 10 };
+      const mockCart = { id: 42 };
+      const existingItem = { id: 10, quantity: 8 };
+
+      productModel.findVariantById.mockResolvedValue(mockVariant);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+      cartModel.findItemByCartAndVariant.mockResolvedValue(existingItem);
+
+      // Act & Assert — tổng 8 + 5 = 13 vượt stock=10
+      await expect(CartService.addItem(1, 5, 5)).rejects.toThrow(
+        "Insufficient stock. Available: 10"
+      );
+
+      // CheckDB — updateItemQuantity KHÔNG được gọi vì lỗi xảy ra trước đó
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // CheckDB — addItem KHÔNG được gọi
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+  });
+  // ── end addItem() — stock overflow on existing item ───────────────────────
+
+  // ── updateItem() — variant deleted / insufficient stock ───────────────────
+  describe("updateItem() — variant not found or insufficient stock", () => {
+    // TC_CART_15
+    test("TC_CART_15 — should_throw_error_when_variant_no_longer_exists_in_db", async () => {
+      // Arrange — cartItem tồn tại nhưng variant đã bị xóa (findVariantById → null)
+      const mockCartItem = { id: 1, product_variant_id: 5 };
+      cartModel.findItemById.mockResolvedValue(mockCartItem);
+      productModel.findVariantById.mockResolvedValue(null);
+
+      // Act & Assert — variant null → available stock = 0
+      await expect(CartService.updateItem(1, 2)).rejects.toThrow(
+        "Insufficient stock. Available: 0"
+      );
+
+      // CheckDB — findItemById được gọi đúng 1 lần
+      expect(cartModel.findItemById).toHaveBeenCalledTimes(1);
+      expect(cartModel.findItemById).toHaveBeenCalledWith(1);
+
+      // CheckDB — updateItemQuantity KHÔNG được gọi
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_CART_16
+    test("TC_CART_16 — should_throw_error_when_requested_quantity_exceeds_stock", async () => {
+      // Arrange — cartItem tồn tại; variant chỉ còn stock=2; cập nhật quantity=10
+      const mockCartItem = { id: 1, product_variant_id: 5 };
+      const mockVariant = { id: 5, stock: 2 };
+
+      cartModel.findItemById.mockResolvedValue(mockCartItem);
+      productModel.findVariantById.mockResolvedValue(mockVariant);
+
+      // Act & Assert
+      await expect(CartService.updateItem(1, 10)).rejects.toThrow(
+        "Insufficient stock. Available: 2"
+      );
+
+      // CheckDB — updateItemQuantity KHÔNG được gọi
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+  });
+  // ── end updateItem() — variant deleted / insufficient stock ───────────────
+
+  // ── restoreCartFromOrder() ─────────────────────────────────────────────────
+  describe("restoreCartFromOrder()", () => {
+    // TC_CART_17
+    test("TC_CART_17 — should_throw_error_when_orderId_does_not_exist", async () => {
+      // Arrange — orderModel.findByIdWithDetails trả về null
+      orderModel.findByIdWithDetails.mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(CartService.restoreCartFromOrder(1, 9999)).rejects.toThrow(
+        "Order not found"
+      );
+
+      // CheckDB — findByIdWithDetails được gọi đúng 1 lần với đúng orderId
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledTimes(1);
+      expect(orderModel.findByIdWithDetails).toHaveBeenCalledWith(9999);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_18
+    test("TC_CART_18 — should_throw_error_when_order_does_not_belong_to_user", async () => {
+      // Arrange — order tồn tại nhưng user_id=2, không khớp với userId=1
+      const mockOrder = {
+        id: 5,
+        user_id: 2,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [],
+      };
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+
+      // Act & Assert
+      await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
+        "Order does not belong to this user"
+      );
+
+      // CheckDB — không có thao tác DB nào khác được gọi
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_19
+    test("TC_CART_19 — should_throw_error_when_payment_method_is_not_vnpay", async () => {
+      // Arrange — order thuộc userId=1 nhưng payment_method="COD" (không phải VNPAY)
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "COD",
+        payment_status: "unpaid",
+        order_items: [],
+      };
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+
+      // Act & Assert
+      await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
+        "Only unpaid VNPay orders can be restored"
+      );
+
+      // CheckDB — không có thao tác giỏ hàng nào được thực hiện
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_20
+    test("TC_CART_20 — should_throw_error_when_vnpay_order_is_already_paid", async () => {
+      // Arrange — order thuộc userId=1, VNPAY nhưng payment_status="paid"
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "paid",
+        order_items: [],
+      };
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+
+      // Act & Assert
+      await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
+        "Only unpaid VNPay orders can be restored"
+      );
+
+      // CheckDB — không có thao tác giỏ hàng nào được thực hiện
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_21
+    test("TC_CART_21 — should_restore_successfully_and_return_zero_when_order_has_no_items", async () => {
+      // Arrange — order hợp lệ (VNPAY, unpaid, userId=1) nhưng order_items=[]
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [],
+      };
+      const mockCart = { id: 42 };
+
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+
+      // Act
+      const result = await CartService.restoreCartFromOrder(1, 5);
+
+      // Assert — không có item nào được khôi phục
+      expect(result).toEqual({ cart_id: 42, restored_items: 0 });
+
+      // CheckDB — addItem KHÔNG được gọi vì không có order_items
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_22
+    test("TC_CART_22 — should_add_new_item_when_variant_not_yet_in_cart_during_restore", async () => {
+      // Arrange — order hợp lệ; order_items có 1 item variant=5, quantity=2; giỏ chưa có item này
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [
+          { variant_id: 5, product_name: "Táo", variant_name: "1kg", quantity: 2 },
+        ],
+      };
+      const mockCart = { id: 42 };
+      const mockVariant = { id: 5, stock: 10 };
+
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+      productModel.findVariantById.mockResolvedValue(mockVariant);
+      cartModel.findItemByCartAndVariant.mockResolvedValue(null);
+      cartModel.addItem.mockResolvedValue({ id: 1 });
+
+      // Act
+      const result = await CartService.restoreCartFromOrder(1, 5);
+
+      // Assert
+      expect(result).toEqual({ cart_id: 42, restored_items: 1 });
+
+      // CheckDB — addItem được gọi đúng tham số
+      expect(cartModel.addItem).toHaveBeenCalledTimes(1);
+      expect(cartModel.addItem).toHaveBeenCalledWith(42, 5, 2);
+
+      // CheckDB — updateItemQuantity KHÔNG được gọi vì item chưa tồn tại
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_23
+    test("TC_CART_23 — should_update_quantity_when_variant_already_exists_in_cart_during_restore", async () => {
+      // Arrange — order hợp lệ; order_items có variant=5, quantity=2; giỏ đã có item: quantity=3
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [{ variant_id: 5, quantity: 2 }],
+      };
+      const mockCart = { id: 42 };
+      const mockVariant = { id: 5, stock: 10 };
+      const existingItem = { id: 7, quantity: 3 };
+
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+      productModel.findVariantById.mockResolvedValue(mockVariant);
+      cartModel.findItemByCartAndVariant.mockResolvedValue(existingItem);
+      cartModel.updateItemQuantity.mockResolvedValue(true);
+
+      // Act
+      const result = await CartService.restoreCartFromOrder(1, 5);
+
+      // Assert
+      expect(result).toEqual({ cart_id: 42, restored_items: 1 });
+
+      // CheckDB — updateItemQuantity được gọi với (existingItemId, 3+2=5)
+      expect(cartModel.updateItemQuantity).toHaveBeenCalledTimes(1);
+      expect(cartModel.updateItemQuantity).toHaveBeenCalledWith(7, 5);
+
+      // CheckDB — addItem KHÔNG được gọi vì item đã tồn tại
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_24
+    test("TC_CART_24 — should_throw_error_when_order_item_variant_no_longer_exists_in_db", async () => {
+      // Arrange — order hợp lệ; order_items có variant_id=99 đã bị xóa khỏi DB
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [
+          { variant_id: 99, variant_name: "Size L", quantity: 1 },
+        ],
+      };
+      const mockCart = { id: 42 };
+
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+      productModel.findVariantById.mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
+        "Product variant Size L not found"
+      );
+
+      // CheckDB — addItem và updateItemQuantity KHÔNG được gọi
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+
+    // TC_CART_25
+    test("TC_CART_25 — should_throw_error_when_stock_insufficient_to_restore_order_item", async () => {
+      // Arrange — order hợp lệ; order_items có variant=5, quantity=5; variant chỉ còn stock=2
+      const mockOrder = {
+        id: 5,
+        user_id: 1,
+        payment_method: "VNPAY",
+        payment_status: "unpaid",
+        order_items: [
+          { variant_id: 5, product_name: "Táo", quantity: 5 },
+        ],
+      };
+      const mockCart = { id: 42 };
+      const mockVariant = { id: 5, stock: 2 };
+
+      orderModel.findByIdWithDetails.mockResolvedValue(mockOrder);
+      cartModel.findByUserId.mockResolvedValue(mockCart);
+      productModel.findVariantById.mockResolvedValue(mockVariant);
+
+      // Act & Assert — stock=2 < quantity=5
+      await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
+        "Insufficient stock for Táo. Available: 2, Requested: 5"
+      );
+
+      // CheckDB — addItem và updateItemQuantity KHÔNG được gọi
+      expect(cartModel.addItem).not.toHaveBeenCalled();
+      expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+    });
+  });
+  // ── end restoreCartFromOrder() ─────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════

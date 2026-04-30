@@ -151,3 +151,181 @@ describe('reviewService - Comprehensive Test Suite (TC_REV_01 to TC_REV_16)', ()
     });
   });
 });
+
+// ════════════════════════════════════════════════════════════════════════════
+// Bổ sung — nâng Branch coverage lên 100%
+// ════════════════════════════════════════════════════════════════════════════
+describe('reviewService — branch coverage bổ sung', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // ── getReviewsForProduct() ────────────────────────────────────────────────
+  describe('getReviewsForProduct()', () => {
+    // TC_REV_14
+    test('TC_REV_14 - Trả về reviews và stats của sản phẩm', async () => {
+      // Arrange
+      const mockReviews = [{ id: 1, rating: 5, comment: 'Tốt' }];
+      const mockStats = { avg: 5, count: 1 };
+      reviewModel.findByProductId.mockResolvedValue(mockReviews);
+      reviewModel.getStatsByProductId.mockResolvedValue(mockStats);
+
+      // Act
+      const result = await reviewService.getReviewsForProduct(1);
+
+      // Assert
+      expect(result).toEqual({ reviews: mockReviews, stats: mockStats });
+      expect(reviewModel.findByProductId).toHaveBeenCalledWith(1);
+      expect(reviewModel.getStatsByProductId).toHaveBeenCalledWith(1);
+    });
+  });
+  // ── end getReviewsForProduct() ────────────────────────────────────────────
+
+  // ── canUserReview() — variantId có nhưng không tìm thấy, fall-through ────
+  describe('canUserReview() — branch bổ sung', () => {
+    // TC_REV_15
+    test('TC_REV_15 - variantId có nhưng không match, fall-through kiểm tra productId và tìm thấy', async () => {
+      // Arrange — query variantId trả về rỗng, query productId tìm thấy
+      pool.query
+        .mockResolvedValueOnce([[]])          // variantId check → không tìm thấy
+        .mockResolvedValueOnce([[{ id: 1 }]]); // productId check → tìm thấy
+
+      // Act
+      const result = await reviewService.canUserReview(1, 2, 10);
+
+      // Assert — fall-through sang productId check và trả về true
+      expect(result).toBe(true);
+      expect(pool.query).toHaveBeenCalledTimes(2);
+    });
+
+    // TC_REV_16
+    test('TC_REV_16 - variantId có nhưng không match, fall-through kiểm tra productId cũng không tìm thấy', async () => {
+      // Arrange — cả 2 query đều trả về rỗng
+      pool.query
+        .mockResolvedValueOnce([[]])  // variantId check → không tìm thấy
+        .mockResolvedValueOnce([[]]); // productId check → không tìm thấy
+
+      // Act
+      const result = await reviewService.canUserReview(1, 2, 10);
+
+      // Assert — trả về false
+      expect(result).toBe(false);
+      expect(pool.query).toHaveBeenCalledTimes(2);
+    });
+  });
+  // ── end canUserReview() branches ──────────────────────────────────────────
+
+  // ── addOrUpdateReview() — comment null (safeComment = '') ────────────────
+  describe('addOrUpdateReview() — branch bổ sung', () => {
+    // TC_REV_17
+    test('TC_REV_17 - comment là null thì safeComment fallback về chuỗi rỗng', async () => {
+      // Arrange
+      pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible
+      reviewModel.findByUserAndProduct.mockResolvedValue(null);
+      reviewModel.create.mockResolvedValue({ id: 101 });
+      reviewModel.findByProductId.mockResolvedValue([]);
+      reviewModel.getStatsByProductId.mockResolvedValue({});
+
+      // Act
+      await reviewService.addOrUpdateReview(1, 1, 5, null);
+
+      // Assert — comment ?? '' → '' sau khi trim
+      expect(reviewModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({ comment: '' })
+      );
+    });
+  });
+  // ── end addOrUpdateReview() branches ──────────────────────────────────────
+
+  // ── addOrUpdateReviewFromOrder() — branch bổ sung ────────────────────────
+  describe('addOrUpdateReviewFromOrder() — branch bổ sung', () => {
+    // TC_REV_18
+    test('TC_REV_18 - days_since_delivery là null → fallback 9999 → bị block bởi WINDOW_EXPIRED', async () => {
+      // Arrange — days_since_delivery = null → Number(null ?? 9999) = 9999 → 9999 >= 30 → WINDOW_EXPIRED
+      pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: null }]]);
+
+      // Act
+      const result = await reviewService.addOrUpdateReviewFromOrder(1, 1, 10, 5, 'Good');
+
+      // Assert — bị chặn vì daysSince = 9999 >= 30
+      expect(result.ok).toBe(false);
+      expect(result.reason).toBe('WINDOW_EXPIRED');
+      expect(result.days_since).toBe(9999);
+    });
+
+    // TC_REV_19
+    test('TC_REV_19 - comment là null thì safeComment fallback về chuỗi rỗng', async () => {
+      // Arrange
+      pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: 5 }]]);
+      reviewModel.findByUserAndProduct.mockResolvedValue(null);
+      reviewModel.create.mockResolvedValue({ id: 201 });
+      reviewModel.findByProductId.mockResolvedValue([]);
+      reviewModel.getStatsByProductId.mockResolvedValue({});
+
+      // Act
+      await reviewService.addOrUpdateReviewFromOrder(1, 1, 10, 5, null);
+
+      // Assert — comment ?? '' → ''
+      expect(reviewModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({ comment: '' })
+      );
+    });
+  });
+  // ── end addOrUpdateReviewFromOrder() branches ─────────────────────────────
+
+  // ── getOrderReviewStatus() — branch bổ sung ──────────────────────────────
+  describe('getOrderReviewStatus() — branch bổ sung', () => {
+    // TC_REV_20
+    test('TC_REV_20 - Đơn hàng chưa delivered: days_since và daysRemaining là null, windowOpen = false', async () => {
+      // Arrange — status không phải delivered
+      pool.query
+        .mockResolvedValueOnce([[{ status: 'pending', days_since_delivery: null }]])
+        .mockResolvedValueOnce([[{ variant_id: 5, product_id: 2, reviewed: 0 }]]);
+
+      // Act
+      const result = await reviewService.getOrderReviewStatus(1, 1);
+
+      // Assert
+      expect(result.found).toBe(true);
+      expect(result.delivered).toBe(false);
+      expect(result.days_since_delivery).toBeNull();
+      expect(result.days_remaining).toBeNull();
+      expect(result.window_open).toBe(false);
+    });
+
+    // TC_REV_21
+    test('TC_REV_21 - Đơn hàng delivered đúng 30 ngày: daysRemaining = 0, windowOpen = false', async () => {
+      // Arrange — days_since_delivery = 30 → daysRemaining = 0, windowOpen = false (30 < 30 là false)
+      pool.query
+        .mockResolvedValueOnce([[{ status: 'delivered', days_since_delivery: 30 }]])
+        .mockResolvedValueOnce([[{ variant_id: 5, product_id: 2, reviewed: 1 }]]);
+
+      // Act
+      const result = await reviewService.getOrderReviewStatus(1, 1);
+
+      // Assert
+      expect(result.delivered).toBe(true);
+      expect(result.days_remaining).toBe(0);
+      expect(result.window_open).toBe(false);
+      expect(result.items[0].reviewed).toBe(true);
+    });
+
+    // TC_REV_22
+    test('TC_REV_22 - days_since_delivery là null khi delivered: daysSince = 9999, daysRemaining = 0, windowOpen = false', async () => {
+      // Arrange — delivered nhưng days_since_delivery = null → Number(null ?? 9999) = 9999
+      // → isFinite(9999) = true → daysRemaining = Math.max(0, 30 - 9999) = 0, windowOpen = false
+      pool.query
+        .mockResolvedValueOnce([[{ status: 'delivered', days_since_delivery: null }]])
+        .mockResolvedValueOnce([[{ variant_id: 3, product_id: 1, reviewed: 0 }]]);
+
+      // Act
+      const result = await reviewService.getOrderReviewStatus(1, 1);
+
+      // Assert
+      expect(result.delivered).toBe(true);
+      expect(result.days_remaining).toBe(0);   // Math.max(0, 30 - 9999) = 0
+      expect(result.window_open).toBe(false);  // 9999 < 30 = false
+    });
+  });
+  // ── end getOrderReviewStatus() branches ───────────────────────────────────
+});

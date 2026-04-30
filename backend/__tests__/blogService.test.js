@@ -71,6 +71,27 @@ describe("blogService", () => {
       // CheckDB — blogModel.create() KHÔNG được gọi vì bị chặn bởi validation
       expect(blogModel.create).not.toHaveBeenCalled();
     });
+
+    // TC_BLOG_13
+    test("TC_BLOG_13 — should_return_success_false_when_content_is_empty", async () => {
+      // Arrange — không cần mock vì validation chặn trước khi gọi DB
+      const blogData = { title: "Tiêu đề", content: "" };
+
+      // Act
+      const result = await blogService.createBlog(blogData);
+
+      // Assert — trả về lỗi validation khi content bỏ trống
+      expect(result).toEqual({
+        success: false,
+        message: "Tiêu đề và nội dung bài viết không được trống",
+        data: null,
+      });
+
+      // CheckDB — blogModel.create() KHÔNG được gọi vì bị chặn bởi validation
+      expect(blogModel.create).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
+    });
   });
   // ── end createBlog() ───────────────────────────────────────────────────────
 
@@ -122,8 +143,62 @@ describe("blogService", () => {
       expect(blogModel.findById).toHaveBeenCalledWith(9999);
       expect(blogModel.getComments).not.toHaveBeenCalled();
     });
+
+    // TC_BLOG_08
+    test("TC_BLOG_08 — should_throw_error_when_findById_throws_DB_error", async () => {
+      // Arrange — mock blogModel.findById ném lỗi DB
+      blogModel.findById.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert — lỗi phải được propagate ra ngoài
+      await expect(blogService.getBlogDetail(1)).rejects.toThrow("DB error");
+
+      // CheckDB — findById được gọi với đúng blogId
+      expect(blogModel.findById).toHaveBeenCalledTimes(1);
+      expect(blogModel.findById).toHaveBeenCalledWith(1);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_BLOG_09
+    test("TC_BLOG_09 — should_return_empty_comments_array_when_getComments_returns_null", async () => {
+      // Arrange — blog tồn tại nhưng getComments trả về null
+      const mockBlog = { id: 1, title: "Blog A", content: "Nội dung A" };
+      blogModel.findById.mockResolvedValue(mockBlog);
+      blogModel.getComments.mockResolvedValue(null);
+
+      // Act
+      const result = await blogService.getBlogDetail(1);
+
+      // Assert — comments phải là mảng rỗng thay vì null (comments || [])
+      expect(result.success).toBe(true);
+      expect(result.data.comments).toEqual([]);
+
+      // CheckDB — getComments được gọi với đúng blogId
+      expect(blogModel.getComments).toHaveBeenCalledTimes(1);
+      expect(blogModel.getComments).toHaveBeenCalledWith(1);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
   });
   // ── end getBlogDetail() ────────────────────────────────────────────────────
+
+  // ── getAllBlogs() ──────────────────────────────────────────────────────────
+  describe("getAllBlogs()", () => {
+    // TC_BLOG_07
+    test("TC_BLOG_07 — should_throw_error_when_findAll_throws_DB_error", async () => {
+      // Arrange — mock blogModel.findAll ném lỗi DB
+      blogModel.findAll.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert — lỗi phải được propagate ra ngoài
+      await expect(blogService.getAllBlogs()).rejects.toThrow("DB error");
+
+      // CheckDB — findAll được gọi đúng 1 lần
+      expect(blogModel.findAll).toHaveBeenCalledTimes(1);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+  });
+  // ── end getAllBlogs() ──────────────────────────────────────────────────────
 
   // ── searchBlogs() ──────────────────────────────────────────────────────────
   describe("searchBlogs()", () => {
@@ -147,8 +222,189 @@ describe("blogService", () => {
       expect(blogModel.findAll).toHaveBeenCalledTimes(1);
       expect(blogModel.searchBlogs).not.toHaveBeenCalled();
     });
+
+    // TC_BLOG_10
+    test("TC_BLOG_10 — should_call_blogModel_searchBlogs_and_return_results_when_keyword_is_valid", async () => {
+      // Arrange — mock blogModel.searchBlogs trả về danh sách kết quả
+      const mockBlogs = [{ id: 1, title: "Rau củ quả" }];
+      blogModel.searchBlogs.mockResolvedValue(mockBlogs);
+
+      // Act
+      const result = await blogService.searchBlogs("rau củ");
+
+      // Assert — trả về kết quả tìm kiếm, KHÔNG gọi findAll
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockBlogs);
+
+      // CheckDB — blogModel.searchBlogs() được gọi với đúng keyword
+      expect(blogModel.searchBlogs).toHaveBeenCalledTimes(1);
+      expect(blogModel.searchBlogs).toHaveBeenCalledWith("rau củ");
+
+      // CheckDB — findAll() KHÔNG được gọi
+      expect(blogModel.findAll).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_BLOG_11
+    test("TC_BLOG_11 — should_call_getAllBlogs_when_keyword_is_whitespace_only", async () => {
+      // Arrange — mock blogModel.findAll trả về danh sách blog
+      const mockBlogs = [{ id: 1, title: "Blog 1" }];
+      blogModel.findAll.mockResolvedValue(mockBlogs);
+
+      // Act — keyword chỉ toàn khoảng trắng → keyword.trim() === ""
+      const result = await blogService.searchBlogs("   ");
+
+      // Assert — fallback về getAllBlogs
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockBlogs);
+
+      // CheckDB — findAll() được gọi, searchBlogs() KHÔNG được gọi
+      expect(blogModel.findAll).toHaveBeenCalledTimes(1);
+      expect(blogModel.searchBlogs).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_BLOG_12
+    test("TC_BLOG_12 — should_call_getAllBlogs_when_keyword_is_null", async () => {
+      // Arrange — mock blogModel.findAll trả về danh sách blog
+      const mockBlogs = [{ id: 2, title: "Blog 2" }];
+      blogModel.findAll.mockResolvedValue(mockBlogs);
+
+      // Act — keyword là null → !keyword === true → fallback về getAllBlogs
+      const result = await blogService.searchBlogs(null);
+
+      // Assert — fallback về getAllBlogs
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockBlogs);
+
+      // CheckDB — findAll() được gọi, searchBlogs() KHÔNG được gọi
+      expect(blogModel.findAll).toHaveBeenCalledTimes(1);
+      expect(blogModel.searchBlogs).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
   });
   // ── end searchBlogs() ──────────────────────────────────────────────────────
+
+  // ── updateBlog() ───────────────────────────────────────────────────────────
+  describe("updateBlog()", () => {
+    // TC_BLOG_14
+    test("TC_BLOG_14 — should_return_success_false_when_title_is_empty", async () => {
+      // Arrange — không cần mock vì validation chặn trước khi gọi DB
+      const blogData = { title: "", content: "Nội dung" };
+
+      // Act
+      const result = await blogService.updateBlog(1, blogData);
+
+      // Assert — trả về lỗi validation khi title bỏ trống
+      expect(result).toEqual({
+        success: false,
+        message: "Tiêu đề và nội dung bài viết không được trống",
+        data: null,
+      });
+
+      // CheckDB — blogModel.update() KHÔNG được gọi vì bị chặn bởi validation
+      expect(blogModel.update).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_BLOG_15
+    test("TC_BLOG_15 — should_return_success_false_when_content_is_empty", async () => {
+      // Arrange — không cần mock vì validation chặn trước khi gọi DB
+      const blogData = { title: "Tiêu đề", content: "" };
+
+      // Act
+      const result = await blogService.updateBlog(1, blogData);
+
+      // Assert — trả về lỗi validation khi content bỏ trống
+      expect(result).toEqual({
+        success: false,
+        message: "Tiêu đề và nội dung bài viết không được trống",
+        data: null,
+      });
+
+      // CheckDB — blogModel.update() KHÔNG được gọi vì bị chặn bởi validation
+      expect(blogModel.update).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+
+    // TC_BLOG_16
+    test("TC_BLOG_16 — should_return_success_true_when_blogData_is_valid", async () => {
+      // Arrange — mock blogModel.update trả về blog đã được cập nhật
+      const blogData = { title: "Tiêu đề mới", content: "Nội dung mới" };
+      const mockUpdatedBlog = { id: 1, title: "Tiêu đề mới", content: "Nội dung mới" };
+      blogModel.update.mockResolvedValue(mockUpdatedBlog);
+
+      // Act
+      const result = await blogService.updateBlog(1, blogData);
+
+      // Assert — trả về thành công kèm blog đã cập nhật
+      expect(result).toEqual({
+        success: true,
+        data: mockUpdatedBlog,
+        message: "Cập nhật bài viết thành công",
+      });
+
+      // CheckDB — blogModel.update() được gọi đúng 1 lần với đúng tham số
+      expect(blogModel.update).toHaveBeenCalledTimes(1);
+      expect(blogModel.update).toHaveBeenCalledWith(1, blogData);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+  });
+  // ── end updateBlog() ───────────────────────────────────────────────────────
+
+  // ── deleteBlog() ───────────────────────────────────────────────────────────
+  describe("deleteBlog()", () => {
+    // TC_BLOG_17
+    test("TC_BLOG_17 — should_return_success_true_when_blog_is_deleted_successfully", async () => {
+      // Arrange — mock blogModel.remove trả về true
+      blogModel.remove.mockResolvedValue(true);
+
+      // Act
+      const result = await blogService.deleteBlog(1);
+
+      // Assert — trả về success:true kèm message xóa thành công
+      expect(result).toEqual({
+        success: true,
+        message: "Xóa bài viết thành công",
+        data: null,
+      });
+
+      // CheckDB — blogModel.remove() được gọi đúng 1 lần với đúng blogId
+      expect(blogModel.remove).toHaveBeenCalledTimes(1);
+      expect(blogModel.remove).toHaveBeenCalledWith(1);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị xóa => không cần rollback
+    });
+
+    // TC_BLOG_18
+    test("TC_BLOG_18 — should_return_success_false_when_blog_delete_fails", async () => {
+      // Arrange — mock blogModel.remove trả về false (không có bài viết nào bị xóa)
+      blogModel.remove.mockResolvedValue(false);
+
+      // Act
+      const result = await blogService.deleteBlog(9999);
+
+      // Assert — trả về success:false kèm message xóa thất bại
+      expect(result).toEqual({
+        success: false,
+        message: "Xóa bài viết thất bại",
+        data: null,
+      });
+
+      // CheckDB — blogModel.remove() được gọi đúng 1 lần với đúng blogId
+      expect(blogModel.remove).toHaveBeenCalledTimes(1);
+      expect(blogModel.remove).toHaveBeenCalledWith(9999);
+
+      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+    });
+  });
+  // ── end deleteBlog() ───────────────────────────────────────────────────────
 
   // ── addComment() ───────────────────────────────────────────────────────────
   describe("addComment()", () => {
@@ -168,6 +424,55 @@ describe("blogService", () => {
 
       // CheckDB — blogModel.addComment() KHÔNG được gọi vì bị chặn bởi validation
       expect(blogModel.addComment).not.toHaveBeenCalled();
+    });
+
+    // TC_BLOG_19
+    test("TC_BLOG_19 — should_return_success_true_when_comment_content_is_valid", async () => {
+      // Arrange — mock blogModel.addComment trả về comment object
+      const mockComment = {
+        id: 10,
+        blog_id: 1,
+        user_id: 2,
+        content: "Bài viết hay quá!",
+      };
+      blogModel.addComment.mockResolvedValue(mockComment);
+
+      // Act
+      const result = await blogService.addComment(1, 2, "Bài viết hay quá!");
+
+      // Assert — trả về thành công kèm comment vừa tạo
+      expect(result).toEqual({
+        success: true,
+        data: mockComment,
+        message: "Thêm comment thành công",
+      });
+
+      // CheckDB — blogModel.addComment() được gọi đúng 1 lần với đúng tham số
+      expect(blogModel.addComment).toHaveBeenCalledTimes(1);
+      expect(blogModel.addComment).toHaveBeenCalledWith(1, 2, "Bài viết hay quá!");
+
+      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
+    });
+
+    // TC_BLOG_20
+    test("TC_BLOG_20 — should_return_success_false_when_content_is_whitespace_only", async () => {
+      // Arrange — không cần mock vì validation chặn trước khi gọi DB
+      // content.trim() === "" khi chỉ có khoảng trắng
+
+      // Act
+      const result = await blogService.addComment(1, 2, "   ");
+
+      // Assert — trả về lỗi validation khi content toàn khoảng trắng
+      expect(result).toEqual({
+        success: false,
+        message: "Nội dung comment không được trống",
+        data: null,
+      });
+
+      // CheckDB — blogModel.addComment() KHÔNG được gọi vì bị chặn bởi validation
+      expect(blogModel.addComment).not.toHaveBeenCalled();
+
+      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
     });
   });
   // ── end addComment() ───────────────────────────────────────────────────────

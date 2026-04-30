@@ -130,7 +130,161 @@ describe("ShipmentService", () => {
       // CheckDB — create() KHÔNG được gọi vì shipment đã tồn tại
       expect(ShipmentModel.create).not.toHaveBeenCalled();
     });
+
+    // TC_SHIP_05
+    test("TC_SHIP_05 — should throw error when model throws in updateShipment", async () => {
+      // Arrange — mock findByOrderId ném lỗi DB
+      ShipmentModel.findByOrderId.mockRejectedValue(new Error("DB connection failed"));
+
+      // Act & Assert — lỗi phải được re-throw ra ngoài
+      await expect(
+        ShipmentService.updateShipment(1, { status: "shipping" }),
+      ).rejects.toThrow("DB connection failed");
+
+      // CheckDB — findByOrderId vẫn được gọi
+      expect(ShipmentModel.findByOrderId).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith(1);
+    });
   });
   // ── end updateShipment() ───────────────────────────────────────────────────
+
+  // ── getShipment() error branch ─────────────────────────────────────────────
+  describe("getShipment() — error branch", () => {
+    // TC_SHIP_06
+    test("TC_SHIP_06 — should throw error when model throws in getShipment", async () => {
+      // Arrange — mock findByOrderId ném lỗi DB
+      ShipmentModel.findByOrderId.mockRejectedValue(new Error("Timeout"));
+
+      // Act & Assert — lỗi phải được re-throw ra ngoài
+      await expect(ShipmentService.getShipment(1)).rejects.toThrow("Timeout");
+
+      // CheckDB — xác minh vẫn gọi đúng hàm
+      expect(ShipmentModel.findByOrderId).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith(1);
+    });
+  });
+  // ── end getShipment() error branch ────────────────────────────────────────
+
+  // ── getAllShipments() ──────────────────────────────────────────────────────
+  describe("getAllShipments()", () => {
+    // TC_SHIP_07
+    test("TC_SHIP_07 — should return list of all shipments with filters", async () => {
+      // Arrange — mock trả về danh sách 2 shipment
+      const mockList = [
+        { order_id: 1, status: "shipping", tracking_code: "VN001" },
+        { order_id: 2, status: "delivered", tracking_code: "VN002" },
+      ];
+      ShipmentModel.findAll.mockResolvedValue(mockList);
+
+      const filters = { status: "shipping" };
+
+      // Act
+      const result = await ShipmentService.getAllShipments(filters);
+
+      // Assert — trả về đúng danh sách
+      expect(result).toEqual(mockList);
+      expect(result).toHaveLength(2);
+
+      // CheckDB — xác minh findAll được gọi đúng 1 lần với đúng filters
+      expect(ShipmentModel.findAll).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.findAll).toHaveBeenCalledWith(filters);
+    });
+
+    // TC_SHIP_08
+    test("TC_SHIP_08 — should return empty array when no shipments exist", async () => {
+      // Arrange — mock trả về array rỗng
+      ShipmentModel.findAll.mockResolvedValue([]);
+
+      // Act
+      const result = await ShipmentService.getAllShipments({});
+
+      // Assert — trả về array rỗng
+      expect(result).toEqual([]);
+      expect(result).toHaveLength(0);
+
+      // CheckDB
+      expect(ShipmentModel.findAll).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.findAll).toHaveBeenCalledWith({});
+    });
+
+    // TC_SHIP_09
+    test("TC_SHIP_09 — should use empty object as default filters when none passed", async () => {
+      // Arrange — gọi không truyền filters, mong model nhận {}
+      ShipmentModel.findAll.mockResolvedValue([]);
+
+      // Act
+      await ShipmentService.getAllShipments();
+
+      // CheckDB — xác minh findAll được gọi với {} (default)
+      expect(ShipmentModel.findAll).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.findAll).toHaveBeenCalledWith({});
+    });
+
+    // TC_SHIP_10
+    test("TC_SHIP_10 — should throw error when model throws in getAllShipments", async () => {
+      // Arrange — mock ném lỗi DB
+      ShipmentModel.findAll.mockRejectedValue(new Error("Table not found"));
+
+      // Act & Assert — lỗi phải được re-throw ra ngoài
+      await expect(ShipmentService.getAllShipments({})).rejects.toThrow(
+        "Table not found",
+      );
+
+      // CheckDB
+      expect(ShipmentModel.findAll).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllShipments() ──────────────────────────────────────────────────
+
+  // ── deleteShipment() ──────────────────────────────────────────────────────
+  describe("deleteShipment()", () => {
+    // TC_SHIP_11
+    test("TC_SHIP_11 — should return result when delete succeeds", async () => {
+      // Arrange — mock trả về { affectedRows: 1 } (xóa thành công)
+      ShipmentModel.delete.mockResolvedValue({ affectedRows: 1 });
+
+      // Act
+      const result = await ShipmentService.deleteShipment(1);
+
+      // Assert — trả về kết quả từ model
+      expect(result).toEqual({ affectedRows: 1 });
+
+      // CheckDB — xác minh delete được gọi đúng 1 lần với đúng tham số
+      expect(ShipmentModel.delete).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.delete).toHaveBeenCalledWith(1);
+    });
+
+    // TC_SHIP_12
+    test("TC_SHIP_12 — should return result when orderId does not exist (affectedRows=0)", async () => {
+      // Arrange — mock trả về affectedRows=0 (không tìm thấy record)
+      ShipmentModel.delete.mockResolvedValue({ affectedRows: 0 });
+
+      // Act
+      const result = await ShipmentService.deleteShipment(9999);
+
+      // Assert — trả về kết quả từ model (service không throw, chỉ pass-through)
+      expect(result).toEqual({ affectedRows: 0 });
+
+      // CheckDB
+      expect(ShipmentModel.delete).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.delete).toHaveBeenCalledWith(9999);
+    });
+
+    // TC_SHIP_13
+    test("TC_SHIP_13 — should throw error when model throws in deleteShipment", async () => {
+      // Arrange — mock ném lỗi DB
+      ShipmentModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
+
+      // Act & Assert — lỗi phải được re-throw ra ngoài
+      await expect(ShipmentService.deleteShipment(1)).rejects.toThrow(
+        "Foreign key constraint",
+      );
+
+      // CheckDB
+      expect(ShipmentModel.delete).toHaveBeenCalledTimes(1);
+      expect(ShipmentModel.delete).toHaveBeenCalledWith(1);
+    });
+  });
+  // ── end deleteShipment() ──────────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════

@@ -287,3 +287,34 @@ describe("ShipmentService", () => {
   });
   // ── end deleteShipment() ──────────────────────────────────────────────────
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("updateShipment() — shipmentData không hợp lệ", () => {
+  // TC_SHIP_14
+  test("TC_SHIP_14 — Tạo shipment mới khi shipmentData là object rỗng (service không validate data)", async () => {
+    // Service không kiểm tra shipmentData có hợp lệ không → gọi create với data rỗng
+    ShipmentModel.findByOrderId.mockResolvedValue(null);
+    ShipmentModel.create.mockResolvedValue({ order_id: 1 });
+
+    const result = await ShipmentService.updateShipment(1, {}); // data rỗng
+
+    // Service KHÔNG chặn data rỗng → lỗ hổng
+    expect(ShipmentModel.create).toHaveBeenCalledWith({ order_id: 1 });
+    expect(result).toEqual({ order_id: 1 });
+  });
+});
+
+describe("getShipment() — orderId không hợp lệ", () => {
+  // TC_SHIP_15
+  test("TC_SHIP_15 — Trả về null khi orderId là string không phải số (service không validate kiểu)", async () => {
+    // Service không validate kiểu orderId → gọi findByOrderId với string
+    ShipmentModel.findByOrderId.mockResolvedValue(null);
+
+    const result = await ShipmentService.getShipment("abc");
+
+    // Service KHÔNG chặn orderId không phải số
+    expect(result).toBeNull();
+    expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith("abc");
+  });
+});

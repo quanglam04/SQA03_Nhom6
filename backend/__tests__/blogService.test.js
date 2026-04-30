@@ -703,3 +703,77 @@ describe("searchBlogs() — blogs null branch", () => {
     expect(blogModel.searchBlogs).toHaveBeenCalledWith("từ khóa");
   });
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("createBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
+  // TC_BLOG_35
+  test("TC_BLOG_35 — Trả về success:false khi title là null (không phải chuỗi rỗng)", async () => {
+    // title=null → !blogData.title = true → bị chặn validation, không gọi DB
+    const result = await blogService.createBlog({ title: null, content: "Nội dung" });
+
+    expect(result).toEqual({
+      success: false,
+      message: "Tiêu đề và nội dung bài viết không được trống",
+      data: null,
+    });
+    expect(blogModel.create).not.toHaveBeenCalled();
+  });
+
+  // TC_BLOG_36
+  test("TC_BLOG_36 — Trả về success:false khi content là null", async () => {
+    // content=null → !blogData.content = true → bị chặn validation
+    const result = await blogService.createBlog({ title: "Tiêu đề", content: null });
+
+    expect(result).toEqual({
+      success: false,
+      message: "Tiêu đề và nội dung bài viết không được trống",
+      data: null,
+    });
+    expect(blogModel.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
+  // TC_BLOG_37
+  test("TC_BLOG_37 — Trả về success:false khi title là null trong updateBlog", async () => {
+    const result = await blogService.updateBlog(1, { title: null, content: "Nội dung" });
+
+    expect(result).toEqual({
+      success: false,
+      message: "Tiêu đề và nội dung bài viết không được trống",
+      data: null,
+    });
+    expect(blogModel.update).not.toHaveBeenCalled();
+  });
+
+  // TC_BLOG_38
+  test("TC_BLOG_38 — Trả về success:false khi cả title lẫn content đều undefined", async () => {
+    // Không truyền title/content → undefined → !undefined = true → bị chặn
+    const result = await blogService.updateBlog(1, {});
+
+    expect(result).toEqual({
+      success: false,
+      message: "Tiêu đề và nội dung bài viết không được trống",
+      data: null,
+    });
+    expect(blogModel.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("addComment() — nội dung không hợp lệ", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_BLOG_39
+  test("TC_BLOG_39 — Trả về success:false khi content là null", async () => {
+    // content=null → !content = true → bị chặn validation
+    const result = await blogService.addComment(1, 1, null);
+
+    expect(result).toEqual({
+      success: false,
+      message: "Nội dung comment không được trống",
+      data: null,
+    });
+    expect(blogModel.addComment).not.toHaveBeenCalled();
+  });
+});

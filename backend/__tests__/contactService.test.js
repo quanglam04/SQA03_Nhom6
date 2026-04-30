@@ -352,3 +352,58 @@ describe("contactService", () => {
   });
   // ── end deleteRequest() ────────────────────────────────────────────────────
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("updateStatus() — giá trị status không hợp lệ thêm", () => {
+  // TC_CONT_16
+  test("TC_CONT_16 — Trả về success:false khi status là null", async () => {
+    // null không nằm trong ['pending', 'resolved'] → bị chặn validation
+    const result = await contactService.updateStatus(1, null);
+
+    expect(result).toEqual({
+      success: false,
+      message: "Status không hợp lệ",
+    });
+    expect(contactModel.updateStatus).not.toHaveBeenCalled();
+  });
+
+  // TC_CONT_17
+  test("TC_CONT_17 — Trả về success:false khi status là chuỗi rỗng", async () => {
+    // '' không nằm trong ['pending', 'resolved'] → bị chặn validation
+    const result = await contactService.updateStatus(1, "");
+
+    expect(result).toEqual({
+      success: false,
+      message: "Status không hợp lệ",
+    });
+    expect(contactModel.updateStatus).not.toHaveBeenCalled();
+  });
+
+  // TC_CONT_18
+  test("TC_CONT_18 — Trả về success:false khi status viết hoa (PENDING) — service không normalize", async () => {
+    // 'PENDING' !== 'pending' → không match → bị chặn
+    const result = await contactService.updateStatus(1, "PENDING");
+
+    expect(result).toEqual({
+      success: false,
+      message: "Status không hợp lệ",
+    });
+    expect(contactModel.updateStatus).not.toHaveBeenCalled();
+  });
+});
+
+describe("getRequestById() — id không hợp lệ", () => {
+  // TC_CONT_19
+  test("TC_CONT_19 — Trả về success:false khi getById trả về null thay vì array rỗng", async () => {
+    // Một số DB driver trả về null thay vì [] → service kiểm tra !results || results.length === 0
+    contactModel.getById.mockResolvedValue(null);
+
+    const result = await contactService.getRequestById(1);
+
+    expect(result).toEqual({
+      success: false,
+      message: "Không tìm thấy",
+    });
+  });
+});

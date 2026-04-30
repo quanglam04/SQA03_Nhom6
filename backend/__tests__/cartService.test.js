@@ -710,3 +710,60 @@ describe("restoreCartFromOrder() — order_items null branch", () => {
   });
 });
 // ─── end branch bổ sung ───────────────────────────────────────────────────────
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("addItem() — số lượng không hợp lệ", () => {
+  // TC_CART_30
+  test("TC_CART_30 — Vẫn thêm item khi quantity=0 (service không validate quantity > 0)", async () => {
+    // Service không kiểm tra quantity có dương không — đây là lỗ hổng
+    const mockVariant = { id: 5, stock: 10 };
+    const mockCart = { id: 42 };
+    cartModel.findByUserId.mockResolvedValue(mockCart);
+    productModel.findVariantById.mockResolvedValue(mockVariant);
+    cartModel.findItemByCartAndVariant.mockResolvedValue(null);
+    cartModel.addItem.mockResolvedValue(true);
+
+    // quantity=0, stock=10 → 0 < 10 không throw → addItem được gọi
+    const result = await CartService.addItem(1, 5, 0);
+
+    // Service KHÔNG chặn quantity=0 → đây là lỗ hổng cần ghi nhận
+    expect(cartModel.addItem).toHaveBeenCalledWith(42, 5, 0);
+    expect(result).toBeDefined();
+  });
+
+  // TC_CART_31
+  test("TC_CART_31 — Throw lỗi khi quantity âm vượt quá stock check (stock=5, quantity=-1: -1 < 5 không throw)", async () => {
+    // quantity=-1 → stock=5, -1 < 5 → không throw tồn kho — đây là lỗ hổng service không validate âm
+    const mockVariant = { id: 5, stock: 5 };
+    const mockCart = { id: 42 };
+    cartModel.findByUserId.mockResolvedValue(mockCart);
+    productModel.findVariantById.mockResolvedValue(mockVariant);
+    cartModel.findItemByCartAndVariant.mockResolvedValue(null);
+    cartModel.addItem.mockResolvedValue(true);
+
+    // Service KHÔNG chặn quantity âm
+    const result = await CartService.addItem(1, 5, -1);
+    expect(cartModel.addItem).toHaveBeenCalledWith(42, 5, -1);
+    expect(result).toBeDefined();
+  });
+});
+
+describe("updateItem() — số lượng không hợp lệ", () => {
+  // TC_CART_32
+  test("TC_CART_32 — Vẫn update khi quantity=0 (service không validate quantity > 0)", async () => {
+    // Service chỉ kiểm tra stock >= quantity, không kiểm tra quantity > 0
+    const mockCartItem = { id: 1, product_variant_id: 5 };
+    const mockVariant = { id: 5, stock: 10 };
+    cartModel.findItemById.mockResolvedValue(mockCartItem);
+    productModel.findVariantById.mockResolvedValue(mockVariant);
+    cartModel.updateItemQuantity.mockResolvedValue(true);
+
+    // quantity=0, stock=10 → 0 không < 10, không bị block
+    const result = await CartService.updateItem(1, 0);
+
+    // Service KHÔNG chặn quantity=0 → lỗ hổng
+    expect(cartModel.updateItemQuantity).toHaveBeenCalledWith(1, 0);
+    expect(result).toBe(true);
+  });
+});

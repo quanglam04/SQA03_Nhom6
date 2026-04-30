@@ -786,3 +786,78 @@ describe("getAllOrders() — no filters (default limit=20)", () => {
     expect(result.pagination.total_pages).toBe(0);
   });
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_ORD_27
+  test("TC_ORD_27 - Throw lỗi khi cart null (getCartItemsWithDetails trả về null)", async () => {
+    // Một số mock trả về null thay vì [] → service kiểm tra !cartItems || cartItems.length === 0
+    const connection = createMockConnection();
+    pool.getConnection.mockResolvedValue(connection);
+    cartModel.getCartItemsWithDetails.mockResolvedValue(null);
+
+    await expect(
+      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+    ).rejects.toThrow("Cart is empty");
+
+    expect(connection.rollback).toHaveBeenCalledTimes(1);
+    expect(orderModel.create).not.toHaveBeenCalled();
+  });
+
+  // TC_ORD_28
+  test("TC_ORD_28 - Throw lỗi khi có nhiều items nhưng item thứ 2 hết tồn kho", async () => {
+    // Item đầu đủ hàng, item thứ 2 stock=0 < quantity=1 → throw ở item thứ 2
+    const connection = createMockConnection();
+    pool.getConnection.mockResolvedValue(connection);
+
+    cartModel.getCartItemsWithDetails.mockResolvedValue([
+      { variant_id: 1, variant_name: "Size S", quantity: 1, stock: 10, price_sale: "50000" },
+      { variant_id: 2, variant_name: "Size XL", quantity: 1, stock: 0, price_sale: "60000" },
+    ]);
+
+    await expect(
+      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+    ).rejects.toThrow("Insufficient stock for product variant Size XL");
+
+    expect(connection.rollback).toHaveBeenCalledTimes(1);
+    expect(orderModel.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("cancelOrder() — trạng thái không cho phép hủy", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_ORD_29
+  test("TC_ORD_29 - Throw lỗi khi đơn hàng đang vận chuyển (shipping) nhưng đã có payment", async () => {
+    const connection = createMockConnection();
+    pool.getConnection.mockResolvedValue(connection);
+
+    orderModel.findById.mockResolvedValue({ id: 10, status: "shipping", payment_status: "paid" });
+    orderModel.getOrderItems.mockResolvedValue([{ variant_id: 5, quantity: 2 }]);
+    productModel.updateVariantStock.mockResolvedValue(true);
+    orderModel.update.mockResolvedValue(true);
+
+    const result = await OrderService.cancelOrder(10, "Đổi ý");
+
+    expect(result).toBe(true);
+    expect(orderModel.update).toHaveBeenCalledWith(10, {
+      status: "canceled",
+      payment_status: "refunded",
+    });
+  });
+});
+
+describe("getCheckoutInfo() — cart items trả về null", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_ORD_30
+  test("TC_ORD_30 - Throw lỗi khi getCartItemsWithDetails trả về null (không phải mảng rỗng)", async () => {
+    cartModel.findById.mockResolvedValue({ id: 1, user_id: 1 });
+    cartModel.getCartItemsWithDetails.mockResolvedValue(null);
+
+    await expect(OrderService.getCheckoutInfo(1)).rejects.toThrow("Cart is empty");
+  });
+});

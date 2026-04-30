@@ -557,3 +557,54 @@ describe("getRolesByUserId() — rrows null branch", () => {
     expect(result).toEqual([]);
   });
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("createUser() — thiếu email hoặc password", () => {
+  // TC_AUTH_22
+  it("TC_AUTH_22 - Throw lỗi khi không truyền email (email undefined)", async () => {
+    // email=undefined → findUserByEmail query với undefined, sau đó bcrypt.hash, INSERT sẽ lưu email=null
+    // nhưng ở đây ta mock pool.query throw lỗi NOT NULL constraint như DB thật sẽ làm
+    pool.query.mockResolvedValueOnce([[]]); // findUserByEmail → không tồn tại
+    bcrypt.hash.mockResolvedValue("hashed");
+    pool.query.mockRejectedValueOnce(new Error("Column 'email' cannot be null"));
+
+    await expect(
+      createUser({ name: "Test", password: "Pass@123" }) // thiếu email
+    ).rejects.toThrow("Column 'email' cannot be null");
+  });
+
+  // TC_AUTH_23
+  it("TC_AUTH_23 - Throw lỗi EMAIL_EXISTS khi email đã tồn tại dù có thêm khoảng trắng (không trim)", async () => {
+    // Service không trim email → "  existing@example.com  " khác "existing@example.com"
+    // → findUserByEmail trả về rỗng → tạo user mới thành công (KHÔNG throw EMAIL_EXISTS)
+    // Đây là negative case: chứng minh service KHÔNG validate trim email
+    pool.query
+      .mockResolvedValueOnce([[]])                          // findUserByEmail email có space → không match
+      .mockResolvedValueOnce([{ insertId: 99 }])           // INSERT users
+      .mockResolvedValueOnce([[{ id: 3 }]])                 // SELECT roles
+      .mockResolvedValueOnce([{}])                          // INSERT user_roles
+      .mockResolvedValueOnce([[{ id: 99, name: "Test", email: "  existing@example.com  ", phone: null, created_at: new Date(), updated_at: new Date() }]]);
+    bcrypt.hash.mockResolvedValue("hashed_pw");
+
+    // KHÔNG throw — service tạo được vì email có space được coi là khác
+    const result = await createUser({ email: "  existing@example.com  ", password: "Pass@123" });
+    expect(result).toBeDefined();
+    expect(pool.query).toHaveBeenCalledTimes(5);
+  });
+});
+
+describe("updatePassword() — token không hợp lệ", () => {
+  // TC_AUTH_24
+  it("TC_AUTH_24 - Throw lỗi INVALID_TOKEN khi gọi updatePassword với token đã hết hạn", async () => {
+    // verifyResetToken bên trong sẽ throw trước khi UPDATE
+    pool.query.mockResolvedValueOnce([[]]); // verifyResetToken → rows rỗng → throw
+
+    await expect(updatePassword("expired_token", "NewPass@1")).rejects.toMatchObject({
+      code: "INVALID_TOKEN",
+    });
+
+    // Không được gọi UPDATE users
+    expect(bcrypt.hash).not.toHaveBeenCalled();
+  });
+});

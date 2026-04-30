@@ -254,3 +254,50 @@ describe("userService", () => {
     });
   });
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("changePassword() — mật khẩu không đáp ứng yêu cầu (service không validate)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_USER_13
+  test("TC_USER_13 - Vẫn đổi password khi newPassword là chuỗi rỗng (service không validate độ dài)", async () => {
+    userModel.findByIdWithPassword.mockResolvedValue({ id: 1, password: "hashed_old" });
+    bcrypt.compare.mockResolvedValue(true);
+    bcrypt.hash.mockResolvedValue("hashed_empty");
+    userModel.updatePassword.mockResolvedValue({ affectedRows: 1 });
+
+    const result = await userService.changePassword(1, "OldPass@1", "");
+
+    expect(result).toEqual({ affectedRows: 1 });
+    expect(bcrypt.hash).toHaveBeenCalledWith("", expect.any(Number));
+  });
+
+  // TC_USER_14
+  test("TC_USER_14 - Throw lỗi USER_NOT_FOUND khi id là null", async () => {
+    userModel.findByIdWithPassword.mockResolvedValue(null);
+
+    await expect(
+      userService.changePassword(null, "OldPass@1", "NewPass@1")
+    ).rejects.toMatchObject({
+      message: "User not found",
+      code: "USER_NOT_FOUND",
+    });
+
+    expect(bcrypt.compare).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateUser() — payload không hợp lệ", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_USER_15
+  test("TC_USER_15 - Trả về kết quả khi data là object rỗng (service không validate payload)", async () => {
+    userModel.updateById.mockResolvedValue({ id: 1 });
+
+    const result = await userService.updateUser(1, {});
+
+    expect(result).toEqual({ id: 1 });
+    expect(userModel.updateById).toHaveBeenCalledWith(1, {});
+  });
+});

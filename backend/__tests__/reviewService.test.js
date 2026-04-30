@@ -349,3 +349,71 @@ describe("getOrderReviewStatus() — status null branch", () => {
     expect(result.window_open).toBe(false);
   });
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("addOrUpdateReview() — rating không hợp lệ (service không validate)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_REV_24
+  test("TC_REV_24 - Vẫn tạo review khi rating=0 (service không validate rating, chỉ controller)", async () => {
+    pool.query.mockResolvedValueOnce([[{ id: 1 }]]);
+    reviewModel.findByUserAndProduct.mockResolvedValue(null);
+    reviewModel.create.mockResolvedValue({ id: 99, rating: 0 });
+    reviewModel.findByProductId.mockResolvedValue([]);
+    reviewModel.getStatsByProductId.mockResolvedValue({});
+
+    const result = await reviewService.addOrUpdateReview(1, 1, 0, "Tệ");
+
+    expect(result.ok).toBe(true);
+    expect(reviewModel.create).toHaveBeenCalledWith(
+      expect.objectContaining({ rating: 0 })
+    );
+  });
+
+  // TC_REV_25
+  test("TC_REV_25 - Vẫn tạo review khi rating=6 (vượt max, service không validate)", async () => {
+    pool.query.mockResolvedValueOnce([[{ id: 1 }]]);
+    reviewModel.findByUserAndProduct.mockResolvedValue(null);
+    reviewModel.create.mockResolvedValue({ id: 100, rating: 6 });
+    reviewModel.findByProductId.mockResolvedValue([]);
+    reviewModel.getStatsByProductId.mockResolvedValue({});
+
+    const result = await reviewService.addOrUpdateReview(1, 1, 6, "Tốt quá");
+
+    expect(result.ok).toBe(true);
+    expect(reviewModel.create).toHaveBeenCalledWith(
+      expect.objectContaining({ rating: 6 })
+    );
+  });
+});
+
+describe("addOrUpdateReviewFromOrder() — ngưỡng biên 30 ngày", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_REV_26
+  test("TC_REV_26 - Vẫn cho phép review khi đúng 29 ngày (ngưỡng biên cuối cùng còn window)", async () => {
+    pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: 29 }]]);
+    reviewModel.findByUserAndProduct.mockResolvedValue(null);
+    reviewModel.create.mockResolvedValue({ id: 200 });
+    reviewModel.findByProductId.mockResolvedValue([]);
+    reviewModel.getStatsByProductId.mockResolvedValue({});
+
+    const result = await reviewService.addOrUpdateReviewFromOrder(1, 1, 10, 5, "Tốt");
+
+    expect(result.ok).toBe(true);
+    expect(reviewModel.create).toHaveBeenCalled();
+  });
+
+  // TC_REV_27
+  test("TC_REV_27 - Chặn review khi đúng 30 ngày (ngưỡng biên đóng window)", async () => {
+    pool.query.mockResolvedValueOnce([[{ product_id: 1, days_since_delivery: 30 }]]);
+
+    const result = await reviewService.addOrUpdateReviewFromOrder(1, 1, 10, 5, "Tốt");
+
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe("WINDOW_EXPIRED");
+    expect(result.days_since).toBe(30);
+    expect(reviewModel.create).not.toHaveBeenCalled();
+  });
+});

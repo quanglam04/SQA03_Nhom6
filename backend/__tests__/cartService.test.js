@@ -767,3 +767,44 @@ describe("updateItem() — số lượng không hợp lệ", () => {
     expect(result).toBe(true);
   });
 });
+
+
+// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
+// Các test dưới đây SẼ FAIL vì service chưa validate quantity > 0
+// Khi sửa service thêm validation → test sẽ PASS
+describe("[FAIL] addItem() — service phải validate quantity > 0", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_CART_FAIL_01
+  test("TC_CART_FAIL_01 — Phải throw lỗi khi quantity=0 (không có ý nghĩa nghiệp vụ)", async () => {
+    // Nghiệp vụ: thêm 0 sản phẩm vào giỏ là vô nghĩa, phải bị chặn
+    // Hiện tại: service chỉ check stock >= quantity → 0 < stock → KHÔNG throw
+    // Cần sửa: thêm if (quantity <= 0) throw new Error('Quantity must be greater than 0')
+    await expect(
+      CartService.addItem(1, 5, 0)
+    ).rejects.toThrow("Quantity must be greater than 0");
+  });
+
+  // TC_CART_FAIL_02
+  test("TC_CART_FAIL_02 — Phải throw lỗi khi quantity âm (-1)", async () => {
+    // Nghiệp vụ: số lượng âm là không hợp lệ về mặt logic
+    // Hiện tại: service KHÔNG validate → KHÔNG throw
+    await expect(
+      CartService.addItem(1, 5, -1)
+    ).rejects.toThrow("Quantity must be greater than 0");
+  });
+});
+
+describe("[FAIL] updateItem() — service phải validate quantity > 0", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_CART_FAIL_03
+  test("TC_CART_FAIL_03 — Phải throw lỗi khi cập nhật quantity=0 (xóa item phải dùng removeItem)", async () => {
+    // Nghiệp vụ: updateItem với quantity=0 là vô nghĩa (nên dùng removeItem thay thế)
+    // Hiện tại: service KHÔNG validate → vẫn gọi updateItemQuantity với 0
+    // Cần sửa: thêm if (quantity <= 0) throw new Error('Quantity must be greater than 0')
+    await expect(
+      CartService.updateItem(1, 0)
+    ).rejects.toThrow("Quantity must be greater than 0");
+  });
+});

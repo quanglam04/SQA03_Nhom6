@@ -417,3 +417,48 @@ describe("addOrUpdateReviewFromOrder() — ngưỡng biên 30 ngày", () => {
     expect(reviewModel.create).not.toHaveBeenCalled();
   });
 });
+
+
+// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
+// Các test dưới đây SẼ FAIL vì service chưa validate rating
+// Khi sửa service thêm validation → test sẽ PASS
+describe("[FAIL] addOrUpdateReview() — service phải validate rating hợp lệ (1-5)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_REV_FAIL_01
+  test("TC_REV_FAIL_01 - Phải trả về ok:false khi rating=0 (nhỏ hơn min=1)", async () => {
+    // Nghiệp vụ: rating hợp lệ là 1-5. rating=0 phải bị chặn ngay tại service
+    // Hiện tại: service KHÔNG validate → test này FAIL
+    // Cần sửa: thêm if (rating < 1 || rating > 5) return { ok: false, reason: 'INVALID_RATING' }
+    pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible
+
+    const result = await reviewService.addOrUpdateReview(1, 1, 0, "Tệ");
+
+    expect(result).toEqual({ ok: false, reason: "INVALID_RATING" });
+    expect(reviewModel.create).not.toHaveBeenCalled();
+  });
+
+  // TC_REV_FAIL_02
+  test("TC_REV_FAIL_02 - Phải trả về ok:false khi rating=6 (lớn hơn max=5)", async () => {
+    // Nghiệp vụ: rating > 5 không hợp lệ, phải bị chặn tại service
+    // Hiện tại: service KHÔNG validate → test này FAIL
+    pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible
+
+    const result = await reviewService.addOrUpdateReview(1, 1, 6, "Tốt quá");
+
+    expect(result).toEqual({ ok: false, reason: "INVALID_RATING" });
+    expect(reviewModel.create).not.toHaveBeenCalled();
+  });
+
+  // TC_REV_FAIL_03
+  test("TC_REV_FAIL_03 - Phải trả về ok:false khi rating là chuỗi (không phải số)", async () => {
+    // Nghiệp vụ: rating phải là số nguyên 1-5
+    // Hiện tại: service KHÔNG validate kiểu → test này FAIL
+    pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible
+
+    const result = await reviewService.addOrUpdateReview(1, 1, "abc", "Bình thường");
+
+    expect(result).toEqual({ ok: false, reason: "INVALID_RATING" });
+    expect(reviewModel.create).not.toHaveBeenCalled();
+  });
+});

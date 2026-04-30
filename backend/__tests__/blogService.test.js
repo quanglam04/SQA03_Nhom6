@@ -476,5 +476,215 @@ describe("blogService", () => {
     });
   });
   // ── end addComment() ───────────────────────────────────────────────────────
+
+  // ── getAllBlogs() — happy path ───────────────────────────────────────────
+  describe("getAllBlogs() — happy path", () => {
+    // TC_BLOG_21
+    test("TC_BLOG_21 — should return success:true with list of blogs", async () => {
+      // Arrange
+      const mockBlogs = [
+        { id: 1, title: "Blog 1", content: "Nội dung 1" },
+        { id: 2, title: "Blog 2", content: "Nội dung 2" },
+      ];
+      blogModel.findAll.mockResolvedValue(mockBlogs);
+
+      // Act
+      const result = await blogService.getAllBlogs();
+
+      // Assert
+      expect(result).toEqual({
+        success: true,
+        data: mockBlogs,
+        message: "Lấy danh sách bài viết thành công",
+      });
+      expect(blogModel.findAll).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_BLOG_22
+    test("TC_BLOG_22 — should return empty array when findAll returns null", async () => {
+      // Arrange — mock trả về null (blogs || [] → [])
+      blogModel.findAll.mockResolvedValue(null);
+
+      // Act
+      const result = await blogService.getAllBlogs();
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual([]);
+      expect(blogModel.findAll).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllBlogs() — happy path ─────────────────────────────────────────
+
+  // ── getBlogsByCategory() ──────────────────────────────────────────────────
+  describe("getBlogsByCategory()", () => {
+    // TC_BLOG_23
+    test("TC_BLOG_23 — should return success:true with blogs of given category", async () => {
+      // Arrange
+      const mockBlogs = [
+        { id: 1, title: "Blog A", category: "sức khỏe" },
+        { id: 2, title: "Blog B", category: "sức khỏe" },
+      ];
+      blogModel.findByCategory.mockResolvedValue(mockBlogs);
+
+      // Act
+      const result = await blogService.getBlogsByCategory("sức khỏe");
+
+      // Assert
+      expect(result).toEqual({
+        success: true,
+        data: mockBlogs,
+        message: "Lấy bài viết theo danh mục thành công",
+      });
+      expect(blogModel.findByCategory).toHaveBeenCalledTimes(1);
+      expect(blogModel.findByCategory).toHaveBeenCalledWith("sức khỏe");
+    });
+
+    // TC_BLOG_24
+    test("TC_BLOG_24 — should return empty array when no blogs in category", async () => {
+      // Arrange — mock trả về null (blogs || [] → [])
+      blogModel.findByCategory.mockResolvedValue(null);
+
+      // Act
+      const result = await blogService.getBlogsByCategory("không tồn tại");
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual([]);
+      expect(blogModel.findByCategory).toHaveBeenCalledWith("không tồn tại");
+    });
+
+    // TC_BLOG_25
+    test("TC_BLOG_25 — should throw error when model throws in getBlogsByCategory", async () => {
+      // Arrange
+      blogModel.findByCategory.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(blogService.getBlogsByCategory("sức khỏe")).rejects.toThrow("DB error");
+      expect(blogModel.findByCategory).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getBlogsByCategory() ──────────────────────────────────────────────
+
+  // ── getAllBlogsAdmin() ────────────────────────────────────────────────────
+  describe("getAllBlogsAdmin()", () => {
+    // TC_BLOG_26
+    test("TC_BLOG_26 — should return success:true with all blogs including drafts", async () => {
+      // Arrange
+      const mockBlogs = [
+        { id: 1, title: "Blog published", status: "published" },
+        { id: 2, title: "Blog draft", status: "draft" },
+      ];
+      blogModel.findAllAdmin.mockResolvedValue(mockBlogs);
+
+      // Act
+      const result = await blogService.getAllBlogsAdmin();
+
+      // Assert
+      expect(result).toEqual({
+        success: true,
+        data: mockBlogs,
+        message: "Lấy danh sách bài viết thành công",
+      });
+      expect(blogModel.findAllAdmin).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_BLOG_27
+    test("TC_BLOG_27 — should return empty array when findAllAdmin returns null", async () => {
+      // Arrange — mock trả về null (blogs || [] → [])
+      blogModel.findAllAdmin.mockResolvedValue(null);
+
+      // Act
+      const result = await blogService.getAllBlogsAdmin();
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual([]);
+      expect(blogModel.findAllAdmin).toHaveBeenCalledTimes(1);
+    });
+
+    // TC_BLOG_28
+    test("TC_BLOG_28 — should throw error when model throws in getAllBlogsAdmin", async () => {
+      // Arrange
+      blogModel.findAllAdmin.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(blogService.getAllBlogsAdmin()).rejects.toThrow("DB error");
+      expect(blogModel.findAllAdmin).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllBlogsAdmin() ────────────────────────────────────────────────
+
+  // ── error paths còn thiếu ─────────────────────────────────────────────────
+  describe("searchBlogs() — error path", () => {
+    // TC_BLOG_29
+    test("TC_BLOG_29 — should throw error when searchBlogs model throws", async () => {
+      // Arrange
+      blogModel.searchBlogs.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(blogService.searchBlogs("từ khóa")).rejects.toThrow("DB error");
+      expect(blogModel.searchBlogs).toHaveBeenCalledTimes(1);
+      expect(blogModel.searchBlogs).toHaveBeenCalledWith("từ khóa");
+    });
+  });
+
+  describe("createBlog() — error path", () => {
+    // TC_BLOG_30
+    test("TC_BLOG_30 — should throw error when model throws in createBlog", async () => {
+      // Arrange
+      blogModel.create.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(
+        blogService.createBlog({ title: "Tiêu đề", content: "Nội dung" })
+      ).rejects.toThrow("DB error");
+      expect(blogModel.create).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("updateBlog() — error path", () => {
+    // TC_BLOG_31
+    test("TC_BLOG_31 — should throw error when model throws in updateBlog", async () => {
+      // Arrange
+      blogModel.update.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(
+        blogService.updateBlog(1, { title: "Tiêu đề", content: "Nội dung" })
+      ).rejects.toThrow("DB error");
+      expect(blogModel.update).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("deleteBlog() — error path", () => {
+    // TC_BLOG_32
+    test("TC_BLOG_32 — should throw error when model throws in deleteBlog", async () => {
+      // Arrange
+      blogModel.remove.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(blogService.deleteBlog(1)).rejects.toThrow("DB error");
+      expect(blogModel.remove).toHaveBeenCalledTimes(1);
+      expect(blogModel.remove).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe("addComment() — error path", () => {
+    // TC_BLOG_33
+    test("TC_BLOG_33 — should throw error when model throws in addComment", async () => {
+      // Arrange
+      blogModel.addComment.mockRejectedValue(new Error("DB error"));
+
+      // Act & Assert
+      await expect(
+        blogService.addComment(1, 1, "Nội dung comment")
+      ).rejects.toThrow("DB error");
+      expect(blogModel.addComment).toHaveBeenCalledTimes(1);
+      expect(blogModel.addComment).toHaveBeenCalledWith(1, 1, "Nội dung comment");
+    });
+  });
+  // ── end error paths ───────────────────────────────────────────────────────
 });
 // ════════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════// ════════════════════════════════════════════════════════════════════════════

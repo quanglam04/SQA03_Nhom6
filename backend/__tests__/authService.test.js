@@ -336,3 +336,197 @@ describe("verifyResetToken()", () => {
     );
   });
 });
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// Bổ sung — nâng Funcs và Branch coverage
+// ════════════════════════════════════════════════════════════════════════════
+const {
+  findUserByEmail,
+  findUserById,
+  getRolesByUserId,
+  cleanupExpiredTokens,
+} = require("../services/authService");
+
+// ─── findUserByEmail() ───────────────────────────────────────────────────────
+describe("findUserByEmail()", () => {
+  // TC_AUTH_11
+  it("TC_AUTH_11 - should_return_user_when_email_exists", async () => {
+    // Arrange — mock trả về user tìm thấy
+    const mockUser = { id: 1, email: "a@test.com", name: "User A" };
+    pool.query.mockResolvedValueOnce([[mockUser]]);
+
+    // Act
+    const result = await findUserByEmail("a@test.com");
+
+    // Assert
+    expect(result).toEqual(mockUser);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE email = ?"),
+      ["a@test.com"],
+    );
+  });
+
+  // TC_AUTH_12
+  it("TC_AUTH_12 - should_return_null_when_email_does_not_exist", async () => {
+    // Arrange — mock trả về rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await findUserByEmail("notfound@test.com");
+
+    // Assert — rows[0] || null → null
+    expect(result).toBeNull();
+  });
+});
+
+// ─── findUserById() ──────────────────────────────────────────────────────────
+describe("findUserById()", () => {
+  // TC_AUTH_13
+  it("TC_AUTH_13 - should_return_user_when_id_exists", async () => {
+    // Arrange
+    const mockUser = { id: 5, name: "User B", email: "b@test.com" };
+    pool.query.mockResolvedValueOnce([[mockUser]]);
+
+    // Act
+    const result = await findUserById(5);
+
+    // Assert
+    expect(result).toEqual(mockUser);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE id = ?"),
+      [5],
+    );
+  });
+
+  // TC_AUTH_14
+  it("TC_AUTH_14 - should_return_null_when_id_does_not_exist", async () => {
+    // Arrange — rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await findUserById(9999);
+
+    // Assert — rows[0] || null → null
+    expect(result).toBeNull();
+  });
+});
+
+// ─── getRolesByUserId() ──────────────────────────────────────────────────────
+describe("getRolesByUserId()", () => {
+  // TC_AUTH_15
+  it("TC_AUTH_15 - should_return_array_of_role_names_for_user", async () => {
+    // Arrange — user có 2 roles
+    pool.query.mockResolvedValueOnce([[{ name: "customer" }, { name: "admin" }]]);
+
+    // Act
+    const result = await getRolesByUserId(1);
+
+    // Assert
+    expect(result).toEqual(["customer", "admin"]);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE ur.user_id = ?"),
+      [1],
+    );
+  });
+
+  // TC_AUTH_16
+  it("TC_AUTH_16 - should_return_empty_array_when_user_has_no_roles", async () => {
+    // Arrange — rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await getRolesByUserId(99);
+
+    // Assert — ([] || []).map(...) → []
+    expect(result).toEqual([]);
+  });
+});
+
+// ─── cleanupExpiredTokens() ──────────────────────────────────────────────────
+describe("cleanupExpiredTokens()", () => {
+  // TC_AUTH_17
+  it("TC_AUTH_17 - should_delete_expired_tokens_from_database", async () => {
+    // Arrange — mock DELETE thành công
+    pool.query.mockResolvedValueOnce([{ affectedRows: 3 }]);
+
+    // Act — không throw, không return gì
+    await expect(cleanupExpiredTokens()).resolves.toBeUndefined();
+
+    // CheckDB — DELETE được gọi đúng
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("DELETE FROM password_resets WHERE expires_at"),
+    );
+  });
+});
+
+// ─── createUser() — branch roleId không tồn tại ──────────────────────────────
+describe("createUser() — role không tồn tại phải INSERT mới", () => {
+  // TC_AUTH_18
+  it("TC_AUTH_18 - should_insert_new_role_when_customer_role_does_not_exist", async () => {
+    // Arrange — roles bảng chưa có 'customer' → INSERT role mới
+    const hashedPw = "hashed_Pass@123";
+    const userId = 50;
+    const newRoleId = 99;
+
+    pool.query
+      .mockResolvedValueOnce([[]])                      // findUserByEmail → không tồn tại
+      .mockResolvedValueOnce([{ insertId: userId }])    // INSERT users
+      .mockResolvedValueOnce([[]])                      // SELECT roles → RỖNG (không có role)
+      .mockResolvedValueOnce([{ insertId: newRoleId }]) // INSERT roles (tạo role mới)
+      .mockResolvedValueOnce([{}])                      // INSERT user_roles
+      .mockResolvedValueOnce([[{                        // findUserById
+        id: userId, name: "New User",
+        email: "new@test.com", phone: null,
+        created_at: new Date(), updated_at: new Date(),
+      }]]);
+
+    bcrypt.hash.mockResolvedValue(hashedPw);
+
+    // Act
+    const result = await createUser({
+      name: "New User",
+      email: "new@test.com",
+      password: "Pass@123",
+    });
+
+    // Assert — INSERT roles được gọi
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO roles"),
+      ["customer"],
+    );
+
+    // Assert — INSERT user_roles dùng roleId mới
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO user_roles"),
+      [userId, newRoleId],
+    );
+
+    expect(result).toMatchObject({ id: userId, email: "new@test.com" });
+  });
+});
+
+// ─── verifyResetToken() — happy path ─────────────────────────────────────────
+describe("verifyResetToken() — happy path", () => {
+  // TC_AUTH_19
+  it("TC_AUTH_19 - should_return_reset_record_when_token_is_valid", async () => {
+    // Arrange — token hợp lệ chưa hết hạn
+    const mockRecord = {
+      user_id: 3,
+      token: "validtoken_abc",
+      email: "u@test.com",
+      expires_at: new Date(Date.now() + 60000),
+    };
+    pool.query.mockResolvedValueOnce([[mockRecord]]);
+
+    // Act
+    const result = await verifyResetToken("validtoken_abc");
+
+    // Assert
+    expect(result).toEqual(mockRecord);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("FROM password_resets pr"),
+      ["validtoken_abc"],
+    );
+  });
+});

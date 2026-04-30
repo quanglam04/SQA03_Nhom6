@@ -110,6 +110,96 @@ describe("userService", () => {
     });
   });
 
+  // ── getAllUsers() ──────────────────────────────────────────────────────────
+  describe("getAllUsers()", () => {
+    test("TC_USER_07 - should_return_list_of_all_users", async () => {
+      // Input: không có tham số
+      // Expected Output: trả về danh sách users từ model
+      // CheckDB: userModel.findAll được gọi đúng 1 lần
+      // Rollback: using Jest mocks only, no real DB read
+      const mockUsers = [
+        { id: 1, name: "Nguyen Van A", email: "a@test.com" },
+        { id: 2, name: "Tran Thi B", email: "b@test.com" },
+      ];
+      userModel.findAll.mockResolvedValue(mockUsers);
+
+      const result = await userService.getAllUsers();
+
+      expect(result).toEqual(mockUsers);
+      expect(userModel.findAll).toHaveBeenCalledTimes(1);
+    });
+
+    test("TC_USER_08 - should_return_empty_array_when_no_users_exist", async () => {
+      // Input: không có tham số
+      // Expected Output: trả về mảng rỗng
+      // CheckDB: userModel.findAll được gọi đúng 1 lần
+      // Rollback: using Jest mocks only, no real DB read
+      userModel.findAll.mockResolvedValue([]);
+
+      const result = await userService.getAllUsers();
+
+      expect(result).toEqual([]);
+      expect(userModel.findAll).toHaveBeenCalledTimes(1);
+    });
+
+    test("TC_USER_09 - should_throw_error_when_model_findAll_fails", async () => {
+      // Input: không có tham số
+      // Expected Output: throw DB error từ model
+      // CheckDB: userModel.findAll được gọi trước khi throw
+      // Rollback: using Jest mocks only, no real DB read
+      userModel.findAll.mockRejectedValue(new Error("DB connection failed"));
+
+      await expect(userService.getAllUsers()).rejects.toThrow("DB connection failed");
+      expect(userModel.findAll).toHaveBeenCalledTimes(1);
+    });
+  });
+  // ── end getAllUsers() ──────────────────────────────────────────────────────
+
+  // ── getUserById() ─────────────────────────────────────────────────────────
+  describe("getUserById()", () => {
+    test("TC_USER_10 - should_return_user_when_id_exists", async () => {
+      // Input: id=1
+      // Expected Output: trả về user object từ model
+      // CheckDB: userModel.findById được gọi với đúng id
+      // Rollback: using Jest mocks only, no real DB read
+      const mockUser = { id: 1, name: "Nguyen Van A", email: "a@test.com" };
+      userModel.findById.mockResolvedValue(mockUser);
+
+      const result = await userService.getUserById(1);
+
+      expect(result).toEqual(mockUser);
+      expect(userModel.findById).toHaveBeenCalledTimes(1);
+      expect(userModel.findById).toHaveBeenCalledWith(1);
+    });
+
+    test("TC_USER_11 - should_return_null_when_id_does_not_exist", async () => {
+      // Input: id=9999
+      // Expected Output: trả về null (không tìm thấy user)
+      // CheckDB: userModel.findById được gọi với id=9999
+      // Rollback: using Jest mocks only, no real DB read
+      userModel.findById.mockResolvedValue(null);
+
+      const result = await userService.getUserById(9999);
+
+      expect(result).toBeNull();
+      expect(userModel.findById).toHaveBeenCalledTimes(1);
+      expect(userModel.findById).toHaveBeenCalledWith(9999);
+    });
+
+    test("TC_USER_12 - should_throw_error_when_model_findById_fails", async () => {
+      // Input: id=1
+      // Expected Output: throw DB error từ model
+      // CheckDB: userModel.findById được gọi trước khi throw
+      // Rollback: using Jest mocks only, no real DB read
+      userModel.findById.mockRejectedValue(new Error("DB connection failed"));
+
+      await expect(userService.getUserById(1)).rejects.toThrow("DB connection failed");
+      expect(userModel.findById).toHaveBeenCalledTimes(1);
+      expect(userModel.findById).toHaveBeenCalledWith(1);
+    });
+  });
+  // ── end getUserById() ─────────────────────────────────────────────────────
+
   describe("updateUser()", () => {
     test("TC_USER_04 - should_return_updated_user_when_id_exists_and_payload_is_valid", async () => {
       // Input: id=3, data={ name: "Van", phone: "0912345678" }

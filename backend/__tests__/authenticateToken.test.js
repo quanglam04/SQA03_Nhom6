@@ -26,7 +26,7 @@ describe("authenticateToken", () => {
   });
 
   describe("authenticateToken()", () => {
-    test("TC_MW_01 - should allow request to proceed when token is valid", () => {
+    test("TC_MW_01 - Cho phép request đi tiếp khi Bearer token hợp lệ", () => {
       const payload = { id: "user123" };
       const token = jwt.sign(payload, JWT_SECRET);
       req.headers["authorization"] = `Bearer ${token}`;
@@ -37,7 +37,7 @@ describe("authenticateToken", () => {
       expect(req.userId).toBe(payload.id);
     });
 
-    test("TC_MW_02 - should return 401 when Authorization header is missing", () => {
+    test("TC_MW_02 - Trả về 401 khi request không có header Authorization", () => {
       req.headers["authorization"] = undefined;
 
       authenticateToken(req, res, next);
@@ -49,7 +49,7 @@ describe("authenticateToken", () => {
       });
     });
 
-    test("TC_MW_03 - should return 401 when token is invalid or tampered", () => {
+    test("TC_MW_03 - Trả về 401 khi token sai hoặc bị giả mạo", () => {
       req.headers["authorization"] = "Bearer invalid_token_xyz";
 
       authenticateToken(req, res, next);
@@ -60,5 +60,28 @@ describe("authenticateToken", () => {
         message: "Invalid token",
       });
     });
+  });
+});
+
+
+// ─── Branch bổ sung: decoded.id là null ──────────────────────────────────────
+describe("authenticateToken() — decoded.id null branch", () => {
+  // TC_AUTH_TOKEN_05
+  test("TC_AUTH_TOKEN_05 — Gán req.userId = null khi token hợp lệ nhưng payload không có trường id", () => {
+    // Arrange — token hợp lệ nhưng payload không có id
+    const realJwt = require("jsonwebtoken");
+    const secret = process.env.JWT_SECRET || "change_this_secret";
+    const tokenWithoutId = realJwt.sign({ role: "guest" }, secret);
+
+    const req = { headers: { authorization: `Bearer ${tokenWithoutId}` } };
+    const res = {};
+    const next = jest.fn();
+
+    // Act
+    authenticateToken(req, res, next);
+
+    // Assert — decoded.id undefined → req.userId = null
+    expect(req.userId).toBeNull();
+    expect(next).toHaveBeenCalled();
   });
 });

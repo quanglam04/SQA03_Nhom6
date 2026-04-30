@@ -666,7 +666,7 @@ export default function ProductDetailPage() {
                   ? "Hết hàng"
                   : addingToCart
                     ? "Đang thêm..."
-                    : "Thêm vào giỏ hàngssssssssss"}
+                    : "Thêm vào giỏ hàng"}
               </button>
 
               {/* Social Share */}

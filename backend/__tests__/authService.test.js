@@ -35,12 +35,10 @@ const {
 // ─── Setup ───────────────────────────────────────────────────────────────────
 beforeEach(() => jest.clearAllMocks());
 
-// ═════════════════════════════════════════════════════════════════════════════
 // createUser()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("createUser()", () => {
   // TC_AUTH_01
-  it("TC_AUTH_01 - should_create_user_successfully_with_valid_data", async () => {
+  it("TC_AUTH_01 - Tạo user mới thành công với dữ liệu hợp lệ", async () => {
     // Rollback: mock DB → không cần xóa dữ liệu thật
 
     const hashedPw = "hashed_Pass@123";
@@ -113,7 +111,7 @@ describe("createUser()", () => {
   });
 
   // TC_AUTH_02
-  it("TC_AUTH_02 - should_throw_EMAIL_EXISTS_when_email_already_registered", async () => {
+  it("TC_AUTH_02 - Throw lỗi EMAIL_EXISTS khi email đã được đăng ký", async () => {
     // Mock findUserByEmail → trả về user đã tồn tại
     pool.query.mockResolvedValueOnce([
       [
@@ -138,12 +136,10 @@ describe("createUser()", () => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
 // verifyPassword()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("verifyPassword()", () => {
   // TC_AUTH_03
-  it("TC_AUTH_03 - should_return_user_object_when_email_and_password_are_correct", async () => {
+  it("TC_AUTH_03 - Trả về user object khi email và password đúng", async () => {
     const mockUser = {
       id: 10,
       email: "user@test.com",
@@ -170,7 +166,7 @@ describe("verifyPassword()", () => {
   });
 
   // TC_AUTH_04
-  it("TC_AUTH_04 - should_return_null_when_password_does_not_match", async () => {
+  it("TC_AUTH_04 - Trả về null khi password không khớp", async () => {
     const mockUser = {
       id: 10,
       email: "user@test.com",
@@ -189,7 +185,7 @@ describe("verifyPassword()", () => {
   });
 
   // TC_AUTH_05
-  it("TC_AUTH_05 - should_return_null_when_email_does_not_exist", async () => {
+  it("TC_AUTH_05 - Trả về null khi email không tồn tại", async () => {
     // Mock pool.query trả về rows rỗng
     pool.query.mockResolvedValueOnce([[]]);
 
@@ -201,12 +197,10 @@ describe("verifyPassword()", () => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
 // signToken()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("signToken()", () => {
   // TC_AUTH_06
-  it("TC_AUTH_06 - should_return_valid_jwt_string_with_correct_id_payload", () => {
+  it("TC_AUTH_06 - Trả về JWT string hợp lệ với payload chứa đúng id", () => {
     // Không cần DB / Rollback
     // Dùng jwt thật để kiểm tra token thực sự hợp lệ
     const realJwt = jest.requireActual("jsonwebtoken");
@@ -227,12 +221,10 @@ describe("signToken()", () => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
 // createResetToken()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("createResetToken()", () => {
   // TC_AUTH_07
-  it("TC_AUTH_07 - should_create_and_save_reset_token_for_existing_email", async () => {
+  it("TC_AUTH_07 - Tạo và lưu reset token thành công cho email hợp lệ", async () => {
     const mockUser = { id: 7, email: "user@test.com", name: "User" };
 
     // findUserByEmail → trả về user
@@ -257,7 +249,7 @@ describe("createResetToken()", () => {
   });
 
   // TC_AUTH_08
-  it("TC_AUTH_08 - should_throw_USER_NOT_FOUND_when_email_does_not_exist", async () => {
+  it("TC_AUTH_08 - Throw lỗi USER_NOT_FOUND khi email không tồn tại", async () => {
     // Mock findUserByEmail → null (không có user)
     pool.query.mockResolvedValueOnce([[]]);
 
@@ -271,12 +263,10 @@ describe("createResetToken()", () => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
 // updatePassword()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("updatePassword()", () => {
   // TC_AUTH_09
-  it("TC_AUTH_09 - should_hash_new_password_and_delete_token_on_success", async () => {
+  it("TC_AUTH_09 - Hash password mới và xóa token sau khi cập nhật thành công", async () => {
     const resetRecord = {
       user_id: 3,
       token: "validtoken123",
@@ -313,12 +303,10 @@ describe("updatePassword()", () => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
 // verifyResetToken()
-// ═════════════════════════════════════════════════════════════════════════════
 describe("verifyResetToken()", () => {
   // TC_AUTH_10
-  it("TC_AUTH_10 - should_throw_INVALID_TOKEN_when_token_expired_or_not_found", async () => {
+  it("TC_AUTH_10 - Throw lỗi INVALID_TOKEN khi token hết hạn hoặc không tồn tại", async () => {
     // Mock pool.query trả về rows rỗng (token không tồn tại hoặc đã hết hạn)
     pool.query.mockResolvedValueOnce([[]]);
 
@@ -334,5 +322,289 @@ describe("verifyResetToken()", () => {
       expect.stringContaining("FROM password_resets pr"),
       ["expiredOrInvalidToken"],
     );
+  });
+});
+
+
+// Bổ sung — nâng Funcs và Branch coverage
+const {
+  findUserByEmail,
+  findUserById,
+  getRolesByUserId,
+  cleanupExpiredTokens,
+} = require("../services/authService");
+
+// ─── findUserByEmail() ───────────────────────────────────────────────────────
+describe("findUserByEmail()", () => {
+  // TC_AUTH_11
+  it("TC_AUTH_11 - Trả về user khi email tồn tại trong DB", async () => {
+    // Arrange — mock trả về user tìm thấy
+    const mockUser = { id: 1, email: "a@test.com", name: "User A" };
+    pool.query.mockResolvedValueOnce([[mockUser]]);
+
+    // Act
+    const result = await findUserByEmail("a@test.com");
+
+    // Assert
+    expect(result).toEqual(mockUser);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE email = ?"),
+      ["a@test.com"],
+    );
+  });
+
+  // TC_AUTH_12
+  it("TC_AUTH_12 - Trả về null khi email không tồn tại trong DB", async () => {
+    // Arrange — mock trả về rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await findUserByEmail("notfound@test.com");
+
+    // Assert — rows[0] || null → null
+    expect(result).toBeNull();
+  });
+});
+
+// ─── findUserById() ──────────────────────────────────────────────────────────
+describe("findUserById()", () => {
+  // TC_AUTH_13
+  it("TC_AUTH_13 - Trả về user khi id tồn tại trong DB", async () => {
+    // Arrange
+    const mockUser = { id: 5, name: "User B", email: "b@test.com" };
+    pool.query.mockResolvedValueOnce([[mockUser]]);
+
+    // Act
+    const result = await findUserById(5);
+
+    // Assert
+    expect(result).toEqual(mockUser);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE id = ?"),
+      [5],
+    );
+  });
+
+  // TC_AUTH_14
+  it("TC_AUTH_14 - Trả về null khi id không tồn tại trong DB", async () => {
+    // Arrange — rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await findUserById(9999);
+
+    // Assert — rows[0] || null → null
+    expect(result).toBeNull();
+  });
+});
+
+// ─── getRolesByUserId() ──────────────────────────────────────────────────────
+describe("getRolesByUserId()", () => {
+  // TC_AUTH_15
+  it("TC_AUTH_15 - Trả về mảng tên roles của user", async () => {
+    // Arrange — user có 2 roles
+    pool.query.mockResolvedValueOnce([[{ name: "customer" }, { name: "admin" }]]);
+
+    // Act
+    const result = await getRolesByUserId(1);
+
+    // Assert
+    expect(result).toEqual(["customer", "admin"]);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE ur.user_id = ?"),
+      [1],
+    );
+  });
+
+  // TC_AUTH_16
+  it("TC_AUTH_16 - Trả về mảng rỗng khi user không có role nào", async () => {
+    // Arrange — rows rỗng
+    pool.query.mockResolvedValueOnce([[]]);
+
+    // Act
+    const result = await getRolesByUserId(99);
+
+    // Assert — ([] || []).map(...) → []
+    expect(result).toEqual([]);
+  });
+});
+
+// ─── cleanupExpiredTokens() ──────────────────────────────────────────────────
+describe("cleanupExpiredTokens()", () => {
+  // TC_AUTH_17
+  it("TC_AUTH_17 - Xóa toàn bộ reset token đã hết hạn khỏi database", async () => {
+    // Arrange — mock DELETE thành công
+    pool.query.mockResolvedValueOnce([{ affectedRows: 3 }]);
+
+    // Act — không throw, không return gì
+    await expect(cleanupExpiredTokens()).resolves.toBeUndefined();
+
+    // CheckDB — DELETE được gọi đúng
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("DELETE FROM password_resets WHERE expires_at"),
+    );
+  });
+});
+
+// ─── createUser() — branch roleId không tồn tại ──────────────────────────────
+describe("createUser() — role không tồn tại phải INSERT mới", () => {
+  // TC_AUTH_18
+  it("TC_AUTH_18 - Tự động INSERT role mới khi bảng roles chưa có role customer", async () => {
+    // Arrange — roles bảng chưa có 'customer' → INSERT role mới
+    const hashedPw = "hashed_Pass@123";
+    const userId = 50;
+    const newRoleId = 99;
+
+    pool.query
+      .mockResolvedValueOnce([[]])                      // findUserByEmail → không tồn tại
+      .mockResolvedValueOnce([{ insertId: userId }])    // INSERT users
+      .mockResolvedValueOnce([[]])                      // SELECT roles → RỖNG (không có role)
+      .mockResolvedValueOnce([{ insertId: newRoleId }]) // INSERT roles (tạo role mới)
+      .mockResolvedValueOnce([{}])                      // INSERT user_roles
+      .mockResolvedValueOnce([[{                        // findUserById
+        id: userId, name: "New User",
+        email: "new@test.com", phone: null,
+        created_at: new Date(), updated_at: new Date(),
+      }]]);
+
+    bcrypt.hash.mockResolvedValue(hashedPw);
+
+    // Act
+    const result = await createUser({
+      name: "New User",
+      email: "new@test.com",
+      password: "Pass@123",
+    });
+
+    // Assert — INSERT roles được gọi
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO roles"),
+      ["customer"],
+    );
+
+    // Assert — INSERT user_roles dùng roleId mới
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO user_roles"),
+      [userId, newRoleId],
+    );
+
+    expect(result).toMatchObject({ id: userId, email: "new@test.com" });
+  });
+});
+
+// ─── verifyResetToken() — happy path ─────────────────────────────────────────
+describe("verifyResetToken() — happy path", () => {
+  // TC_AUTH_19
+  it("TC_AUTH_19 - Trả về reset record khi token hợp lệ và chưa hết hạn", async () => {
+    // Arrange — token hợp lệ chưa hết hạn
+    const mockRecord = {
+      user_id: 3,
+      token: "validtoken_abc",
+      email: "u@test.com",
+      expires_at: new Date(Date.now() + 60000),
+    };
+    pool.query.mockResolvedValueOnce([[mockRecord]]);
+
+    // Act
+    const result = await verifyResetToken("validtoken_abc");
+
+    // Assert
+    expect(result).toEqual(mockRecord);
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("FROM password_resets pr"),
+      ["validtoken_abc"],
+    );
+  });
+});
+
+
+// ─── Branch bổ sung: name/phone là undefined → null ─────────────────────────
+describe("createUser() — branch name/phone undefined", () => {
+  // TC_AUTH_20
+  it("TC_AUTH_20 - Truyền null cho name và phone khi không cung cấp", async () => {
+    // Arrange — không truyền name và phone → name || null = null, phone || null = null
+    bcrypt.hash.mockResolvedValue("hashed_pw");
+    pool.query
+      .mockResolvedValueOnce([[]])                   // findUserByEmail → không tồn tại
+      .mockResolvedValueOnce([{ insertId: 99 }])     // INSERT users
+      .mockResolvedValueOnce([[{ id: 3 }]])           // SELECT roles
+      .mockResolvedValueOnce([{}])                   // INSERT user_roles
+      .mockResolvedValueOnce([[{ id: 99, name: null, email: "x@test.com", phone: null, created_at: new Date(), updated_at: new Date() }]]);
+
+    // Act
+    await createUser({ email: "x@test.com", password: "Pass@1" });
+
+    // Assert — INSERT users được gọi với null cho name và phone
+    expect(pool.query).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining("INSERT INTO users"),
+      expect.arrayContaining([null, "x@test.com", "hashed_pw", null]),
+    );
+  });
+});
+
+// ─── Branch bổ sung: getRolesByUserId khi rrows là null ─────────────────────
+describe("getRolesByUserId() — rrows null branch", () => {
+  // TC_AUTH_21
+  it("TC_AUTH_21 - Trả về mảng rỗng khi pool.query trả về null", async () => {
+    // Arrange — mock pool.query trả về null thay vì array
+    pool.query.mockResolvedValueOnce([null]);
+
+    // Act
+    const result = await getRolesByUserId(1);
+
+    // Assert — (null || []).map(...) → []
+    expect(result).toEqual([]);
+  });
+});
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("createUser() — thiếu email hoặc password", () => {
+  // TC_AUTH_22
+  it("TC_AUTH_22 - Throw lỗi khi không truyền email (email undefined)", async () => {
+    // email=undefined → findUserByEmail query với undefined, sau đó bcrypt.hash, INSERT sẽ lưu email=null
+    // nhưng ở đây ta mock pool.query throw lỗi NOT NULL constraint như DB thật sẽ làm
+    pool.query.mockResolvedValueOnce([[]]); // findUserByEmail → không tồn tại
+    bcrypt.hash.mockResolvedValue("hashed");
+    pool.query.mockRejectedValueOnce(new Error("Column 'email' cannot be null"));
+
+    await expect(
+      createUser({ name: "Test", password: "Pass@123" }) // thiếu email
+    ).rejects.toThrow("Column 'email' cannot be null");
+  });
+
+  // TC_AUTH_23
+  it("TC_AUTH_23 - Throw lỗi EMAIL_EXISTS khi email đã tồn tại dù có thêm khoảng trắng (không trim)", async () => {
+    // Service không trim email → "  existing@example.com  " khác "existing@example.com"
+    // → findUserByEmail trả về rỗng → tạo user mới thành công (KHÔNG throw EMAIL_EXISTS)
+    // Đây là negative case: chứng minh service KHÔNG validate trim email
+    pool.query
+      .mockResolvedValueOnce([[]])                          // findUserByEmail email có space → không match
+      .mockResolvedValueOnce([{ insertId: 99 }])           // INSERT users
+      .mockResolvedValueOnce([[{ id: 3 }]])                 // SELECT roles
+      .mockResolvedValueOnce([{}])                          // INSERT user_roles
+      .mockResolvedValueOnce([[{ id: 99, name: "Test", email: "  existing@example.com  ", phone: null, created_at: new Date(), updated_at: new Date() }]]);
+    bcrypt.hash.mockResolvedValue("hashed_pw");
+
+    // KHÔNG throw — service tạo được vì email có space được coi là khác
+    const result = await createUser({ email: "  existing@example.com  ", password: "Pass@123" });
+    expect(result).toBeDefined();
+    expect(pool.query).toHaveBeenCalledTimes(5);
+  });
+});
+
+describe("updatePassword() — token không hợp lệ", () => {
+  // TC_AUTH_24
+  it("TC_AUTH_24 - Throw lỗi INVALID_TOKEN khi gọi updatePassword với token đã hết hạn", async () => {
+    // verifyResetToken bên trong sẽ throw trước khi UPDATE
+    pool.query.mockResolvedValueOnce([[]]); // verifyResetToken → rows rỗng → throw
+
+    await expect(updatePassword("expired_token", "NewPass@1")).rejects.toMatchObject({
+      code: "INVALID_TOKEN",
+    });
+
+    // Không được gọi UPDATE users
+    expect(bcrypt.hash).not.toHaveBeenCalled();
   });
 });

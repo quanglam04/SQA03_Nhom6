@@ -640,7 +640,7 @@ describe("[FAIL] createProduct() — service phải validate dữ liệu đầu 
     // Test FAIL vì service chưa có validation này
     // Cần sửa: thêm if (!data.name || data.name.trim() === '') throw error
     await expect(
-      productService.createProduct({ name: "", price: 50000, category_id: 1 })
+      ProductService.createProduct({ name: "", price: 50000, category_id: 1 })
     ).rejects.toThrow("Product name cannot be empty");
 
     expect(productModel.createWithVariants).not.toHaveBeenCalled();
@@ -652,7 +652,7 @@ describe("[FAIL] createProduct() — service phải validate dữ liệu đầu 
     // Test FAIL vì service chưa có validation này
     // Cần sửa: thêm if (!data.price || data.price <= 0) throw error
     await expect(
-      productService.createProduct({ name: "SP hợp lệ", price: -1000, category_id: 1 })
+      ProductService.createProduct({ name: "SP hợp lệ", price: -1000, category_id: 1 })
     ).rejects.toThrow("Product price must be greater than 0");
 
     expect(productModel.createWithVariants).not.toHaveBeenCalled();
@@ -664,7 +664,7 @@ describe("[FAIL] createProduct() — service phải validate dữ liệu đầu 
     // Test FAIL vì service chưa có validation này
     // Cần sửa: thêm if (!data.variants || data.variants.length === 0) throw error
     await expect(
-      productService.createProduct({ name: "SP hợp lệ", price: 50000, category_id: 1, variants: [] })
+      ProductService.createProduct({ name: "SP hợp lệ", price: 50000, category_id: 1, variants: [] })
     ).rejects.toThrow("Product must have at least one variant");
 
     expect(productModel.createWithVariants).not.toHaveBeenCalled();
@@ -680,7 +680,7 @@ describe("[FAIL] updateProduct() — service phải validate dữ liệu đầu 
     // Test FAIL vì service chưa có validation này
     // Cần sửa: thêm if (!data || Object.keys(data).length === 0) throw error
     await expect(
-      productService.updateProduct(1, {})
+      ProductService.updateProduct(1, {})
     ).rejects.toThrow("Update data cannot be empty");
 
     expect(productModel.updateWithVariants).not.toHaveBeenCalled();
@@ -691,7 +691,7 @@ describe("[FAIL] updateProduct() — service phải validate dữ liệu đầu 
     // Nghiệp vụ: không cho phép cập nhật giá âm
     // Test FAIL vì service chưa có validation này
     await expect(
-      productService.updateProduct(1, { price: -500 })
+      ProductService.updateProduct(1, { price: -500 })
     ).rejects.toThrow("Product price must be greater than 0");
 
     expect(productModel.updateWithVariants).not.toHaveBeenCalled();

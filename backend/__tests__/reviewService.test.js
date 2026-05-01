@@ -422,7 +422,7 @@ describe("addOrUpdateReviewFromOrder() — ngưỡng biên 30 ngày", () => {
 // ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
 // Các test dưới đây SẼ FAIL vì service chưa validate rating
 // Khi sửa service thêm validation → test sẽ PASS
-describe("[FAIL] addOrUpdateReview() — service phải validate rating hợp lệ (1-5)", () => {
+describe("addOrUpdateReview() — service phải validate rating hợp lệ (1-5)", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_REV_28

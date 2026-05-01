@@ -321,7 +321,7 @@ describe("getShipment() — orderId không hợp lệ", () => {
 
 
 // ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
-describe("[FAIL] updateShipment() — service phải validate shipmentData không rỗng", () => {
+describe("updateShipment() — service phải validate shipmentData không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_SHIP_16
@@ -337,7 +337,7 @@ describe("[FAIL] updateShipment() — service phải validate shipmentData khôn
   });
 });
 
-describe("[FAIL] getShipment() — service phải validate orderId là số hợp lệ", () => {
+describe("getShipment() — service phải validate orderId là số hợp lệ", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_SHIP_17

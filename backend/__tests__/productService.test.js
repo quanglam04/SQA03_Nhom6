@@ -536,7 +536,7 @@ describe("createProduct() — dữ liệu không hợp lệ (service không vali
   beforeEach(() => jest.clearAllMocks());
 
   // TC_PROD_23
-  test("TC_PROD_23 — [Negative] Vẫn tạo sản phẩm khi name là chuỗi rỗng — service không validate", async () => {
+  test("TC_PROD_23 — Vẫn tạo sản phẩm khi name là chuỗi rỗng — service không validate", async () => {
     // Nghiệp vụ: tên sản phẩm rỗng là không hợp lệ
     // Hiện tại: service không kiểm tra → gọi thẳng model → lỗ hổng
     productModel.createWithVariants.mockResolvedValue({ id: 1, name: "" });
@@ -551,7 +551,7 @@ describe("createProduct() — dữ liệu không hợp lệ (service không vali
   });
 
   // TC_PROD_24
-  test("TC_PROD_24 — [Negative] Vẫn tạo sản phẩm khi price âm — service không validate", async () => {
+  test("TC_PROD_24 — Vẫn tạo sản phẩm khi price âm — service không validate", async () => {
     // Nghiệp vụ: giá âm là không hợp lệ về mặt nghiệp vụ
     // Hiện tại: service không kiểm tra → lỗ hổng
     productModel.createWithVariants.mockResolvedValue({ id: 2, price: -10000 });
@@ -565,7 +565,7 @@ describe("createProduct() — dữ liệu không hợp lệ (service không vali
   });
 
   // TC_PROD_25
-  test("TC_PROD_25 — [Negative] Vẫn tạo sản phẩm khi không có variants — service không validate", async () => {
+  test("TC_PROD_25 — Vẫn tạo sản phẩm khi không có variants — service không validate", async () => {
     // Nghiệp vụ: sản phẩm phải có ít nhất 1 variant
     // Hiện tại: service không kiểm tra variants → lỗ hổng
     productModel.createWithVariants.mockResolvedValue({ id: 3 });
@@ -579,7 +579,7 @@ describe("createProduct() — dữ liệu không hợp lệ (service không vali
   });
 
   // TC_PROD_26
-  test("TC_PROD_26 — [Negative] Vẫn tạo sản phẩm khi price=0 — service không validate", async () => {
+  test("TC_PROD_26 — Vẫn tạo sản phẩm khi price=0 — service không validate", async () => {
     // Nghiệp vụ: giá = 0 không có ý nghĩa nghiệp vụ
     productModel.createWithVariants.mockResolvedValue({ id: 4, price: 0 });
 
@@ -596,7 +596,7 @@ describe("updateProduct() — dữ liệu không hợp lệ (service không vali
   beforeEach(() => jest.clearAllMocks());
 
   // TC_PROD_27
-  test("TC_PROD_27 — [Negative] Vẫn update khi data là object rỗng {} — service không validate payload", async () => {
+  test("TC_PROD_27 — Vẫn update khi data là object rỗng {} — service không validate payload", async () => {
     // Nghiệp vụ: update với payload rỗng là vô nghĩa
     productModel.updateWithVariants.mockResolvedValue({ id: 1 });
 
@@ -608,7 +608,7 @@ describe("updateProduct() — dữ liệu không hợp lệ (service không vali
   });
 
   // TC_PROD_28
-  test("TC_PROD_28 — [Negative] Vẫn update khi name là null — service không validate", async () => {
+  test("TC_PROD_28 — Vẫn update khi name là null — service không validate", async () => {
     // Nghiệp vụ: tên sản phẩm null là không hợp lệ
     productModel.updateWithVariants.mockResolvedValue({ id: 1, name: null });
 
@@ -619,7 +619,7 @@ describe("updateProduct() — dữ liệu không hợp lệ (service không vali
   });
 
   // TC_PROD_29
-  test("TC_PROD_29 — [Negative] Vẫn update khi price âm — service không validate", async () => {
+  test("TC_PROD_29 — Vẫn update khi price âm — service không validate", async () => {
     // Nghiệp vụ: giá âm không hợp lệ
     productModel.updateWithVariants.mockResolvedValue({ id: 1, price: -5000 });
 
@@ -631,7 +631,7 @@ describe("updateProduct() — dữ liệu không hợp lệ (service không vali
 });
 
 // ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
-describe("[FAIL] createProduct() — service phải validate dữ liệu đầu vào", () => {
+describe("createProduct() — service phải validate dữ liệu đầu vào", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_PROD_30
@@ -671,7 +671,7 @@ describe("[FAIL] createProduct() — service phải validate dữ liệu đầu 
   });
 });
 
-describe("[FAIL] updateProduct() — service phải validate dữ liệu đầu vào", () => {
+describe("updateProduct() — service phải validate dữ liệu đầu vào", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_PROD_33

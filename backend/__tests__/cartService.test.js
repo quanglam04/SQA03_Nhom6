@@ -772,7 +772,7 @@ describe("updateItem() — số lượng không hợp lệ", () => {
 // ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
 // Các test dưới đây SẼ FAIL vì service chưa validate quantity > 0
 // Khi sửa service thêm validation → test sẽ PASS
-describe("[FAIL] addItem() — service phải validate quantity > 0", () => {
+describe("addItem() — service phải validate quantity > 0", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_CART_33
@@ -795,7 +795,7 @@ describe("[FAIL] addItem() — service phải validate quantity > 0", () => {
   });
 });
 
-describe("[FAIL] updateItem() — service phải validate quantity > 0", () => {
+describe("updateItem() — service phải validate quantity > 0", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_CART_35

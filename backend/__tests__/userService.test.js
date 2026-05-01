@@ -306,7 +306,7 @@ describe("updateUser() — payload không hợp lệ", () => {
 // ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
 // Các test dưới đây SẼ FAIL vì service chưa validate newPassword
 // Khi sửa service thêm validation → test sẽ PASS
-describe("[FAIL] changePassword() — service phải validate newPassword không được rỗng", () => {
+describe("changePassword() — service phải validate newPassword không được rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_USER_16
@@ -348,7 +348,7 @@ describe("[FAIL] changePassword() — service phải validate newPassword không
   });
 });
 
-describe("[FAIL] updateUser() — service phải validate payload không rỗng", () => {
+describe("updateUser() — service phải validate payload không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_USER_18

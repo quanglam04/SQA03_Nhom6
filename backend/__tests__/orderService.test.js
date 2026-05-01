@@ -404,7 +404,6 @@ describe("OrderService", () => {
       expect(orderModel.findByIdWithDetails).toHaveBeenCalledWith(9999);
     });
   });
-  // ── end getOrderDetail() ───────────────────────────────────────────────────
 
   // ── getMyOrders() ──────────────────────────────────────────────────────────
   describe("getMyOrders()", () => {
@@ -415,8 +414,20 @@ describe("OrderService", () => {
       // CheckDB: findByUserId, countByUserId, countOrderItems được gọi
       // Rollback: read-only flow with mocks, no DB mutation
       const mockOrders = [
-        { id: 1, total_price: "250000", status: "pending", payment_status: "unpaid", created_at: "2024-01-01" },
-        { id: 2, total_price: "150000", status: "delivered", payment_status: "paid", created_at: "2024-01-02" },
+        {
+          id: 1,
+          total_price: "250000",
+          status: "pending",
+          payment_status: "unpaid",
+          created_at: "2024-01-01",
+        },
+        {
+          id: 2,
+          total_price: "150000",
+          status: "delivered",
+          payment_status: "paid",
+          created_at: "2024-01-02",
+        },
       ];
       orderModel.findByUserId.mockResolvedValue(mockOrders);
       orderModel.countByUserId.mockResolvedValue(2);
@@ -439,8 +450,14 @@ describe("OrderService", () => {
         total: 2,
         total_pages: 1,
       });
-      expect(orderModel.findByUserId).toHaveBeenCalledWith(1, { page: 1, limit: 10 });
-      expect(orderModel.countByUserId).toHaveBeenCalledWith(1, { page: 1, limit: 10 });
+      expect(orderModel.findByUserId).toHaveBeenCalledWith(1, {
+        page: 1,
+        limit: 10,
+      });
+      expect(orderModel.countByUserId).toHaveBeenCalledWith(1, {
+        page: 1,
+        limit: 10,
+      });
       expect(orderModel.countOrderItems).toHaveBeenCalledTimes(2);
     });
 
@@ -476,7 +493,6 @@ describe("OrderService", () => {
       expect(orderModel.findByUserId).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getMyOrders() ──────────────────────────────────────────────────────
 
   // ── cancelOrder() ─────────────────────────────────────────────────────────
   describe("cancelOrder()", () => {
@@ -504,8 +520,16 @@ describe("OrderService", () => {
       expect(result).toBe(true);
       expect(orderModel.findById).toHaveBeenCalledWith(1);
       expect(orderModel.getOrderItems).toHaveBeenCalledWith(1);
-      expect(productModel.updateVariantStock).toHaveBeenCalledWith(7, 2, "increment");
-      expect(productModel.updateVariantStock).toHaveBeenCalledWith(8, 1, "increment");
+      expect(productModel.updateVariantStock).toHaveBeenCalledWith(
+        7,
+        2,
+        "increment",
+      );
+      expect(productModel.updateVariantStock).toHaveBeenCalledWith(
+        8,
+        1,
+        "increment",
+      );
       expect(orderModel.update).toHaveBeenCalledWith(1, { status: "canceled" });
       expect(connection.commit).toHaveBeenCalledTimes(1);
       expect(connection.rollback).not.toHaveBeenCalled();
@@ -523,7 +547,9 @@ describe("OrderService", () => {
 
       const mockOrder = { id: 2, status: "pending", payment_status: "paid" };
       orderModel.findById.mockResolvedValue(mockOrder);
-      orderModel.getOrderItems.mockResolvedValue([{ variant_id: 7, quantity: 1 }]);
+      orderModel.getOrderItems.mockResolvedValue([
+        { variant_id: 7, quantity: 1 },
+      ]);
       productModel.updateVariantStock.mockResolvedValue(true);
       orderModel.update.mockResolvedValue(true);
 
@@ -546,7 +572,11 @@ describe("OrderService", () => {
       const connection = createMockConnection();
       pool.getConnection.mockResolvedValue(connection);
 
-      orderModel.findById.mockResolvedValue({ id: 3, status: "delivered", payment_status: "paid" });
+      orderModel.findById.mockResolvedValue({
+        id: 3,
+        status: "delivered",
+        payment_status: "paid",
+      });
 
       await expect(OrderService.cancelOrder(3, "test")).rejects.toThrow(
         "Cannot cancel this order",
@@ -565,7 +595,11 @@ describe("OrderService", () => {
       const connection = createMockConnection();
       pool.getConnection.mockResolvedValue(connection);
 
-      orderModel.findById.mockResolvedValue({ id: 4, status: "canceled", payment_status: "unpaid" });
+      orderModel.findById.mockResolvedValue({
+        id: 4,
+        status: "canceled",
+        payment_status: "unpaid",
+      });
 
       await expect(OrderService.cancelOrder(4, "test")).rejects.toThrow(
         "Cannot cancel this order",
@@ -593,7 +627,6 @@ describe("OrderService", () => {
       expect(connection.release).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end cancelOrder() ─────────────────────────────────────────────────────
 
   // ── updatePaymentStatus() ─────────────────────────────────────────────────
   describe("updatePaymentStatus()", () => {
@@ -620,7 +653,9 @@ describe("OrderService", () => {
       // Rollback: no transaction, mock only
       orderModel.updatePaymentStatus.mockRejectedValue(new Error("DB error"));
 
-      await expect(OrderService.updatePaymentStatus(1, "paid")).rejects.toThrow("DB error");
+      await expect(OrderService.updatePaymentStatus(1, "paid")).rejects.toThrow(
+        "DB error",
+      );
       expect(orderModel.updatePaymentStatus).toHaveBeenCalledTimes(1);
     });
   });
@@ -707,7 +742,6 @@ describe("OrderService", () => {
       expect(orderModel.findAll).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllOrders() ─────────────────────────────────────────────────────
 
   // ── updateOrder() ─────────────────────────────────────────────────────────
   describe("updateOrder()", () => {
@@ -734,13 +768,13 @@ describe("OrderService", () => {
       // Rollback: no transaction, mock only
       orderModel.update.mockRejectedValue(new Error("DB error"));
 
-      await expect(OrderService.updateOrder(1, { status: "shipping" })).rejects.toThrow("DB error");
+      await expect(
+        OrderService.updateOrder(1, { status: "shipping" }),
+      ).rejects.toThrow("DB error");
       expect(orderModel.update).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end updateOrder() ─────────────────────────────────────────────────────
 });
-
 
 // ─── Branch bổ sung ──────────────────────────────────────────────────────────
 describe("createOrder() — updateVariantStock returns false", () => {
@@ -753,14 +787,26 @@ describe("createOrder() — updateVariantStock returns false", () => {
     pool.getConnection.mockResolvedValue(connection);
 
     cartModel.getCartItemsWithDetails.mockResolvedValue([
-      { variant_id: 7, variant_name: "Size M", quantity: 2, stock: 10, price_sale: "50000" },
+      {
+        variant_id: 7,
+        variant_name: "Size M",
+        quantity: 2,
+        stock: 10,
+        price_sale: "50000",
+      },
     ]);
     orderModel.create.mockResolvedValue({ id: 88 });
     orderModel.addOrderItem.mockResolvedValue(true);
     productModel.updateVariantStock.mockResolvedValue(false); // stock update thất bại
 
     await expect(
-      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+      OrderService.createOrder({
+        userId: 1,
+        cartId: 1,
+        shippingAddress: "HN",
+        paymentMethod: "COD",
+        note: "",
+      }),
     ).rejects.toThrow("Failed to update stock for variant Size M");
 
     expect(connection.rollback).toHaveBeenCalledTimes(1);
@@ -769,8 +815,7 @@ describe("createOrder() — updateVariantStock returns false", () => {
   });
 });
 
-
-// ─── Branch bổ sung: getAllOrders không truyền filters ───────────────────────
+// ─── getAllOrders bổ sung branch không truyền filters ───────────────────────
 describe("getAllOrders() — no filters (default limit=20)", () => {
   test("TC_ORD_26 - Dùng default limit=20 khi gọi getAllOrders không truyền filters", async () => {
     // Input: gọi getAllOrders() không truyền filters
@@ -787,8 +832,7 @@ describe("getAllOrders() — no filters (default limit=20)", () => {
   });
 });
 
-
-// ── Negative test cases bổ sung ───────────────────────────────────────────────
+// ── Negative test cases ───────────────────────────────────────────────
 describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
   beforeEach(() => jest.clearAllMocks());
 
@@ -800,7 +844,13 @@ describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
     cartModel.getCartItemsWithDetails.mockResolvedValue(null);
 
     await expect(
-      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+      OrderService.createOrder({
+        userId: 1,
+        cartId: 1,
+        shippingAddress: "HN",
+        paymentMethod: "COD",
+        note: "",
+      }),
     ).rejects.toThrow("Cart is empty");
 
     expect(connection.rollback).toHaveBeenCalledTimes(1);
@@ -814,12 +864,30 @@ describe("createOrder() — dữ liệu đầu vào không hợp lệ", () => {
     pool.getConnection.mockResolvedValue(connection);
 
     cartModel.getCartItemsWithDetails.mockResolvedValue([
-      { variant_id: 1, variant_name: "Size S", quantity: 1, stock: 10, price_sale: "50000" },
-      { variant_id: 2, variant_name: "Size XL", quantity: 1, stock: 0, price_sale: "60000" },
+      {
+        variant_id: 1,
+        variant_name: "Size S",
+        quantity: 1,
+        stock: 10,
+        price_sale: "50000",
+      },
+      {
+        variant_id: 2,
+        variant_name: "Size XL",
+        quantity: 1,
+        stock: 0,
+        price_sale: "60000",
+      },
     ]);
 
     await expect(
-      OrderService.createOrder({ userId: 1, cartId: 1, shippingAddress: "HN", paymentMethod: "COD", note: "" })
+      OrderService.createOrder({
+        userId: 1,
+        cartId: 1,
+        shippingAddress: "HN",
+        paymentMethod: "COD",
+        note: "",
+      }),
     ).rejects.toThrow("Insufficient stock for product variant Size XL");
 
     expect(connection.rollback).toHaveBeenCalledTimes(1);
@@ -835,8 +903,14 @@ describe("cancelOrder() — trạng thái không cho phép hủy", () => {
     const connection = createMockConnection();
     pool.getConnection.mockResolvedValue(connection);
 
-    orderModel.findById.mockResolvedValue({ id: 10, status: "shipping", payment_status: "paid" });
-    orderModel.getOrderItems.mockResolvedValue([{ variant_id: 5, quantity: 2 }]);
+    orderModel.findById.mockResolvedValue({
+      id: 10,
+      status: "shipping",
+      payment_status: "paid",
+    });
+    orderModel.getOrderItems.mockResolvedValue([
+      { variant_id: 5, quantity: 2 },
+    ]);
     productModel.updateVariantStock.mockResolvedValue(true);
     orderModel.update.mockResolvedValue(true);
 
@@ -858,6 +932,8 @@ describe("getCheckoutInfo() — cart items trả về null", () => {
     cartModel.findById.mockResolvedValue({ id: 1, user_id: 1 });
     cartModel.getCartItemsWithDetails.mockResolvedValue(null);
 
-    await expect(OrderService.getCheckoutInfo(1)).rejects.toThrow("Cart is empty");
+    await expect(OrderService.getCheckoutInfo(1)).rejects.toThrow(
+      "Cart is empty",
+    );
   });
 });

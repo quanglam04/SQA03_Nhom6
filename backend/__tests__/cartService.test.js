@@ -9,7 +9,7 @@
  *             tạo / thay đổi => KHÔNG cần rollback sau khi chạy test.
  */
 
-// ── Mock toàn bộ models — không dùng DB thật ────────────────────────────────
+// ── Mock toàn bộ models  ────────────────────────────────
 jest.mock("../models/index");
 
 // cartService.js có đoạn debug gọi pool.query('SELECT DATABASE()') trực tiếp
@@ -77,10 +77,9 @@ describe("CartService", () => {
       expect(cartModel.findByUserId).toHaveBeenCalledTimes(1);
       expect(cartModel.findByUserId).toHaveBeenCalledWith(2);
 
-      // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
+      // Rollback: dùng mock  => không cần rollback
     });
   });
-  // ── end getOrCreateCart() ──────────────────────────────────────────────────
 
   // ── addItem() ──────────────────────────────────────────────────────────────
   describe("addItem()", () => {
@@ -145,14 +144,14 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.addItem(1, 5, 5)).rejects.toThrow(
-        "Insufficient stock. Available: 1"
+        "Insufficient stock. Available: 1",
       );
 
       // CheckDB — không có thay đổi DB nào được thực hiện
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_04
@@ -162,7 +161,7 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.addItem(1, 9999, 1)).rejects.toThrow(
-        "Product variant not found"
+        "Product variant not found",
       );
 
       // CheckDB — không gọi bất kỳ thao tác nào trên cartModel
@@ -170,7 +169,6 @@ describe("CartService", () => {
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
     });
   });
-  // ── end addItem() ──────────────────────────────────────────────────────────
 
   // ── updateItem() ───────────────────────────────────────────────────────────
   describe("updateItem()", () => {
@@ -204,14 +202,13 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.updateItem(9999, 2)).rejects.toThrow(
-        "Cart item not found"
+        "Cart item not found",
       );
 
       // CheckDB — updateItemQuantity KHÔNG được gọi
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
     });
   });
-  // ── end updateItem() ───────────────────────────────────────────────────────
 
   // ── removeItem() ───────────────────────────────────────────────────────────
   describe("removeItem()", () => {
@@ -242,14 +239,13 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.removeItem(9999)).rejects.toThrow(
-        "Cart item not found"
+        "Cart item not found",
       );
 
       // CheckDB — removeItem KHÔNG được gọi
       expect(cartModel.removeItem).not.toHaveBeenCalled();
     });
   });
-  // ── end removeItem() ───────────────────────────────────────────────────────
 
   // ── clearCart() ────────────────────────────────────────────────────────────
   describe("clearCart()", () => {
@@ -278,7 +274,7 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.clearCart(9999)).rejects.toThrow(
-        "Cart not found"
+        "Cart not found",
       );
 
       // CheckDB — clearCartItems vẫn được gọi đúng 1 lần với đúng cartId
@@ -286,18 +282,19 @@ describe("CartService", () => {
       expect(cartModel.clearCartItems).toHaveBeenCalledWith(9999);
     });
   });
-  // ── end clearCart() ────────────────────────────────────────────────────────
 
   // ── getOrCreateCart() — error path ────────────────────────────────────────
   describe("getOrCreateCart() — error path", () => {
     // TC_CART_13
     test("TC_CART_13 — Throw lỗi khi findByUserId throw lỗi DB", async () => {
       // Arrange — mock cartModel.findByUserId throw lỗi DB
-      cartModel.findByUserId.mockRejectedValue(new Error("DB connection error"));
+      cartModel.findByUserId.mockRejectedValue(
+        new Error("DB connection error"),
+      );
 
       // Act & Assert
       await expect(CartService.getOrCreateCart(1)).rejects.toThrow(
-        "DB connection error"
+        "DB connection error",
       );
 
       // CheckDB — findByUserId được gọi đúng 1 lần với đúng userId
@@ -307,10 +304,9 @@ describe("CartService", () => {
       // CheckDB — create KHÔNG được gọi vì lỗi xảy ra trước đó
       expect(cartModel.create).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
   });
-  // ── end getOrCreateCart() — error path ────────────────────────────────────
 
   // ── addItem() — stock overflow on existing item ────────────────────────────
   describe("addItem() — stock overflow on existing item", () => {
@@ -327,7 +323,7 @@ describe("CartService", () => {
 
       // Act & Assert — tổng 8 + 5 = 13 vượt stock=10
       await expect(CartService.addItem(1, 5, 5)).rejects.toThrow(
-        "Insufficient stock. Available: 10"
+        "Insufficient stock. Available: 10",
       );
 
       // CheckDB — updateItemQuantity KHÔNG được gọi vì lỗi xảy ra trước đó
@@ -336,10 +332,9 @@ describe("CartService", () => {
       // CheckDB — addItem KHÔNG được gọi
       expect(cartModel.addItem).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
   });
-  // ── end addItem() — stock overflow on existing item ───────────────────────
 
   // ── updateItem() — variant deleted / insufficient stock ───────────────────
   describe("updateItem() — variant not found or insufficient stock", () => {
@@ -352,7 +347,7 @@ describe("CartService", () => {
 
       // Act & Assert — variant null → available stock = 0
       await expect(CartService.updateItem(1, 2)).rejects.toThrow(
-        "Insufficient stock. Available: 0"
+        "Insufficient stock. Available: 0",
       );
 
       // CheckDB — findItemById được gọi đúng 1 lần
@@ -376,7 +371,7 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.updateItem(1, 10)).rejects.toThrow(
-        "Insufficient stock. Available: 2"
+        "Insufficient stock. Available: 2",
       );
 
       // CheckDB — updateItemQuantity KHÔNG được gọi
@@ -385,7 +380,6 @@ describe("CartService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
     });
   });
-  // ── end updateItem() — variant deleted / insufficient stock ───────────────
 
   // ── restoreCartFromOrder() ─────────────────────────────────────────────────
   describe("restoreCartFromOrder()", () => {
@@ -396,14 +390,14 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.restoreCartFromOrder(1, 9999)).rejects.toThrow(
-        "Order not found"
+        "Order not found",
       );
 
       // CheckDB — findByIdWithDetails được gọi đúng 1 lần với đúng orderId
       expect(orderModel.findByIdWithDetails).toHaveBeenCalledTimes(1);
       expect(orderModel.findByIdWithDetails).toHaveBeenCalledWith(9999);
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_18
@@ -420,13 +414,13 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
-        "Order does not belong to this user"
+        "Order does not belong to this user",
       );
 
       // CheckDB — không có thao tác DB nào khác được gọi
       expect(cartModel.addItem).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_19
@@ -443,14 +437,14 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
-        "Only unpaid VNPay orders can be restored"
+        "Only unpaid VNPay orders can be restored",
       );
 
       // CheckDB — không có thao tác giỏ hàng nào được thực hiện
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_20
@@ -467,14 +461,14 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
-        "Only unpaid VNPay orders can be restored"
+        "Only unpaid VNPay orders can be restored",
       );
 
       // CheckDB — không có thao tác giỏ hàng nào được thực hiện
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_21
@@ -502,7 +496,7 @@ describe("CartService", () => {
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_22
@@ -514,7 +508,12 @@ describe("CartService", () => {
         payment_method: "VNPAY",
         payment_status: "unpaid",
         order_items: [
-          { variant_id: 5, product_name: "Táo", variant_name: "1kg", quantity: 2 },
+          {
+            variant_id: 5,
+            product_name: "Táo",
+            variant_name: "1kg",
+            quantity: 2,
+          },
         ],
       };
       const mockCart = { id: 42 };
@@ -539,7 +538,7 @@ describe("CartService", () => {
       // CheckDB — updateItemQuantity KHÔNG được gọi vì item chưa tồn tại
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_23
@@ -575,7 +574,7 @@ describe("CartService", () => {
       // CheckDB — addItem KHÔNG được gọi vì item đã tồn tại
       expect(cartModel.addItem).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_24
@@ -586,9 +585,7 @@ describe("CartService", () => {
         user_id: 1,
         payment_method: "VNPAY",
         payment_status: "unpaid",
-        order_items: [
-          { variant_id: 99, variant_name: "Size L", quantity: 1 },
-        ],
+        order_items: [{ variant_id: 99, variant_name: "Size L", quantity: 1 }],
       };
       const mockCart = { id: 42 };
 
@@ -598,14 +595,14 @@ describe("CartService", () => {
 
       // Act & Assert
       await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
-        "Product variant Size L not found"
+        "Product variant Size L not found",
       );
 
       // CheckDB — addItem và updateItemQuantity KHÔNG được gọi
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_CART_25
@@ -616,9 +613,7 @@ describe("CartService", () => {
         user_id: 1,
         payment_method: "VNPAY",
         payment_status: "unpaid",
-        order_items: [
-          { variant_id: 5, product_name: "Táo", quantity: 5 },
-        ],
+        order_items: [{ variant_id: 5, product_name: "Táo", quantity: 5 }],
       };
       const mockCart = { id: 42 };
       const mockVariant = { id: 5, stock: 2 };
@@ -629,20 +624,19 @@ describe("CartService", () => {
 
       // Act & Assert — stock=2 < quantity=5
       await expect(CartService.restoreCartFromOrder(1, 5)).rejects.toThrow(
-        "Insufficient stock for Táo. Available: 2, Requested: 5"
+        "Insufficient stock for Táo. Available: 2, Requested: 5",
       );
 
       // CheckDB — addItem và updateItemQuantity KHÔNG được gọi
       expect(cartModel.addItem).not.toHaveBeenCalled();
       expect(cartModel.updateItemQuantity).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị tạo => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
   });
-  // ── end restoreCartFromOrder() ─────────────────────────────────────────────
 });
 
-// ─── Branch bổ sung: getCartByUserId ─────────────────────────────────────────
+// ─── getCartByUserId bổ sung branch ─────────────────────────────────────────
 describe("getCartByUserId()", () => {
   // TC_CART_16
   test("TC_CART_26 — Trả về cart object khi userId tồn tại", async () => {
@@ -682,10 +676,8 @@ describe("getCartByUserId()", () => {
     expect(cartModel.findByUserIdWithItems).toHaveBeenCalledWith(1);
   });
 });
-// ─── end getCartByUserId() ───────────────────────────────────────────────────
 
-
-// ─── Branch bổ sung: order_items là null/undefined ───────────────────────────
+// ─── order_items bổ sung branch là null/undefined ───────────────────────────
 describe("restoreCartFromOrder() — order_items null branch", () => {
   test("TC_CART_29 — Trả về restored_items=0 khi order.order_items là undefined", async () => {
     // Arrange — order không có field order_items (undefined) → ternary trả về 0
@@ -693,8 +685,8 @@ describe("restoreCartFromOrder() — order_items null branch", () => {
     const mockOrder = {
       id: 5,
       user_id: 1,
-      payment_method: 'VNPAY',
-      payment_status: 'unpaid',
+      payment_method: "VNPAY",
+      payment_status: "unpaid",
       // order_items: undefined — không có field này
     };
     const mockCart = { id: 1 };
@@ -709,10 +701,8 @@ describe("restoreCartFromOrder() — order_items null branch", () => {
     expect(result.cart_id).toBe(1);
   });
 });
-// ─── end branch bổ sung ───────────────────────────────────────────────────────
 
-
-// ── Negative test cases bổ sung ───────────────────────────────────────────────
+// ── Negative test cases ───────────────────────────────────────────────
 describe("addItem() — số lượng không hợp lệ", () => {
   // TC_CART_30
   test("TC_CART_30 — Vẫn thêm item khi quantity=0 (service không validate quantity > 0)", async () => {
@@ -768,8 +758,6 @@ describe("updateItem() — số lượng không hợp lệ", () => {
   });
 });
 
-
-// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
 // Các test dưới đây SẼ FAIL vì service chưa validate quantity > 0
 // Khi sửa service thêm validation → test sẽ PASS
 describe("addItem() — service phải validate quantity > 0", () => {
@@ -780,18 +768,18 @@ describe("addItem() — service phải validate quantity > 0", () => {
     // Nghiệp vụ: thêm 0 sản phẩm vào giỏ là vô nghĩa, phải bị chặn
     // Hiện tại: service chỉ check stock >= quantity → 0 < stock → KHÔNG throw
     // Cần sửa: thêm if (quantity <= 0) throw new Error('Quantity must be greater than 0')
-    await expect(
-      CartService.addItem(1, 5, 0)
-    ).rejects.toThrow("Quantity must be greater than 0");
+    await expect(CartService.addItem(1, 5, 0)).rejects.toThrow(
+      "Quantity must be greater than 0",
+    );
   });
 
   // TC_CART_34
   test("TC_CART_34 — Phải throw lỗi khi quantity âm (-1)", async () => {
     // Nghiệp vụ: số lượng âm là không hợp lệ về mặt logic
     // Hiện tại: service KHÔNG validate → KHÔNG throw
-    await expect(
-      CartService.addItem(1, 5, -1)
-    ).rejects.toThrow("Quantity must be greater than 0");
+    await expect(CartService.addItem(1, 5, -1)).rejects.toThrow(
+      "Quantity must be greater than 0",
+    );
   });
 });
 
@@ -803,8 +791,8 @@ describe("updateItem() — service phải validate quantity > 0", () => {
     // Nghiệp vụ: updateItem với quantity=0 là vô nghĩa (nên dùng removeItem thay thế)
     // Hiện tại: service KHÔNG validate → vẫn gọi updateItemQuantity với 0
     // Cần sửa: thêm if (quantity <= 0) throw new Error('Quantity must be greater than 0')
-    await expect(
-      CartService.updateItem(1, 0)
-    ).rejects.toThrow("Quantity must be greater than 0");
+    await expect(CartService.updateItem(1, 0)).rejects.toThrow(
+      "Quantity must be greater than 0",
+    );
   });
 });

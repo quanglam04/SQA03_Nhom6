@@ -78,7 +78,6 @@ describe("contactService", () => {
       expect(contactModel.updateStatus).toHaveBeenCalledWith(9999, "pending");
     });
   });
-  // ── end updateStatus() ─────────────────────────────────────────────────────
 
   // ── getRequestById() ───────────────────────────────────────────────────────
   describe("getRequestById()", () => {
@@ -147,7 +146,6 @@ describe("contactService", () => {
       expect(contactModel.getById).toHaveBeenCalledWith(1);
     });
   });
-  // ── end getRequestById() ───────────────────────────────────────────────────
 
   // ── updateStatus() error branch ────────────────────────────────────────────
   describe("updateStatus() — error branch", () => {
@@ -171,7 +169,6 @@ describe("contactService", () => {
       expect(contactModel.updateStatus).toHaveBeenCalledWith(1, "pending");
     });
   });
-  // ── end updateStatus() error branch ───────────────────────────────────────
 
   // ── createRequest() ────────────────────────────────────────────────────────
   describe("createRequest()", () => {
@@ -223,7 +220,6 @@ describe("contactService", () => {
       expect(contactModel.create).toHaveBeenCalledWith(data);
     });
   });
-  // ── end createRequest() ────────────────────────────────────────────────────
 
   // ── getAllRequests() ────────────────────────────────────────────────────────
   describe("getAllRequests()", () => {
@@ -288,7 +284,6 @@ describe("contactService", () => {
       expect(contactModel.getAll).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllRequests() ────────────────────────────────────────────────────
 
   // ── deleteRequest() ────────────────────────────────────────────────────────
   describe("deleteRequest()", () => {
@@ -333,7 +328,9 @@ describe("contactService", () => {
     // TC_CONT_15
     test("TC_CONT_15 — Trả về success:false khi model throw lỗi DB trong deleteRequest", async () => {
       // Arrange — mock throw lỗi DB
-      contactModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
+      contactModel.delete.mockRejectedValue(
+        new Error("Foreign key constraint"),
+      );
 
       // Act
       const result = await contactService.deleteRequest(1);
@@ -350,9 +347,7 @@ describe("contactService", () => {
       expect(contactModel.delete).toHaveBeenCalledWith(1);
     });
   });
-  // ── end deleteRequest() ────────────────────────────────────────────────────
 });
-
 
 // ── Negative test cases bổ sung ───────────────────────────────────────────────
 describe("updateStatus() — giá trị status không hợp lệ thêm", () => {

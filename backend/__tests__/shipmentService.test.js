@@ -19,7 +19,7 @@ describe("ShipmentService", () => {
   // Reset tất cả mock trước mỗi test để tránh ảnh hưởng lẫn nhau
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   // ── getShipment() ──────────────────────────────────────────────────────────
@@ -64,7 +64,6 @@ describe("ShipmentService", () => {
       expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith(9999);
     });
   });
-  // ── end getShipment() ──────────────────────────────────────────────────────
 
   // ── updateShipment() ───────────────────────────────────────────────────────
   describe("updateShipment()", () => {
@@ -134,7 +133,9 @@ describe("ShipmentService", () => {
     // TC_SHIP_05
     test("TC_SHIP_05 — Throw lỗi khi model throw lỗi DB trong updateShipment", async () => {
       // Arrange — mock findByOrderId throw lỗi DB
-      ShipmentModel.findByOrderId.mockRejectedValue(new Error("DB connection failed"));
+      ShipmentModel.findByOrderId.mockRejectedValue(
+        new Error("DB connection failed"),
+      );
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
       await expect(
@@ -146,7 +147,6 @@ describe("ShipmentService", () => {
       expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith(1);
     });
   });
-  // ── end updateShipment() ───────────────────────────────────────────────────
 
   // ── getShipment() error branch ─────────────────────────────────────────────
   describe("getShipment() — error branch", () => {
@@ -163,7 +163,6 @@ describe("ShipmentService", () => {
       expect(ShipmentModel.findByOrderId).toHaveBeenCalledWith(1);
     });
   });
-  // ── end getShipment() error branch ────────────────────────────────────────
 
   // ── getAllShipments() ──────────────────────────────────────────────────────
   describe("getAllShipments()", () => {
@@ -234,7 +233,6 @@ describe("ShipmentService", () => {
       expect(ShipmentModel.findAll).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllShipments() ──────────────────────────────────────────────────
 
   // ── deleteShipment() ──────────────────────────────────────────────────────
   describe("deleteShipment()", () => {
@@ -273,7 +271,9 @@ describe("ShipmentService", () => {
     // TC_SHIP_13
     test("TC_SHIP_13 — Throw lỗi khi model throw lỗi DB trong deleteShipment", async () => {
       // Arrange — mock throw lỗi DB
-      ShipmentModel.delete.mockRejectedValue(new Error("Foreign key constraint"));
+      ShipmentModel.delete.mockRejectedValue(
+        new Error("Foreign key constraint"),
+      );
 
       // Act & Assert — lỗi phải được re-throw ra ngoài
       await expect(ShipmentService.deleteShipment(1)).rejects.toThrow(
@@ -285,9 +285,7 @@ describe("ShipmentService", () => {
       expect(ShipmentModel.delete).toHaveBeenCalledWith(1);
     });
   });
-  // ── end deleteShipment() ──────────────────────────────────────────────────
 });
-
 
 // ── Negative test cases bổ sung ───────────────────────────────────────────────
 describe("updateShipment() — shipmentData không hợp lệ", () => {
@@ -319,8 +317,7 @@ describe("getShipment() — orderId không hợp lệ", () => {
   });
 });
 
-
-// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
+// ── test service thiếu validation ─────────────────
 describe("updateShipment() — service phải validate shipmentData không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
@@ -329,9 +326,9 @@ describe("updateShipment() — service phải validate shipmentData không rỗn
     // Nghiệp vụ: cập nhật shipment với data rỗng là vô nghĩa
     // Hiện tại: service tạo/update với data rỗng → lỗ hổng
     // Cần sửa: thêm if (!shipmentData || Object.keys(shipmentData).length === 0) throw error
-    await expect(
-      ShipmentService.updateShipment(1, {})
-    ).rejects.toThrow("Shipment data cannot be empty");
+    await expect(ShipmentService.updateShipment(1, {})).rejects.toThrow(
+      "Shipment data cannot be empty",
+    );
 
     expect(ShipmentModel.findByOrderId).not.toHaveBeenCalled();
   });
@@ -345,9 +342,9 @@ describe("getShipment() — service phải validate orderId là số hợp lệ"
     // Nghiệp vụ: orderId phải là số nguyên dương
     // Hiện tại: service không validate kiểu → query DB với 'abc'
     // Cần sửa: thêm if (isNaN(orderId) || orderId <= 0) throw error
-    await expect(
-      ShipmentService.getShipment("abc")
-    ).rejects.toThrow("Invalid orderId");
+    await expect(ShipmentService.getShipment("abc")).rejects.toThrow(
+      "Invalid orderId",
+    );
 
     expect(ShipmentModel.findByOrderId).not.toHaveBeenCalled();
   });

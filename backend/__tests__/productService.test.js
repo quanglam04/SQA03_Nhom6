@@ -529,3 +529,171 @@ describe("ProductService", () => {
   });
   // ── end deleteVariant() ───────────────────────────────────────────────────
 });
+
+
+// ── Negative test cases bổ sung ───────────────────────────────────────────────
+describe("createProduct() — dữ liệu không hợp lệ (service không validate)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_PROD_23
+  test("TC_PROD_23 — [Negative] Vẫn tạo sản phẩm khi name là chuỗi rỗng — service không validate", async () => {
+    // Nghiệp vụ: tên sản phẩm rỗng là không hợp lệ
+    // Hiện tại: service không kiểm tra → gọi thẳng model → lỗ hổng
+    productModel.createWithVariants.mockResolvedValue({ id: 1, name: "" });
+
+    const result = await ProductService.createProduct({ name: "", price: 50000, category_id: 1 });
+
+    // Service KHÔNG chặn → gọi model với name rỗng
+    expect(productModel.createWithVariants).toHaveBeenCalledWith(
+      expect.objectContaining({ name: "" })
+    );
+    expect(result).toBeDefined();
+  });
+
+  // TC_PROD_24
+  test("TC_PROD_24 — [Negative] Vẫn tạo sản phẩm khi price âm — service không validate", async () => {
+    // Nghiệp vụ: giá âm là không hợp lệ về mặt nghiệp vụ
+    // Hiện tại: service không kiểm tra → lỗ hổng
+    productModel.createWithVariants.mockResolvedValue({ id: 2, price: -10000 });
+
+    const result = await ProductService.createProduct({ name: "Sản phẩm X", price: -10000, category_id: 1 });
+
+    expect(productModel.createWithVariants).toHaveBeenCalledWith(
+      expect.objectContaining({ price: -10000 })
+    );
+    expect(result).toBeDefined();
+  });
+
+  // TC_PROD_25
+  test("TC_PROD_25 — [Negative] Vẫn tạo sản phẩm khi không có variants — service không validate", async () => {
+    // Nghiệp vụ: sản phẩm phải có ít nhất 1 variant
+    // Hiện tại: service không kiểm tra variants → lỗ hổng
+    productModel.createWithVariants.mockResolvedValue({ id: 3 });
+
+    const result = await ProductService.createProduct({ name: "SP Y", price: 50000, category_id: 1, variants: [] });
+
+    expect(productModel.createWithVariants).toHaveBeenCalledWith(
+      expect.objectContaining({ variants: [] })
+    );
+    expect(result).toBeDefined();
+  });
+
+  // TC_PROD_26
+  test("TC_PROD_26 — [Negative] Vẫn tạo sản phẩm khi price=0 — service không validate", async () => {
+    // Nghiệp vụ: giá = 0 không có ý nghĩa nghiệp vụ
+    productModel.createWithVariants.mockResolvedValue({ id: 4, price: 0 });
+
+    const result = await ProductService.createProduct({ name: "SP Z", price: 0, category_id: 1 });
+
+    expect(productModel.createWithVariants).toHaveBeenCalledWith(
+      expect.objectContaining({ price: 0 })
+    );
+    expect(result).toBeDefined();
+  });
+});
+
+describe("updateProduct() — dữ liệu không hợp lệ (service không validate)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_PROD_27
+  test("TC_PROD_27 — [Negative] Vẫn update khi data là object rỗng {} — service không validate payload", async () => {
+    // Nghiệp vụ: update với payload rỗng là vô nghĩa
+    productModel.updateWithVariants.mockResolvedValue({ id: 1 });
+
+    const result = await ProductService.updateProduct(1, {});
+
+    // Service KHÔNG chặn payload rỗng → lỗ hổng
+    expect(productModel.updateWithVariants).toHaveBeenCalledWith(1, {});
+    expect(result).toBeDefined();
+  });
+
+  // TC_PROD_28
+  test("TC_PROD_28 — [Negative] Vẫn update khi name là null — service không validate", async () => {
+    // Nghiệp vụ: tên sản phẩm null là không hợp lệ
+    productModel.updateWithVariants.mockResolvedValue({ id: 1, name: null });
+
+    const result = await ProductService.updateProduct(1, { name: null, price: 50000 });
+
+    expect(productModel.updateWithVariants).toHaveBeenCalledWith(1, { name: null, price: 50000 });
+    expect(result).toBeDefined();
+  });
+
+  // TC_PROD_29
+  test("TC_PROD_29 — [Negative] Vẫn update khi price âm — service không validate", async () => {
+    // Nghiệp vụ: giá âm không hợp lệ
+    productModel.updateWithVariants.mockResolvedValue({ id: 1, price: -5000 });
+
+    const result = await ProductService.updateProduct(1, { price: -5000 });
+
+    expect(productModel.updateWithVariants).toHaveBeenCalledWith(1, { price: -5000 });
+    expect(result).toBeDefined();
+  });
+});
+
+// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
+describe("[FAIL] createProduct() — service phải validate dữ liệu đầu vào", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_PROD_30
+  test("TC_PROD_30 — Phải throw lỗi khi name là chuỗi rỗng — service CHƯA validate", async () => {
+    // Nghiệp vụ: tên sản phẩm bắt buộc, không được rỗng
+    // Test FAIL vì service chưa có validation này
+    // Cần sửa: thêm if (!data.name || data.name.trim() === '') throw error
+    await expect(
+      productService.createProduct({ name: "", price: 50000, category_id: 1 })
+    ).rejects.toThrow("Product name cannot be empty");
+
+    expect(productModel.createWithVariants).not.toHaveBeenCalled();
+  });
+
+  // TC_PROD_31
+  test("TC_PROD_31 — Phải throw lỗi khi price âm hoặc bằng 0 — service CHƯA validate", async () => {
+    // Nghiệp vụ: giá sản phẩm phải > 0
+    // Test FAIL vì service chưa có validation này
+    // Cần sửa: thêm if (!data.price || data.price <= 0) throw error
+    await expect(
+      productService.createProduct({ name: "SP hợp lệ", price: -1000, category_id: 1 })
+    ).rejects.toThrow("Product price must be greater than 0");
+
+    expect(productModel.createWithVariants).not.toHaveBeenCalled();
+  });
+
+  // TC_PROD_32
+  test("TC_PROD_32 — Phải throw lỗi khi variants rỗng hoặc không có — service CHƯA validate", async () => {
+    // Nghiệp vụ: sản phẩm phải có ít nhất 1 variant
+    // Test FAIL vì service chưa có validation này
+    // Cần sửa: thêm if (!data.variants || data.variants.length === 0) throw error
+    await expect(
+      productService.createProduct({ name: "SP hợp lệ", price: 50000, category_id: 1, variants: [] })
+    ).rejects.toThrow("Product must have at least one variant");
+
+    expect(productModel.createWithVariants).not.toHaveBeenCalled();
+  });
+});
+
+describe("[FAIL] updateProduct() — service phải validate dữ liệu đầu vào", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  // TC_PROD_33
+  test("TC_PROD_33 — Phải throw lỗi khi data là object rỗng {} — service CHƯA validate", async () => {
+    // Nghiệp vụ: update với payload rỗng không có ý nghĩa
+    // Test FAIL vì service chưa có validation này
+    // Cần sửa: thêm if (!data || Object.keys(data).length === 0) throw error
+    await expect(
+      productService.updateProduct(1, {})
+    ).rejects.toThrow("Update data cannot be empty");
+
+    expect(productModel.updateWithVariants).not.toHaveBeenCalled();
+  });
+
+  // TC_PROD_34
+  test("TC_PROD_34 — Phải throw lỗi khi price âm trong updateProduct — service CHƯA validate", async () => {
+    // Nghiệp vụ: không cho phép cập nhật giá âm
+    // Test FAIL vì service chưa có validation này
+    await expect(
+      productService.updateProduct(1, { price: -500 })
+    ).rejects.toThrow("Product price must be greater than 0");
+
+    expect(productModel.updateWithVariants).not.toHaveBeenCalled();
+  });
+});

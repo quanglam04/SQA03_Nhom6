@@ -28,6 +28,7 @@
     "qrcode": "^1.5.4",
     "querystring": "^0.2.1",
     "request": "^2.88.2",
+    "selenium-webdriver": "^4.43.0",
     "vnpay": "^2.4.4"
   },
   "devDependencies": {

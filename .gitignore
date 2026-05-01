@@ -2,6 +2,9 @@
 # Node.js & React fullstack
 # ============================
 
+# .csv files (nếu có, thường là dữ liệu test hoặc export)
+system_case/
+
 # Node modules (nặng, tự cài lại được)
 backend/node_modules/
 frontend/node_modules/

@@ -324,8 +324,8 @@ describe("getShipment() — orderId không hợp lệ", () => {
 describe("[FAIL] updateShipment() — service phải validate shipmentData không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_SHIP_FAIL_01
-  test("TC_SHIP_FAIL_01 — Phải throw lỗi khi shipmentData là object rỗng {}", async () => {
+  // TC_SHIP_16
+  test("TC_SHIP_16 — Phải throw lỗi khi shipmentData là object rỗng {}", async () => {
     // Nghiệp vụ: cập nhật shipment với data rỗng là vô nghĩa
     // Hiện tại: service tạo/update với data rỗng → lỗ hổng
     // Cần sửa: thêm if (!shipmentData || Object.keys(shipmentData).length === 0) throw error
@@ -340,8 +340,8 @@ describe("[FAIL] updateShipment() — service phải validate shipmentData khôn
 describe("[FAIL] getShipment() — service phải validate orderId là số hợp lệ", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_SHIP_FAIL_02
-  test("TC_SHIP_FAIL_02 — Phải throw lỗi khi orderId là chuỗi không phải số ('abc')", async () => {
+  // TC_SHIP_17
+  test("TC_SHIP_17 — Phải throw lỗi khi orderId là chuỗi không phải số ('abc')", async () => {
     // Nghiệp vụ: orderId phải là số nguyên dương
     // Hiện tại: service không validate kiểu → query DB với 'abc'
     // Cần sửa: thêm if (isNaN(orderId) || orderId <= 0) throw error

@@ -309,8 +309,8 @@ describe("updateUser() — payload không hợp lệ", () => {
 describe("[FAIL] changePassword() — service phải validate newPassword không được rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_USER_FAIL_01
-  test("TC_USER_FAIL_01 - Phải throw lỗi khi newPassword là chuỗi rỗng", async () => {
+  // TC_USER_16
+  test("TC_USER_16 - Phải throw lỗi khi newPassword là chuỗi rỗng", async () => {
     // Nghiệp vụ: mật khẩu rỗng không được phép đặt làm password mới
     // Hiện tại: service hash chuỗi rỗng và lưu vào DB → lỗ hổng bảo mật nghiêm trọng
     // Cần sửa: thêm if (!newPassword || newPassword.trim() === '') throw error
@@ -329,8 +329,8 @@ describe("[FAIL] changePassword() — service phải validate newPassword không
     expect(userModel.updatePassword).not.toHaveBeenCalled();
   });
 
-  // TC_USER_FAIL_02
-  test("TC_USER_FAIL_02 - Phải throw lỗi khi newPassword chỉ toàn khoảng trắng", async () => {
+  // TC_USER_17
+  test("TC_USER_17 - Phải throw lỗi khi newPassword chỉ toàn khoảng trắng", async () => {
     // Nghiệp vụ: password "   " sau khi trim là rỗng → không hợp lệ
     // Hiện tại: service KHÔNG validate → hash và lưu "   " vào DB
     userModel.findByIdWithPassword.mockResolvedValue({ id: 1, password: "hashed_old" });
@@ -351,8 +351,8 @@ describe("[FAIL] changePassword() — service phải validate newPassword không
 describe("[FAIL] updateUser() — service phải validate payload không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_USER_FAIL_03
-  test("TC_USER_FAIL_03 - Phải throw lỗi khi data là object rỗng {} (không có gì để update)", async () => {
+  // TC_USER_18
+  test("TC_USER_18 - Phải throw lỗi khi data là object rỗng {} (không có gì để update)", async () => {
     // Nghiệp vụ: update với payload rỗng là vô nghĩa, có thể gây UPDATE không có SET clause
     // Hiện tại: service gọi model với {} → lỗ hổng
     // Cần sửa: thêm if (!data || Object.keys(data).length === 0) throw error

@@ -425,8 +425,8 @@ describe("addOrUpdateReviewFromOrder() — ngưỡng biên 30 ngày", () => {
 describe("[FAIL] addOrUpdateReview() — service phải validate rating hợp lệ (1-5)", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_REV_FAIL_01
-  test("TC_REV_FAIL_01 - Phải trả về ok:false khi rating=0 (nhỏ hơn min=1)", async () => {
+  // TC_REV_28
+  test("TC_REV_28 - Phải trả về ok:false khi rating=0 (nhỏ hơn min=1)", async () => {
     // Nghiệp vụ: rating hợp lệ là 1-5. rating=0 phải bị chặn ngay tại service
     // Hiện tại: service KHÔNG validate → test này FAIL
     // Cần sửa: thêm if (rating < 1 || rating > 5) return { ok: false, reason: 'INVALID_RATING' }
@@ -438,8 +438,8 @@ describe("[FAIL] addOrUpdateReview() — service phải validate rating hợp l�
     expect(reviewModel.create).not.toHaveBeenCalled();
   });
 
-  // TC_REV_FAIL_02
-  test("TC_REV_FAIL_02 - Phải trả về ok:false khi rating=6 (lớn hơn max=5)", async () => {
+  // TC_REV_29
+  test("TC_REV_29 - Phải trả về ok:false khi rating=6 (lớn hơn max=5)", async () => {
     // Nghiệp vụ: rating > 5 không hợp lệ, phải bị chặn tại service
     // Hiện tại: service KHÔNG validate → test này FAIL
     pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible
@@ -450,8 +450,8 @@ describe("[FAIL] addOrUpdateReview() — service phải validate rating hợp l�
     expect(reviewModel.create).not.toHaveBeenCalled();
   });
 
-  // TC_REV_FAIL_03
-  test("TC_REV_FAIL_03 - Phải trả về ok:false khi rating là chuỗi (không phải số)", async () => {
+  // TC_REV_30
+  test("TC_REV_30 - Phải trả về ok:false khi rating là chuỗi (không phải số)", async () => {
     // Nghiệp vụ: rating phải là số nguyên 1-5
     // Hiện tại: service KHÔNG validate kiểu → test này FAIL
     pool.query.mockResolvedValueOnce([[{ id: 1 }]]); // eligible

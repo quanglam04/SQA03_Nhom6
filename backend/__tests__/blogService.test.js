@@ -9,7 +9,7 @@
  *             tạo / thay đổi => KHÔNG cần rollback sau khi chạy test.
  */
 
-// ── Mock toàn bộ blogModel — không dùng DB thật ──────────────────────────────
+// ── Mock toàn bộ blogModel ──────────────────────────────
 jest.mock("../models/blogModel");
 
 const blogModel = require("../models/blogModel");
@@ -92,7 +92,6 @@ describe("blogService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
     });
   });
-  // ── end createBlog() ───────────────────────────────────────────────────────
 
   // ── getBlogDetail() ────────────────────────────────────────────────────────
   describe("getBlogDetail()", () => {
@@ -176,10 +175,9 @@ describe("blogService", () => {
       expect(blogModel.getComments).toHaveBeenCalledTimes(1);
       expect(blogModel.getComments).toHaveBeenCalledWith(1);
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
   });
-  // ── end getBlogDetail() ────────────────────────────────────────────────────
 
   // ── getAllBlogs() ──────────────────────────────────────────────────────────
   describe("getAllBlogs()", () => {
@@ -197,7 +195,6 @@ describe("blogService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
     });
   });
-  // ── end getAllBlogs() ──────────────────────────────────────────────────────
 
   // ── searchBlogs() ──────────────────────────────────────────────────────────
   describe("searchBlogs()", () => {
@@ -242,7 +239,7 @@ describe("blogService", () => {
       // CheckDB — findAll() KHÔNG được gọi
       expect(blogModel.findAll).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_BLOG_11
@@ -285,7 +282,6 @@ describe("blogService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
     });
   });
-  // ── end searchBlogs() ──────────────────────────────────────────────────────
 
   // ── updateBlog() ───────────────────────────────────────────────────────────
   describe("updateBlog()", () => {
@@ -328,14 +324,18 @@ describe("blogService", () => {
       // CheckDB — blogModel.update() KHÔNG được gọi vì bị chặn bởi validation
       expect(blogModel.update).not.toHaveBeenCalled();
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
 
     // TC_BLOG_16
     test("TC_BLOG_16 — Cập nhật bài viết thành công khi blogData hợp lệ", async () => {
       // Arrange — mock blogModel.update trả về blog đã được cập nhật
       const blogData = { title: "Tiêu đề mới", content: "Nội dung mới" };
-      const mockUpdatedBlog = { id: 1, title: "Tiêu đề mới", content: "Nội dung mới" };
+      const mockUpdatedBlog = {
+        id: 1,
+        title: "Tiêu đề mới",
+        content: "Nội dung mới",
+      };
       blogModel.update.mockResolvedValue(mockUpdatedBlog);
 
       // Act
@@ -355,7 +355,6 @@ describe("blogService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
     });
   });
-  // ── end updateBlog() ───────────────────────────────────────────────────────
 
   // ── deleteBlog() ───────────────────────────────────────────────────────────
   describe("deleteBlog()", () => {
@@ -400,10 +399,9 @@ describe("blogService", () => {
       expect(blogModel.remove).toHaveBeenCalledTimes(1);
       expect(blogModel.remove).toHaveBeenCalledWith(9999);
 
-      // Rollback: dùng mock => không có dữ liệu thật nào bị thay đổi => không cần rollback
+      // Rollback: dùng mock => không cần rollback
     });
   });
-  // ── end deleteBlog() ───────────────────────────────────────────────────────
 
   // ── addComment() ───────────────────────────────────────────────────────────
   describe("addComment()", () => {
@@ -448,7 +446,11 @@ describe("blogService", () => {
 
       // CheckDB — blogModel.addComment() được gọi đúng 1 lần với đúng tham số
       expect(blogModel.addComment).toHaveBeenCalledTimes(1);
-      expect(blogModel.addComment).toHaveBeenCalledWith(1, 2, "Bài viết hay quá!");
+      expect(blogModel.addComment).toHaveBeenCalledWith(
+        1,
+        2,
+        "Bài viết hay quá!",
+      );
 
       // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
     });
@@ -474,7 +476,6 @@ describe("blogService", () => {
       // Rollback: dùng mock => không có dữ liệu thật nào được tạo => không cần rollback
     });
   });
-  // ── end addComment() ───────────────────────────────────────────────────────
 
   // ── getAllBlogs() — happy path ───────────────────────────────────────────
   describe("getAllBlogs() — happy path", () => {
@@ -513,7 +514,6 @@ describe("blogService", () => {
       expect(blogModel.findAll).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllBlogs() — happy path ─────────────────────────────────────────
 
   // ── getBlogsByCategory() ──────────────────────────────────────────────────
   describe("getBlogsByCategory()", () => {
@@ -559,11 +559,12 @@ describe("blogService", () => {
       blogModel.findByCategory.mockRejectedValue(new Error("DB error"));
 
       // Act & Assert
-      await expect(blogService.getBlogsByCategory("sức khỏe")).rejects.toThrow("DB error");
+      await expect(blogService.getBlogsByCategory("sức khỏe")).rejects.toThrow(
+        "DB error",
+      );
       expect(blogModel.findByCategory).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getBlogsByCategory() ──────────────────────────────────────────────
 
   // ── getAllBlogsAdmin() ────────────────────────────────────────────────────
   describe("getAllBlogsAdmin()", () => {
@@ -612,7 +613,6 @@ describe("blogService", () => {
       expect(blogModel.findAllAdmin).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllBlogsAdmin() ────────────────────────────────────────────────
 
   // ── error paths còn thiếu ─────────────────────────────────────────────────
   describe("searchBlogs() — error path", () => {
@@ -622,7 +622,9 @@ describe("blogService", () => {
       blogModel.searchBlogs.mockRejectedValue(new Error("DB error"));
 
       // Act & Assert
-      await expect(blogService.searchBlogs("từ khóa")).rejects.toThrow("DB error");
+      await expect(blogService.searchBlogs("từ khóa")).rejects.toThrow(
+        "DB error",
+      );
       expect(blogModel.searchBlogs).toHaveBeenCalledTimes(1);
       expect(blogModel.searchBlogs).toHaveBeenCalledWith("từ khóa");
     });
@@ -636,7 +638,7 @@ describe("blogService", () => {
 
       // Act & Assert
       await expect(
-        blogService.createBlog({ title: "Tiêu đề", content: "Nội dung" })
+        blogService.createBlog({ title: "Tiêu đề", content: "Nội dung" }),
       ).rejects.toThrow("DB error");
       expect(blogModel.create).toHaveBeenCalledTimes(1);
     });
@@ -650,7 +652,7 @@ describe("blogService", () => {
 
       // Act & Assert
       await expect(
-        blogService.updateBlog(1, { title: "Tiêu đề", content: "Nội dung" })
+        blogService.updateBlog(1, { title: "Tiêu đề", content: "Nội dung" }),
       ).rejects.toThrow("DB error");
       expect(blogModel.update).toHaveBeenCalledTimes(1);
     });
@@ -677,17 +679,19 @@ describe("blogService", () => {
 
       // Act & Assert
       await expect(
-        blogService.addComment(1, 1, "Nội dung comment")
+        blogService.addComment(1, 1, "Nội dung comment"),
       ).rejects.toThrow("DB error");
       expect(blogModel.addComment).toHaveBeenCalledTimes(1);
-      expect(blogModel.addComment).toHaveBeenCalledWith(1, 1, "Nội dung comment");
+      expect(blogModel.addComment).toHaveBeenCalledWith(
+        1,
+        1,
+        "Nội dung comment",
+      );
     });
   });
-  // ── end error paths ───────────────────────────────────────────────────────
 });
 
-
-// ─── Branch bổ sung: searchBlogs khi model trả về null ──────────────────────
+// ─── searchBlogs khi model trả về null ──────────────────────
 describe("searchBlogs() — blogs null branch", () => {
   // TC_BLOG_34
   test("TC_BLOG_34 — Trả về data=[] khi searchBlogs model trả về null", async () => {
@@ -704,13 +708,15 @@ describe("searchBlogs() — blogs null branch", () => {
   });
 });
 
-
-// ── Negative test cases bổ sung ───────────────────────────────────────────────
+// ── Negative test cases ───────────────────────────────────────────────
 describe("createBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
   // TC_BLOG_35
   test("TC_BLOG_35 — Trả về success:false khi title là null (không phải chuỗi rỗng)", async () => {
     // title=null → !blogData.title = true → bị chặn validation, không gọi DB
-    const result = await blogService.createBlog({ title: null, content: "Nội dung" });
+    const result = await blogService.createBlog({
+      title: null,
+      content: "Nội dung",
+    });
 
     expect(result).toEqual({
       success: false,
@@ -723,7 +729,10 @@ describe("createBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
   // TC_BLOG_36
   test("TC_BLOG_36 — Trả về success:false khi content là null", async () => {
     // content=null → !blogData.content = true → bị chặn validation
-    const result = await blogService.createBlog({ title: "Tiêu đề", content: null });
+    const result = await blogService.createBlog({
+      title: "Tiêu đề",
+      content: null,
+    });
 
     expect(result).toEqual({
       success: false,
@@ -737,7 +746,10 @@ describe("createBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
 describe("updateBlog() — thiếu hoặc sai kiểu dữ liệu", () => {
   // TC_BLOG_37
   test("TC_BLOG_37 — Trả về success:false khi title là null trong updateBlog", async () => {
-    const result = await blogService.updateBlog(1, { title: null, content: "Nội dung" });
+    const result = await blogService.updateBlog(1, {
+      title: null,
+      content: "Nội dung",
+    });
 
     expect(result).toEqual({
       success: false,

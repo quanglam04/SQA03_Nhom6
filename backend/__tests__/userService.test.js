@@ -149,11 +149,12 @@ describe("userService", () => {
       // Rollback: using Jest mocks only, no real DB read
       userModel.findAll.mockRejectedValue(new Error("DB connection failed"));
 
-      await expect(userService.getAllUsers()).rejects.toThrow("DB connection failed");
+      await expect(userService.getAllUsers()).rejects.toThrow(
+        "DB connection failed",
+      );
       expect(userModel.findAll).toHaveBeenCalledTimes(1);
     });
   });
-  // ── end getAllUsers() ──────────────────────────────────────────────────────
 
   // ── getUserById() ─────────────────────────────────────────────────────────
   describe("getUserById()", () => {
@@ -193,13 +194,15 @@ describe("userService", () => {
       // Rollback: using Jest mocks only, no real DB read
       userModel.findById.mockRejectedValue(new Error("DB connection failed"));
 
-      await expect(userService.getUserById(1)).rejects.toThrow("DB connection failed");
+      await expect(userService.getUserById(1)).rejects.toThrow(
+        "DB connection failed",
+      );
       expect(userModel.findById).toHaveBeenCalledTimes(1);
       expect(userModel.findById).toHaveBeenCalledWith(1);
     });
   });
-  // ── end getUserById() ─────────────────────────────────────────────────────
 
+  // ── updateUser() ─────────────────────────────────────────────────────────
   describe("updateUser()", () => {
     test("TC_USER_04 - Trả về user đã cập nhật khi id tồn tại và payload hợp lệ", async () => {
       // Input: id=3, data={ name: "Van", phone: "0912345678" }
@@ -255,14 +258,16 @@ describe("userService", () => {
   });
 });
 
-
-// ── Negative test cases bổ sung ───────────────────────────────────────────────
+// ── Negative test cases  ───────────────────────────────────────────────
 describe("changePassword() — mật khẩu không đáp ứng yêu cầu (service không validate)", () => {
   beforeEach(() => jest.clearAllMocks());
 
   // TC_USER_13
   test("TC_USER_13 - Vẫn đổi password khi newPassword là chuỗi rỗng (service không validate độ dài)", async () => {
-    userModel.findByIdWithPassword.mockResolvedValue({ id: 1, password: "hashed_old" });
+    userModel.findByIdWithPassword.mockResolvedValue({
+      id: 1,
+      password: "hashed_old",
+    });
     bcrypt.compare.mockResolvedValue(true);
     bcrypt.hash.mockResolvedValue("hashed_empty");
     userModel.updatePassword.mockResolvedValue({ affectedRows: 1 });
@@ -278,7 +283,7 @@ describe("changePassword() — mật khẩu không đáp ứng yêu cầu (servi
     userModel.findByIdWithPassword.mockResolvedValue(null);
 
     await expect(
-      userService.changePassword(null, "OldPass@1", "NewPass@1")
+      userService.changePassword(null, "OldPass@1", "NewPass@1"),
     ).rejects.toMatchObject({
       message: "User not found",
       code: "USER_NOT_FOUND",
@@ -302,23 +307,25 @@ describe("updateUser() — payload không hợp lệ", () => {
   });
 });
 
-
-// ── Test FAIL có chủ ý — chứng minh service thiếu validation ─────────────────
+// ── test service thiếu validation ─────────────────
 // Các test dưới đây SẼ FAIL vì service chưa validate newPassword
 // Khi sửa service thêm validation → test sẽ PASS
-describe("[FAIL] changePassword() — service phải validate newPassword không được rỗng", () => {
+describe("changePassword() — service phải validate newPassword không được rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_USER_FAIL_01
-  test("TC_USER_FAIL_01 - Phải throw lỗi khi newPassword là chuỗi rỗng", async () => {
+  // TC_USER_16
+  test("TC_USER_16 - Phải throw lỗi khi newPassword là chuỗi rỗng", async () => {
     // Nghiệp vụ: mật khẩu rỗng không được phép đặt làm password mới
     // Hiện tại: service hash chuỗi rỗng và lưu vào DB → lỗ hổng bảo mật nghiêm trọng
     // Cần sửa: thêm if (!newPassword || newPassword.trim() === '') throw error
-    userModel.findByIdWithPassword.mockResolvedValue({ id: 1, password: "hashed_old" });
+    userModel.findByIdWithPassword.mockResolvedValue({
+      id: 1,
+      password: "hashed_old",
+    });
     bcrypt.compare.mockResolvedValue(true);
 
     await expect(
-      userService.changePassword(1, "OldPass@1", "")
+      userService.changePassword(1, "OldPass@1", ""),
     ).rejects.toMatchObject({
       message: "New password cannot be empty",
       code: "INVALID_PASSWORD",
@@ -329,15 +336,18 @@ describe("[FAIL] changePassword() — service phải validate newPassword không
     expect(userModel.updatePassword).not.toHaveBeenCalled();
   });
 
-  // TC_USER_FAIL_02
-  test("TC_USER_FAIL_02 - Phải throw lỗi khi newPassword chỉ toàn khoảng trắng", async () => {
+  // TC_USER_17
+  test("TC_USER_17 - Phải throw lỗi khi newPassword chỉ toàn khoảng trắng", async () => {
     // Nghiệp vụ: password "   " sau khi trim là rỗng → không hợp lệ
     // Hiện tại: service KHÔNG validate → hash và lưu "   " vào DB
-    userModel.findByIdWithPassword.mockResolvedValue({ id: 1, password: "hashed_old" });
+    userModel.findByIdWithPassword.mockResolvedValue({
+      id: 1,
+      password: "hashed_old",
+    });
     bcrypt.compare.mockResolvedValue(true);
 
     await expect(
-      userService.changePassword(1, "OldPass@1", "   ")
+      userService.changePassword(1, "OldPass@1", "   "),
     ).rejects.toMatchObject({
       message: "New password cannot be empty",
       code: "INVALID_PASSWORD",
@@ -348,17 +358,15 @@ describe("[FAIL] changePassword() — service phải validate newPassword không
   });
 });
 
-describe("[FAIL] updateUser() — service phải validate payload không rỗng", () => {
+describe("updateUser() — service phải validate payload không rỗng", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  // TC_USER_FAIL_03
-  test("TC_USER_FAIL_03 - Phải throw lỗi khi data là object rỗng {} (không có gì để update)", async () => {
+  // TC_USER_18
+  test("TC_USER_18 - Phải throw lỗi khi data là object rỗng {} (không có gì để update)", async () => {
     // Nghiệp vụ: update với payload rỗng là vô nghĩa, có thể gây UPDATE không có SET clause
     // Hiện tại: service gọi model với {} → lỗ hổng
     // Cần sửa: thêm if (!data || Object.keys(data).length === 0) throw error
-    await expect(
-      userService.updateUser(1, {})
-    ).rejects.toMatchObject({
+    await expect(userService.updateUser(1, {})).rejects.toMatchObject({
       message: "Update data cannot be empty",
       code: "INVALID_DATA",
     });

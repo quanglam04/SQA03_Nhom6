@@ -1,3 +1,14 @@
+/**
+ * Unit Tests for reviewService.js
+ * File gốc  : backend/services/reviewService.js
+ * Test file : backend/__tests__/reviewService.test.js
+ * Người PT  : Cao Thị Thu Hương
+ *
+ *
+ * Rollback: Toàn bộ DB được mock bằng jest.mock() → không có dữ liệu thật
+ * nào được ghi/xóa. Không cần rollback sau mỗi test.
+ */
+
 const reviewService = require("../services/reviewService");
 const reviewModel = require("../models/reviewModel");
 const { pool } = require("../config/mysql");

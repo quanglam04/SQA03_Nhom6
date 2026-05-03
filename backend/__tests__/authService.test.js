@@ -3,7 +3,7 @@
  * File gốc  : backend/services/authService.js
  * Test file : backend/__tests__/authService.test.js
  * Người PT  : Cao Thị Thu Hương
- *
+ *Test Cases: TC_AUTH_01 → TC_AUTH_24
  *
  * Rollback: Toàn bộ DB được mock bằng jest.mock() → không có dữ liệu thật
  * nào được ghi/xóa. Không cần rollback sau mỗi test.

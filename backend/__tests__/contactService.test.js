@@ -2,7 +2,7 @@
  * Unit Test — contactService
  * File gốc  : backend/services/contactService.js
  * Test file : backend/__tests__/contactService.test.js
- * Người PT  : Trịnh Quang Lâm
+ * Người PT  : Vũ Nhân Kiên
  *
  * Rollback  : Toàn bộ test dùng jest.mock() để mock contactModel,
  *             không kết nối DB thật => không có dữ liệu nào được

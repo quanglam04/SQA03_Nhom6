@@ -2,7 +2,7 @@
  * Unit Tests for authService.js
  * File gốc  : backend/services/authService.js
  * Test file : backend/__tests__/authService.test.js
- * Người PT  : Vũ Nhân Kiên
+ * Người PT  : Cao Thị Thu Hương
  * Test Cases: TC_AUTH_01 → TC_AUTH_10
  *
  * Rollback: Toàn bộ DB được mock bằng jest.mock() → không có dữ liệu thật
